@@ -1,10 +1,19 @@
-name: test
+name: maxsmi
 channels:
+  - conda-forge
+  - defaults
 dependencies:
     # Base depends
-  - python
+  - python>=3.6
   - pip
-
+  - jupyter
+  - jupyterlab
+  - rdkit>=2018.09.2.0
+  - scikit-learn
+  - requests
+  - tqdm
+  - pytorch
+  - matplotlib
     # Testing
   - pytest
   - pytest-cov
