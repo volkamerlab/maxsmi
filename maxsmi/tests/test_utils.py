@@ -8,7 +8,6 @@ import pytest
 import sys
 
 from maxsmi.utils_smiles import smi2can, smi2rand
-# from utils_smiles import smi2can, smi2rand
 
 def test_maxsmi_imported():
     """Sample test, will always pass so long as import statement worked"""
