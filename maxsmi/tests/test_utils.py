@@ -23,6 +23,19 @@ def test_maxsmi_imported():
     ],
 )
 
+
 def test_smi2can(smiles, solution):
     can_smi = smi2can(smiles)
     assert solution == can_smi
+
+
+@pytest.mark.parametrize(
+    "smiles, solution",
+    [
+        ('C', ['C', 'C', 'C']),
+    ],
+)
+
+def test_smi2rand(smiles, solution):
+    rand_smi = smi2rand(smiles, int_aug=3)
+    assert solution == rand_smi
