@@ -1,6 +1,6 @@
 """
-utils_smi.py
-Find the optimal SMILES augmentation for accurate prediction.
+utils_smiles.py
+SMILES augmentation in RDKit.
 
 Handles the primary functions
 """
