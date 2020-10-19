@@ -4,7 +4,7 @@ SMILES Augmentation and max
 [![codecov](https://codecov.io/gh/t-kimber/maxsmi/branch/master/graph/badge.svg)](https://codecov.io/gh/t-kimber/maxsmi/branch/master)
 
 
-Find the optimal SMILES augmentationn for accurate prediction.
+Find the optimal SMILES augmentation for accurate prediction.
 
 ### Copyright
 
