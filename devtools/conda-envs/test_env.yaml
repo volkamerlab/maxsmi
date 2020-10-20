@@ -1,10 +1,9 @@
 name: maxsmi
 channels:
   - conda-forge
-  - defaults
 dependencies:
     # Base depends
-  - python>=3.6
+  - python>=3.7
   - pip
   - jupyter
   - jupyterlab

@@ -1,8 +1,8 @@
 SMILES Augmentation and max
 ==============================
 [//]: # (Badges)
-[![codecov](https://codecov.io/gh/t-kimber/maxsmi/branch/master/graph/badge.svg)](https://codecov.io/gh/t-kimber/maxsmi/branch/master)
-
+[![Travis Build Status](https://travis-ci.com/t-kimber/maxsmi.svg?branch=main)](https://travis-ci.com/t-kimber/maxsmi) 
+[![codecov](https://codecov.io/gh/t-kimber/maxsmi/branch/main/graph/badge.svg)](https://codecov.io/gh/t-kimber/maxsmi/branch/main)
 
 Find the optimal SMILES augmentation for accurate prediction.
 
