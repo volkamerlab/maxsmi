@@ -70,11 +70,16 @@ def one_hot_encode(sequence, dictionary):
 
     Parameters
     ----------
-    # TODO
+    sequence: str
+        A sequence of charaters.
+    dictionary: dict
+        A dictionary which comprises of characters.
 
     Returns
     -------
-    # TODO
+    np.array
+        The binary matrix of shape `(len(dictionary), len(sequence))`,
+        the one-hot encoding of the sequence.
 
     """
     ohe_matrix = np.zeros((len(dictionary), len(sequence)))
@@ -82,7 +87,7 @@ def one_hot_encode(sequence, dictionary):
         ohe_matrix[dictionary[character],i] = 1
     return ohe_matrix
 
-ohe_smiles = [one_hot_encode(smiles, DICTIONARY) for smiles in adapted_smiles]
+# ohe_smiles = [one_hot_encode(smiles, DICTIONARY) for smiles in adapted_smiles]
 
 def integer_encode(sequence):
     pass
