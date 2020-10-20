@@ -14,13 +14,14 @@ def smi2can(smiles):
 
     Parameters
     ----------
-    smiles: str
+    smiles : str
         SMILES string describing a compound.
 
     Returns
     -------
-        str: the canonical version of the SMILES
-            or None if SMILES is not valid.
+    str
+        The canonical version of the SMILES
+        or None if SMILES is not valid.
     """
 
     mol  = Chem.MolFromSmiles(smiles)
@@ -38,15 +39,16 @@ def smi2rand(smiles, int_aug=50):
 
     Parameters
     ----------
-    smiles: str
+    smiles : str
         SMILES string describing a compound.
-    int_aug: int, Optional, default: 50
-        the number of random SMILES generated.
+    int_aug : int, Optional, default: 50
+        The number of random SMILES generated.
 
     Returns
     -------
-        list: a list of int_aug random SMILES
-            or None if the initial SMILES is not valid.
+    list
+        A list of int_aug random SMILES
+        or None if the initial SMILES is not valid.
     """
 
     mol  = Chem.MolFromSmiles(smiles)
@@ -64,14 +66,15 @@ def smi2unique_rand(smiles, int_aug=50):
 
     Parameters
     ----------
-    smiles: str
+    smiles : str
         SMILES string describing a compound.
-    int_aug: int, Optional, default: 50
-        the number of random (may not be unique) SMILES generated.
+    int_aug : int, Optional, default: 50
+        The number of random (may not be unique) SMILES generated.
 
     Returns
     -------
-        list: a list of unique random SMILES.
+    list
+        A list of unique random SMILES.
     """
 
     from rdkit import Chem

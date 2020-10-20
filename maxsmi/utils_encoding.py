@@ -12,11 +12,12 @@ def get_max_length(list_):
     Parameters
     ----------
     list_: list
-        a generic list.
+        A generic list.
 
     Returns
     -------
-        int: the longest element in the list.
+    int
+        The longest element in the list.
     """
 
     length_elements = [len(element) for element in list_]
@@ -33,8 +34,9 @@ def char_replacement(smiles):
 
     Returns
     -------
-        str: SMILES with character replacement.
-        """
+    str
+        SMILES with character replacement.
+    """
 
     smiles = smiles.replace("Cl", "L")
     smiles = smiles.replace("Br", "R")
@@ -44,7 +46,7 @@ def char_replacement(smiles):
 
 
 def get_unique_elements_as_dict(list_):
-    '''
+    """
     Given a list, obtain dictonary with unique elements as keys and integer as values.
 
     Parameters
@@ -54,10 +56,9 @@ def get_unique_elements_as_dict(list_):
 
     Returns
     -------
-        dict: unique elements of the list with assigned integer.
-
-
-    '''
+    dict
+        Unique elements of the list with assigned integer.
+    """
     all_elements = ''.join(list_)
     unique_elements = list(set(all_elements))
     return {unique_elements[i] : i for i in range(len(unique_elements))}
