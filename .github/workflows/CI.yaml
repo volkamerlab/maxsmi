@@ -3,12 +3,12 @@ name: CI
 on:
   push:
     branches:
-      - "master"
+      - "main"
   pull_request:
     branches:
-      - "master"
+      - "main"
   # schedule:
-  #   # Nightly tests run on master by default:
+  #   # Nightly tests run on main by default:
   #   #   Scheduled workflows run on the latest commit on the default or base branch.
   #   #   (from https://help.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events-schedule)
   #   - cron: "0 0 * * *"
@@ -57,7 +57,7 @@ jobs:
     - name: Lint with flake8
       shell: bash
       run: |
-        . devtools/scripts/initialize_conda.sh
+      # . devtools/scripts/initialize_conda.sh
         pip install flake8
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
