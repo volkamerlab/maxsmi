@@ -34,9 +34,9 @@ before_install:
 install:
 
     # Create test environment for package
-  - python devtools/scripts/create_conda_env.py -n=test -p=$PYTHON_VER devtools/conda-envs/test_env.yaml
+  - python devtools/scripts/create_conda_env.py -n=maxsmi -p=$PYTHON_VER devtools/conda-envs/test_env.yaml
     # Activate the test environment
-  - conda activate test
+  - conda activate maxsmi
     # Build and install package
   - python setup.py develop --no-deps
 
