@@ -1,4 +1,4 @@
-name: maxsmi
+name: test
 channels:
   - conda-forge
 dependencies:
