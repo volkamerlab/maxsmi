@@ -59,18 +59,6 @@ jobs:
         python -m pip install . --no-deps
         conda list
 
-    - name: Setup packages
-      shell: bash
-      run: |
-        python -m pip install flake8
-
-    - name: Lint
-      shell: bash
-      run: |
-        pip install flake8
-        flake8 .
-
-
     - name: Run tests
 
       # conda setup requires this special shell
