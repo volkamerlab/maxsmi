@@ -1,4 +1,4 @@
-SMILES Augmentation and max
+maxsmi: SMILES maximum augmentation
 ==============================
 [//]: # (Badges)
 [![Travis Build Status](https://travis-ci.com/t-kimber/maxsmi.svg?branch=main)](https://travis-ci.com/t-kimber/maxsmi) 
