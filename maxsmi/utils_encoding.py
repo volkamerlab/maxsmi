@@ -12,7 +12,7 @@ def get_max_length(list_):
     Parameters
     ----------
     list_: list
-        A generic list.
+        A generic list of strings.
 
     Returns
     -------
@@ -52,7 +52,7 @@ def get_unique_elements_as_dict(list_):
     Parameters
     ----------
     list_: list
-        A generic list.
+        A generic list of strings.
 
     Returns
     -------
@@ -89,15 +89,15 @@ def one_hot_encode(sequence, dictionary):
 
 # ohe_smiles = [one_hot_encode(smiles, DICTIONARY) for smiles in adapted_smiles]
 
-def integer_encode(sequence):
-    pass
-
-
-def pad_ohe(one_hot_encoded):
-    # [np.pad(matrix,
-    # ((0,0), (0, max_smiles-matrix.shape[1])))
-    # for matrix in ohe_smiles]
-    pass
-
-def pad_integer_encode(integer):
-    pass
+# def integer_encode(sequence):
+#     pass
+#
+#
+# def pad_ohe(one_hot_encoded):
+#     # [np.pad(matrix,
+#     # ((0,0), (0, max_smiles-matrix.shape[1])))
+#     # for matrix in ohe_smiles]
+#     pass
+#
+# def pad_integer_encode(integer):
+#     pass

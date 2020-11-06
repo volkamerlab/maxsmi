@@ -10,7 +10,7 @@ from rdkit.Chem import AllChem
 
 def smi2can(smiles):
     """
-    smi2can takes a SMILES and return its canonical form
+    smi2can takes a SMILES and return its canonical form.
 
     Parameters
     ----------
@@ -34,8 +34,8 @@ def smi2can(smiles):
 
 def smi2rand(smiles, int_aug=50):
     """
-    smi2rand takes a SMILES (non necessarily canonical)
-    and returns n random variations of this SMILES.
+    smi2rand takes a SMILES (not necessarily canonical)
+    and returns `int_aug` random variations of this SMILES.
 
     Parameters
     ----------
@@ -47,7 +47,7 @@ def smi2rand(smiles, int_aug=50):
     Returns
     -------
     list
-        A list of int_aug random SMILES
+        A list of `int_aug` random SMILES
         or None if the initial SMILES is not valid.
     """
 
@@ -56,13 +56,14 @@ def smi2rand(smiles, int_aug=50):
     if mol is None:
         return None
     else:
-        return [Chem.MolToSmiles(mol, canonical=False, doRandom=True) for nb in range(int_aug)]
+        return [Chem.MolToSmiles(mol, canonical=False, doRandom=True)
+            for nb in range(int_aug)]
 
 
 def smi2unique_rand(smiles, int_aug=50):
     """
     smi2uniquerand takes a SMILES (not necessarily canonical and
-    returns n unique random variations of this SMILES
+    returns `int_aug` unique random variations of this SMILES.
 
     Parameters
     ----------
@@ -83,7 +84,6 @@ def smi2unique_rand(smiles, int_aug=50):
     mol  = Chem.MolFromSmiles(smiles)
 
     if mol is None:
-        print('Faulty molecule in RDKit')
         return None
     else:
         smi_unique = []
