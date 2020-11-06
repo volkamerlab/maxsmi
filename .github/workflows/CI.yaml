@@ -74,10 +74,10 @@ jobs:
         flags: unittests
         name: codecov-${{ matrix.os }}-py${{ matrix.python-version }}
 
-    - name: GitHub Action for Flake8
-      uses: cclauss/GitHub-Action-for-Flake8@v0.5.0
+#    - name: GitHub Action for Flake8
+#      uses: cclauss/GitHub-Action-for-Flake8@v0.5.0
 
-
+jobs:
   flake8_py3:
     runs-on: ubuntu-latest
     steps:
