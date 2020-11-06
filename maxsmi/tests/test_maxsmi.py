@@ -10,3 +10,4 @@ import sys
 def test_maxsmi_imported():
     """Sample test, will always pass so long as import statement worked"""
     assert "maxsmi" in sys.modules
+

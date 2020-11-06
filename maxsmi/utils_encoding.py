@@ -5,6 +5,7 @@ SMILES encoding for machine learning.
 Handles the primary functions
 """
 
+
 def get_max_length(list_):
     """
     Computes the longest element in a given list.
@@ -22,6 +23,7 @@ def get_max_length(list_):
 
     length_elements = [len(element) for element in list_]
     return max(length_elements)
+
 
 def char_replacement(smiles):
     """
@@ -86,6 +88,7 @@ def one_hot_encode(sequence, dictionary):
     for i, character in enumerate(sequence):
         ohe_matrix[dictionary[character],i] = 1
     return ohe_matrix
+
 
 # ohe_smiles = [one_hot_encode(smiles, DICTIONARY) for smiles in adapted_smiles]
 

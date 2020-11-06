@@ -8,6 +8,7 @@ Handles the primary functions
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
+
 def smi2can(smiles):
     """
     smi2can takes a SMILES and return its canonical form.
@@ -24,7 +25,7 @@ def smi2can(smiles):
         or None if SMILES is not valid.
     """
 
-    mol  = Chem.MolFromSmiles(smiles)
+    mol = Chem.MolFromSmiles(smiles)
 
     if mol is None:
         return None
@@ -51,7 +52,7 @@ def smi2rand(smiles, int_aug=50):
         or None if the initial SMILES is not valid.
     """
 
-    mol  = Chem.MolFromSmiles(smiles)
+    mol = Chem.MolFromSmiles(smiles)
 
     if mol is None:
         return None
@@ -77,9 +78,6 @@ def smi2unique_rand(smiles, int_aug=50):
     list
         A list of unique random SMILES.
     """
-
-    from rdkit import Chem
-    from rdkit.Chem import AllChem
 
     mol  = Chem.MolFromSmiles(smiles)
 

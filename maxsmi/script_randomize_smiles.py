@@ -5,13 +5,12 @@ Example with a single SMILES
 """
 
 import argparse
-import sys
+from utils_smiles import smi2can, smi2rand, smi2unique_rand
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--nb_rand', type=int, help='nb_rand will be generated', default=3)
 args = parser.parse_args()
-
-from utils_smiles import smi2can, smi2rand, smi2unique_rand
 
 if __name__ == '__main__':
 

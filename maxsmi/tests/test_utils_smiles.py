@@ -9,6 +9,7 @@ import sys
 
 from maxsmi.utils_smiles import smi2can, smi2rand, smi2unique_rand
 
+
 def test_maxsmi_imported():
     """Sample test, will always pass so long as import statement worked"""
     assert "maxsmi" in sys.modules
@@ -34,6 +35,7 @@ def test_smi2can(smiles, solution):
         ('C', ['C', 'C', 'C']),
     ],
 )
+
 
 def test_smi2rand(smiles, solution):
     rand_smi = smi2rand(smiles, int_aug=3)
