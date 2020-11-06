@@ -74,6 +74,10 @@ jobs:
         flags: unittests
         name: codecov-${{ matrix.os }}-py${{ matrix.python-version }}
 
+    - name: GitHub Action for Flake8
+      uses: cclauss/GitHub-Action-for-Flake8@v0.5.0
+
+
   flake8_py3:
     runs-on: ubuntu-latest
     steps:
@@ -92,7 +96,4 @@ jobs:
           checkName: 'flake8_py3'   # NOTE: this needs to be the same as the job name
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: GitHub Action for Flake8
-    uses: cclauss/GitHub-Action-for-Flake8@v0.5.0
 
