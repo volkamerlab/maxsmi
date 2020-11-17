@@ -4,7 +4,7 @@ SMILES encoding for machine learning.
 
 Handles the primary functions
 """
-
+import numpy as np
 
 def get_max_length(list_):
     """
@@ -63,7 +63,7 @@ def get_unique_elements_as_dict(list_):
     """
     all_elements = ''.join(list_)
     unique_elements = list(set(all_elements))
-    return {unique_elements[i] : i for i in range(len(unique_elements))}
+    return {unique_elements[i]: i for i in range(len(unique_elements))}
 
 
 def one_hot_encode(sequence, dictionary):
@@ -86,7 +86,7 @@ def one_hot_encode(sequence, dictionary):
     """
     ohe_matrix = np.zeros((len(dictionary), len(sequence)))
     for i, character in enumerate(sequence):
-        ohe_matrix[dictionary[character],i] = 1
+        ohe_matrix[dictionary[character], i] = 1
     return ohe_matrix
 
 

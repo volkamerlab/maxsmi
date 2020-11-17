@@ -6,7 +6,6 @@ Handles the primary functions
 """
 
 from rdkit import Chem
-from rdkit.Chem import AllChem
 
 
 def smi2can(smiles):
@@ -58,7 +57,7 @@ def smi2rand(smiles, int_aug=50):
         return None
     else:
         return [Chem.MolToSmiles(mol, canonical=False, doRandom=True)
-            for nb in range(int_aug)]
+                for nb in range(int_aug)]
 
 
 def smi2unique_rand(smiles, int_aug=50):
@@ -79,8 +78,7 @@ def smi2unique_rand(smiles, int_aug=50):
         A list of unique random SMILES.
     """
 
-    mol  = Chem.MolFromSmiles(smiles)
-
+    mol = Chem.MolFromSmiles(smiles)
     if mol is None:
         return None
     else:

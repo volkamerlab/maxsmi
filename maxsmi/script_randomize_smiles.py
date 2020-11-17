@@ -28,4 +28,4 @@ if __name__ == '__main__':
     ran_unique_smi = smi2unique_rand(smile, int_aug=args.nb_rand)
     print(*ran_unique_smi)
     print(f'List of {len(ran_unique_smi)} out of '
-        f'{args.nb_rand} generated random SMILES')
+            f'{args.nb_rand} generated random SMILES')

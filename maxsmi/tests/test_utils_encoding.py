@@ -20,12 +20,10 @@ def test_maxsmi_imported():
 @pytest.mark.parametrize(
     "list_, solution",
     [
-        (['1', 'helloworld!','12'], 11),
+        (['1', 'helloworld!', '12'], 11),
         (['a', 'b', 'CC1CC1'], 6),
     ],
 )
-
-
 def test_get_max_length(list_, solution):
     max_len = get_max_length(list_)
     assert solution == max_len
@@ -40,7 +38,6 @@ def test_get_max_length(list_, solution):
         ('C@@C', 'C$C')
     ],
 )
-
 def test_char_replacement(smiles, solution):
     replac_smiles = char_replacement(smiles)
     assert solution == replac_smiles
