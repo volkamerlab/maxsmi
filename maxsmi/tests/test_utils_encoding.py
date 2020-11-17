@@ -5,7 +5,6 @@ Unit and regression test for the maxsmi package.
 # Import package, test suite, and other packages as needed
 import pytest
 import sys
-
 from maxsmi.utils_encoding import get_max_length, char_replacement
 # from maxsmi.utils_encoding import get_unique_elements_as_dict
 # from maxsmi.utils_encoding import one_hot_encode
@@ -29,6 +28,7 @@ def test_get_max_length(list_, solution):
     assert solution == max_len
 
 ####################
+
 
 @pytest.mark.parametrize(
     "smiles, solution",
