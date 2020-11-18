@@ -20,6 +20,7 @@ def test_maxsmi_imported():
     [
         ('C', 'C'),
         ('OC', 'CO'),
+        ('KCahsbl', None)
     ],
 )
 def test_smi2can(smiles, solution):
