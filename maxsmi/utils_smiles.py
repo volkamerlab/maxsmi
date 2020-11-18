@@ -47,7 +47,7 @@ def smi2rand(smiles, int_aug=50):
     Returns
     -------
     list
-        A list of `int_aug` random SMILES
+        A list of `int_aug` random (may not be unique) SMILES
         or None if the initial SMILES is not valid.
     """
 
@@ -62,7 +62,7 @@ def smi2rand(smiles, int_aug=50):
 
 def smi2unique_rand(smiles, int_aug=50):
     """
-    smi2uniquerand takes a SMILES (not necessarily canonical and
+    smi2uniquerand takes a SMILES (not necessarily canonical) and
     returns `int_aug` unique random variations of this SMILES.
 
     Parameters
@@ -70,7 +70,7 @@ def smi2unique_rand(smiles, int_aug=50):
     smiles : str
         SMILES string describing a compound.
     int_aug : int, Optional, default: 50
-        The number of random (may not be unique) SMILES generated.
+        The number of random (unique) SMILES generated.
 
     Returns
     -------
