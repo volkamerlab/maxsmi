@@ -5,9 +5,14 @@ Unit and regression test for the maxsmi package.
 # Import package, test suite, and other packages as needed
 import pytest
 import sys
-from maxsmi.utils_encoding import get_max_length, char_replacement
-# from maxsmi.utils_encoding import get_unique_elements_as_dict
-# from maxsmi.utils_encoding import one_hot_encode
+import numpy as np
+from maxsmi.utils_encoding import (
+    get_max_length,
+    char_replacement,
+    get_unique_elements_as_dict,
+    one_hot_encode,
+    pad_matrix,
+)
 
 
 def test_maxsmi_imported():
@@ -19,54 +24,57 @@ def test_maxsmi_imported():
 @pytest.mark.parametrize(
     "list_, solution",
     [
-        (['1', 'helloworld!', '12'], 11),
-        (['a', 'b', 'CC1CC1'], 6),
+        (["1", "helloworld!", "12"], 11),
+        (["a", "b", "CC1CC1"], 6),
     ],
 )
 def test_get_max_length(list_, solution):
     max_len = get_max_length(list_)
     assert solution == max_len
 
+
 ####################
+@pytest.mark.parametrize(
+    "smiles, solution",
+    [("Cl", "L"), ("CBrCC", "CRCC"), ("C@@C", "C$C")],
+)
+def test_char_replacement(smiles, solution):
+    replace_smiles = char_replacement(smiles)
+    assert solution == replace_smiles
 
 
+####################
+@pytest.mark.parametrize(
+    "list_, solution",
+    [
+        # (["@", "B", "1"], (("1", 0), ("@", 2), ("B", 1))),
+        # (["2", "CCC"], {"2": 0, "C": 1}),
+    ],
+)
+def test_get_unique_elements_as_dict(list_, solution):
+    ordered_dict = get_unique_elements_as_dict(list_)
+    assert solution == ordered_dict
+
+
+####################
 @pytest.mark.parametrize(
     "smiles, solution",
     [
-        ('Cl', 'L'),
-        ('CBrCC', 'CRCC'),
-        ('C@@C', 'C$C')
+        ("C1", np.array([[1, 0], [0, 1]])),
     ],
 )
-def test_char_replacement(smiles, solution):
-    replac_smiles = char_replacement(smiles)
-    assert solution == replac_smiles
+def test_one_hot_encode(smiles, solution):
+    dictionary = {"C": 0, "1": 1}
+    one_hot_matrix = one_hot_encode(smiles, dictionary)
+    assert (solution == one_hot_matrix).all()
+
 
 ####################
-
-# TODO
-
-# @pytest.mark.parametrize(
-#     "list_, solution",
-#     [
-#         (['1', '2', 'CCC'], {'1':2, '2':1, 'C':0})
-#     ],
-# )
-
-# def test_get_unique_elements_as_dict(list_, solution):
-#     unique_elem = get_unique_elements_as_dict(list_)
-#     assert solution == unique_elem
-
-####################
-
-# TODO
-# @pytest.mark.parametrize(
-#     "ohe_matrix, solution",
-#     [
-#
-#     ],
-# )
-#
-# def test_one_hot_encode(sequence, dictionary, solution):
-#     one_hot = one_hot_encode(sequence, dictionary)
-#     assert solution == one_hot
+@pytest.mark.parametrize(
+    "matrix, solution",
+    [(np.zeros((2, 2)), np.zeros((2, 4)))],
+)
+def test_pad_matrix(matrix, solution):
+    max_pad = 4
+    padded_matrix = pad_matrix(matrix, max_pad)
+    assert (solution == padded_matrix).all()

@@ -15,13 +15,10 @@ def test_maxsmi_imported():
     assert "maxsmi" in sys.modules
 
 
+####################
 @pytest.mark.parametrize(
     "smiles, solution",
-    [
-        ('C', 'C'),
-        ('OC', 'CO'),
-        ('KCahsbl', None)
-    ],
+    [("C", "C"), ("OC", "CO"), ("KCahsbl", None)],
 )
 def test_smi2can(smiles, solution):
     can_smi = smi2can(smiles)
@@ -31,7 +28,7 @@ def test_smi2can(smiles, solution):
 @pytest.mark.parametrize(
     "smiles, solution",
     [
-        ('C', ['C', 'C', 'C']),
+        ("C", ["C", "C", "C"]),
     ],
 )
 def test_smi2rand(smiles, solution):
@@ -41,10 +38,7 @@ def test_smi2rand(smiles, solution):
 
 @pytest.mark.parametrize(
     "smiles, solution",
-    [
-        ('C', ['C']),
-        ('CO', ['OC', 'CO'])
-    ],
+    [("C", ["C"]), ("CO", ["OC", "CO"])],
 )
 def test_smi2unique_rand(smiles, solution):
     ran_unique_smi = smi2unique_rand(smiles, int_aug=3)
