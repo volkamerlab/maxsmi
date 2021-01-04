@@ -5,6 +5,8 @@ SMILES encoding for machine learning.
 Handles the primary functions
 """
 import numpy as np
+from collections import OrderedDict
+
 
 def get_max_length(list_):
     """
@@ -42,14 +44,15 @@ def char_replacement(smiles):
 
     smiles = smiles.replace("Cl", "L")
     smiles = smiles.replace("Br", "R")
-    smiles = smiles. replace("@@", "$")
+    smiles = smiles.replace("@@", "$")
+    smiles = smiles.replace("\\", "|")
 
     return smiles
 
 
 def get_unique_elements_as_dict(list_):
     """
-    Given a list, obtain dictonary with unique elements as keys and integer as values.
+    Given a list, obtain ordered dictonary with unique elements as keys and integer as values.
 
     Parameters
     ----------
@@ -58,12 +61,13 @@ def get_unique_elements_as_dict(list_):
 
     Returns
     -------
-    dict
+    ord dict
         Unique elements of the list with assigned integer.
     """
-    all_elements = ''.join(list_)
+    all_elements = "".join(list_)
     unique_elements = list(set(all_elements))
-    return {unique_elements[i]: i for i in range(len(unique_elements))}
+    dict_ = {unique_elem: i for i, unique_elem in enumerate(unique_elements)}
+    return OrderedDict(sorted(dict_.items()))
 
 
 def one_hot_encode(sequence, dictionary):
@@ -90,17 +94,29 @@ def one_hot_encode(sequence, dictionary):
     return ohe_matrix
 
 
-# ohe_smiles = [one_hot_encode(smiles, DICTIONARY) for smiles in adapted_smiles]
+def pad_matrix(matrix, max_pad):
+    """
+    Pad matrix with zeros for shape dimension.
+
+    Parameters
+    ----------
+    matrix: np.array
+        The one-hot encoded matrix of a smiles.
+    max_pad: int
+        Dimension to which the padding should be done with zeros.
+
+    Returns
+    -------
+    np.array
+        The padded matrix of shape `(matrix.shape[0], max_pad)`.
+    """
+    if max_pad < matrix.shape[1]:
+        return matrix
+    else:
+        return np.pad(matrix, ((0, 0), (0, max_pad - matrix.shape[1])))
+
 
 # def integer_encode(sequence):
 #     pass
-#
-#
-# def pad_ohe(one_hot_encoded):
-#     # [np.pad(matrix,
-#     # ((0,0), (0, max_smiles-matrix.shape[1])))
-#     # for matrix in ohe_smiles]
-#     pass
-#
 # def pad_integer_encode(integer):
 #     pass
