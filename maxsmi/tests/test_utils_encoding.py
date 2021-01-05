@@ -47,24 +47,24 @@ def test_char_replacement(smiles, solution):
 @pytest.mark.parametrize(
     "list_, solution",
     [
-        # (["@", "B", "1"], (("1", 0), ("@", 2), ("B", 1))),
-        # (["2", "CCC"], {"2": 0, "C": 1}),
+        (["@", "B", "1"], {"1": 0, "@": 1, "B": 2}),
+        (["2", "CCC"], {"2": 0, "C": 1}),
     ],
 )
 def test_get_unique_elements_as_dict(list_, solution):
-    ordered_dict = get_unique_elements_as_dict(list_)
-    assert solution == ordered_dict
+    dict_ = get_unique_elements_as_dict(list_)
+    assert solution == dict_
 
 
 ####################
 @pytest.mark.parametrize(
     "smiles, solution",
     [
-        ("C1", np.array([[1, 0], [0, 1]])),
+        ("C1", np.array([[0, 1], [1, 0]])),
     ],
 )
 def test_one_hot_encode(smiles, solution):
-    dictionary = {"C": 0, "1": 1}
+    dictionary = get_unique_elements_as_dict(smiles)
     one_hot_matrix = one_hot_encode(smiles, dictionary)
     assert (solution == one_hot_matrix).all()
 
