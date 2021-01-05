@@ -110,3 +110,6 @@ ENV/
 
 # VScode
 .vscode
+
+# ML models
+saved_model/
