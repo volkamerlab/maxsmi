@@ -26,12 +26,7 @@ def data_retrieval(target_data="ESOL"):
             - `target`: the measured target values.
     """
 
-    if target_data == "ESOL":
-        url = "https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/delaney-processed.csv"
-        data = pd.read_csv(url)
-        task = "measured log solubility in mols per litre"
-
-    elif target_data == "free solv":
+    if target_data == "free solv":
         url = "https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/SAMPL.csv"
         data = pd.read_csv(url)
         task = "expt"
@@ -44,9 +39,11 @@ def data_retrieval(target_data="ESOL"):
         task = "exp"
 
     else:
-        print("Invalid data. Choosing ESOL by default. ")
+        if target_data != "ESOL":
+            print("Invalid data. Choosing ESOL by default. ")
         url = "https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/delaney-processed.csv"
         data = pd.read_csv(url)
+        task = "measured log solubility in mols per litre"
 
     df = data[[task, "smiles"]]
     df = df.rename(columns={task: "target"})
