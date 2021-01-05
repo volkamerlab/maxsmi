@@ -107,3 +107,9 @@ ENV/
 
 # MacOS
 .DS_Store
+
+# VScode
+.vscode
+
+# ML models
+saved_model/

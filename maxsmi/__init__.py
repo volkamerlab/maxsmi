@@ -4,7 +4,7 @@ Find the optimal SMILES augmentationn for accurate prediction.
 """
 
 # Add imports here
-from .get_data import *
+# from .get_data import *
 
 # Handle versioneer
 from ._version import get_versions

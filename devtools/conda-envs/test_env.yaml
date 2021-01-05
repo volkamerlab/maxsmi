@@ -1,4 +1,4 @@
-name: maxsmi
+name: test
 channels:
   - conda-forge
 dependencies:
@@ -21,4 +21,3 @@ dependencies:
     # Pip-only installs
   #- pip:
   #  - codecov
-
