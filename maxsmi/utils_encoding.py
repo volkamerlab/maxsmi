@@ -52,7 +52,7 @@ def char_replacement(smiles):
 
 def get_unique_elements_as_dict(list_):
     """
-    Given a list, obtain ordered dictonary with unique elements as keys and integer as values.
+    Given a list, obtain a dictonary with unique elements as keys and integer as values.
 
     Parameters
     ----------
@@ -61,13 +61,12 @@ def get_unique_elements_as_dict(list_):
 
     Returns
     -------
-    ord dict
-        Unique elements of the list with assigned integer.
+    dict
+        Unique elements of the sorted list with assigned integer.
     """
     all_elements = "".join(list_)
-    unique_elements = list(set(all_elements))
-    dict_ = {unique_elem: i for i, unique_elem in enumerate(unique_elements)}
-    return OrderedDict(sorted(dict_.items()))
+    unique_elements = sorted(list(set(all_elements)))
+    return {unique_elem: i for i, unique_elem in enumerate(unique_elements)}
 
 
 def one_hot_encode(sequence, dictionary):
