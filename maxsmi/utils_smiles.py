@@ -56,8 +56,13 @@ def smi2rand(smiles, int_aug=50):
     if mol is None:
         return None
     else:
-        return [Chem.MolToSmiles(mol, canonical=False, doRandom=True)
-                for nb in range(int_aug)]
+        if int_aug > 0:
+            return [
+                Chem.MolToSmiles(mol, canonical=False, doRandom=True)
+                for nb in range(int_aug)
+            ]
+        else:
+            return Chem.MolToSmiles(mol, canonical=False, doRandom=False)
 
 
 def smi2unique_rand(smiles, int_aug=50):
@@ -82,12 +87,15 @@ def smi2unique_rand(smiles, int_aug=50):
     if mol is None:
         return None
     else:
-        smi_unique = []
-        for nb in range(int_aug):
-            rand = Chem.MolToSmiles(mol, canonical=False, doRandom=True)
-            if rand in smi_unique:
-                pass
-            else:
-                smi_unique.append(rand)
+        if int_aug > 0:
+            smi_unique = []
+            for nb in range(int_aug):
+                rand = Chem.MolToSmiles(mol, canonical=False, doRandom=True)
+                if rand in smi_unique:
+                    pass
+                else:
+                    smi_unique.append(rand)
 
-        return smi_unique
+            return smi_unique
+        else:
+            return Chem.MolToSmiles(mol, canonical=False, doRandom=False)
