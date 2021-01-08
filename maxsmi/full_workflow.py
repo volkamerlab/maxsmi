@@ -4,8 +4,8 @@ From smiles to predictions
 """
 import numpy
 import os
-from utils_data import data_retrieval
-from utils_smiles import smi2can
+from utils_data import data_retrieval, augmented_data
+from utils_smiles import smi2can, smi2rand
 from utils_encoding import (
     char_replacement,
     get_unique_elements_as_dict,
@@ -52,18 +52,20 @@ if __name__ == "__main__":
     # ================================
     # Augmentation
     # ================================
+    train_augmentation = 10
+    test_augmentation = 0
 
-    # TODO
+    smiles_aug_train = smiles_train.apply(smi2rand, args=(train_augmentation,))
+    smiles_aug_test = smiles_test.apply(smi2rand, args=(test_augmentation,))
 
-    smiles_aug_train = smiles_train
-    smiles_aug_test = smiles_test
+    aug_df = augmented_data(smiles_aug_train, target_train)
 
     # ================================
     # Input processing
     # ================================
 
     # Replace double symbols
-    new_smi_train = smiles_aug_train.apply(char_replacement)
+    new_smi_train = aug_df["smiles"].apply(char_replacement)
     new_smi_test = smiles_aug_test.apply(char_replacement)
 
     # Merge all smiles
@@ -95,7 +97,7 @@ if __name__ == "__main__":
 
     # Train set
 
-    output_nn_train = torch.tensor(target_train.values).float()
+    output_nn_train = torch.tensor(aug_df["target"].values).float()
     output_nn_train = output_nn_train.view(-1, 1)
     print("Shape of output: ", output_nn_train.shape)
 
