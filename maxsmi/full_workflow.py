@@ -5,7 +5,7 @@ From smiles to predictions
 import numpy
 import os
 from utils_data import data_retrieval, augmented_data
-from utils_smiles import smi2can, smi2rand
+from utils_smiles import smi2can, smi2rand, smi2unique_rand
 from utils_encoding import (
     char_replacement,
     get_unique_elements_as_dict,
@@ -52,21 +52,22 @@ if __name__ == "__main__":
     # ================================
     # Augmentation
     # ================================
-    train_augmentation = 10
-    test_augmentation = 0
+    train_augmentation = 5
+    test_augmentation = 2
 
-    smiles_aug_train = smiles_train.apply(smi2rand, args=(train_augmentation,))
-    smiles_aug_test = smiles_test.apply(smi2rand, args=(test_augmentation,))
+    smiles_aug_train = smiles_train.apply(smi2unique_rand, args=(train_augmentation,))
+    smiles_aug_test = smiles_test.apply(smi2unique_rand, args=(test_augmentation,))
 
-    aug_df = augmented_data(smiles_aug_train, target_train)
+    augmented_train = augmented_data(smiles_aug_train, target_train)
+    augmented_test = augmented_data(smiles_aug_test, target_test)
 
     # ================================
     # Input processing
     # ================================
 
     # Replace double symbols
-    new_smi_train = aug_df["smiles"].apply(char_replacement)
-    new_smi_test = smiles_aug_test.apply(char_replacement)
+    new_smi_train = augmented_train["smiles"].apply(char_replacement)
+    new_smi_test = augmented_test["smiles"].apply(char_replacement)
 
     # Merge all smiles
     all_smiles = new_smi_train.append(new_smi_test)
@@ -97,7 +98,7 @@ if __name__ == "__main__":
 
     # Train set
 
-    output_nn_train = torch.tensor(aug_df["target"].values).float()
+    output_nn_train = torch.tensor(augmented_train["target"].values).float()
     output_nn_train = output_nn_train.view(-1, 1)
     print("Shape of output: ", output_nn_train.shape)
 
@@ -164,7 +165,7 @@ if __name__ == "__main__":
 
     # Test set
 
-    output_nn_test = torch.tensor(target_test.values).float()
+    output_nn_test = torch.tensor(augmented_test["target"].values).float()
     output_nn_test = output_nn_test.view(-1, 1)
     input_nn_test = torch.tensor(list(input_test)).float()
 
