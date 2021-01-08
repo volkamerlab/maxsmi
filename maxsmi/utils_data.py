@@ -71,7 +71,7 @@ def augmented_data(aug_smiles_df, target_df):
     """
 
     augmented_data = []
-    for i, (smile, target) in enumerate(zip(aug_smiles_df, target_df)):
+    for smile, target in zip(aug_smiles_df, target_df):
         # concatenate by columns two series:
         # 1st: randomized smiles 2. necessary repeted associated target value
         smile_target = pd.concat(
