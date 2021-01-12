@@ -14,7 +14,21 @@ import torch.nn as nn
 
 def evaluation_results(output_true, output_predicted):
     """
-    # TODO
+    Computes metrics on ML predictions.
+
+    Parameters
+    ----------
+    output_true : torch.tensor
+        Labelled output from the data.
+    output_predicted : torch.tensor
+        Predicted output from the model.
+
+    Returns
+    -------
+    tuple
+        (mean squared error,
+        root mean squared error,
+        measure of good-of-fit)
     """
     loss_function = nn.MSELoss()
     loss_value = loss_function(output_predicted, output_true)
