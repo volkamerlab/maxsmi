@@ -48,8 +48,6 @@ def data_retrieval(target_data="ESOL"):
     df = data[[task, "smiles"]]
     df = df.rename(columns={task: "target"})
 
-    print("Shape of data set: ", df.shape)
-
     return df
 
 
