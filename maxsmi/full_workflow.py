@@ -112,7 +112,6 @@ if __name__ == "__main__":
     time_end_data = datetime.now()
     time_data = time_end_data - time_start_data
     logging.info(f"Time for data processing {time_data}")
-    # TODO: save value
 
     # ================================
     # Machine learning ML
@@ -178,20 +177,16 @@ if __name__ == "__main__":
         loss_per_epoch.append(running_loss / len(train_dataset))
         print("Epoch : ", epoch + 1)
         logging.info(f"Epoch : {epoch + 1} ")
-        # print("Loss: ", loss_per_epoch)
-        # TODO: save value
 
     time_end_training = datetime.now()
     time_training = time_end_training - time_start_training
     logging.info(f"Time for model training {time_training}")
-    # TODO: save value
 
     # ================================
     # # Evaluate on train set
     # ================================
 
     evaluation_train = evaluation_results(output_nn_train, ml_model(input_nn_train))
-    # TODO: Save values
 
     # Save model
     os.makedirs("saved_model", exist_ok=True)
@@ -226,21 +221,17 @@ if __name__ == "__main__":
             output_pred_test = ml_model(input_true_test)
             loss_pred = loss_function(output_pred_test, output_true_test)
             logging.info(f"Loss: {loss_pred.item()} ")
-            # TODO: save: output_pred_test, output_true_test
             evaluation_test = evaluation_results(
                 output_true_test, ml_model(input_true_test)
             )
-            # TODO: Save values
 
     time_end_testing = datetime.now()
     time_testing = time_end_testing - time_start_testing
     logging.info(f"Time for model testing {time_testing}")
-    # TODO: save value
 
     time_execution_end = datetime.now()
     time_execution = time_execution_end - time_execution_start
     logging.info(f"Time for model execution {time_execution}")
-    # TODO: save value
 
     # Save metrics to a csv
     results_cv = pandas.DataFrame(
