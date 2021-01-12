@@ -113,3 +113,6 @@ ENV/
 
 # ML models
 saved_model/
+
+# Results
+results/
