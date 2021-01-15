@@ -5,7 +5,6 @@ SMILES encoding for machine learning.
 Handles the primary functions
 """
 import numpy as np
-from collections import OrderedDict
 
 
 def get_max_length(list_):

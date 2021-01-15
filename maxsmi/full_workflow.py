@@ -4,12 +4,11 @@ From smiles to predictions
 """
 import logging
 import logging.handlers
-import numpy
 import pandas
 import os
 from datetime import datetime
 from utils_data import data_retrieval, augmented_data
-from utils_smiles import smi2can, smi2rand, smi2unique_rand
+from utils_smiles import smi2can, smi2unique_rand
 from utils_encoding import (
     char_replacement,
     get_unique_elements_as_dict,
@@ -23,7 +22,6 @@ import torch
 import torch.optim as optim
 import torch.nn as nn
 from torch.utils.data import TensorDataset
-from torch.utils.data.dataset import random_split
 from pytorch_models import ConvolutionNetwork
 
 # Logging information

@@ -5,8 +5,6 @@ Evaluation metrics.
 Handles the primary functions
 """
 
-import pandas as pd
-import numpy
 from sklearn.metrics import r2_score
 import torch
 import torch.nn as nn
