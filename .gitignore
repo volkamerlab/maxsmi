@@ -116,3 +116,6 @@ saved_model/
 
 # Results
 results/
+
+# Testing files
+test_notebooks.ipynb
