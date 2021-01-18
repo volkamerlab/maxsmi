@@ -4,7 +4,7 @@ Find the optimal SMILES augmentationn for accurate prediction.
 """
 
 # Add imports here
-from . import utils_data, utils_encoding, utils_evaluation, utils_smiles
+# from . import utils_data, utils_encoding, utils_evaluation, utils_smiles
 
 
 # Handle versioneer
