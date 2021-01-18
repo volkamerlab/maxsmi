@@ -71,10 +71,9 @@ def test_one_hot_encode(smiles, solution):
 
 ####################
 @pytest.mark.parametrize(
-    "matrix, solution",
-    [(np.zeros((2, 2)), np.zeros((2, 4)))],
+    "matrix, max_pad, solution",
+    [(np.zeros((2, 2)), 4, np.zeros((2, 4))), (np.zeros((2, 2)), 1, np.zeros((2, 2)))],
 )
-def test_pad_matrix(matrix, solution):
-    max_pad = 4
+def test_pad_matrix(matrix, max_pad, solution):
     padded_matrix = pad_matrix(matrix, max_pad)
     assert (solution == padded_matrix).all()

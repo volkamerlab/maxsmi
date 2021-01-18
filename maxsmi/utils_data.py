@@ -48,6 +48,34 @@ def data_retrieval(target_data="ESOL"):
     df = data[[task, "smiles"]]
     df = df.rename(columns={task: "target"})
 
-    print("Shape of data set: ", df.shape)
-
     return df
+
+
+def augmented_data(aug_smiles_df, target_df):
+    """
+    Transforms augmented lists into augmented data frame.
+
+    Parameters
+    ----------
+    aug_smiles_df : pd.Pandas
+        Data frame containing lists of augmented smiles.
+    target_df : pd.Pandas
+        Data frame with target values.
+
+    Returns
+    -------
+    pd.Pandas :
+        Data frame with augmented smiles and associated target value.
+    """
+
+    augmented_data = []
+    for smile, target in zip(aug_smiles_df, target_df):
+        # concatenate by columns two series:
+        # 1st: randomized smiles 2. necessary repeted associated target value
+        smile_target = pd.concat(
+            [pd.DataFrame(smile), pd.DataFrame([target for number in smile])], axis=1
+        )
+        augmented_data.append(smile_target)
+    aug_df = pd.concat(augmented_data, axis=0)
+    aug_df.columns = ["smiles", "target"]
+    return aug_df
