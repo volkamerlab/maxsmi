@@ -89,13 +89,10 @@ def smi2unique_rand(smiles, int_aug=50):
     else:
         if int_aug > 0:
             smi_unique = []
-            for nb in range(int_aug):
+            for _ in range(int_aug):
                 rand = Chem.MolToSmiles(mol, canonical=False, doRandom=True)
-                if rand in smi_unique:
-                    pass
-                else:
+                if rand not in smi_unique:
                     smi_unique.append(rand)
-
             return smi_unique
         else:
             return [Chem.MolToSmiles(mol, canonical=False, doRandom=False)]
