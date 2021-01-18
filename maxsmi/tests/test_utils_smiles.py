@@ -31,30 +31,26 @@ def test_smi2can(smiles, solution):
 
 
 @pytest.mark.parametrize(
-    "smiles, solution",
-    [
-        ("C", ["C", "C", "C"]),
-    ],
+    "smiles, int_aug, solution",
+    [("C", 3, ["C", "C", "C"]), ("sakjncal", 3, None), ("OC", 0, ["OC"])],
 )
-def test_smi2rand(smiles, solution):
-    rand_smi = smi2rand(smiles, int_aug=3)
+def test_smi2rand(smiles, int_aug, solution):
+    rand_smi = smi2rand(smiles, int_aug)
     assert solution == rand_smi
 
 
 @pytest.mark.parametrize(
-    "smiles, solution",
-    [("C", ["C"]), ("CO", ["OC", "CO"])],
+    "smiles, int_aug, solution",
+    [("C", 3, ["C"]), ("CO", 3, ["OC", "CO"]), ("KCahsbl", 3, None), ("OC", 0, ["OC"])],
 )
-def test_smi2unique_rand(smiles, solution):
-    ran_unique_smi = smi2unique_rand(smiles, int_aug=3)
+def test_smi2unique_rand(smiles, int_aug, solution):
+    ran_unique_smi = smi2unique_rand(smiles, int_aug)
     assert solution == ran_unique_smi
 
 
 @pytest.mark.parametrize(
     "smiles, solution",
-    [
-        ("C.", None),
-    ],
+    [("C.", None), ("CCC", "CCC")],
 )
 def test_identify_disconnected_structures(smiles, solution):
     disconnected_smi = identify_disconnected_structures(smiles)
