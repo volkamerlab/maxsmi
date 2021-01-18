@@ -8,7 +8,7 @@ import pandas
 import os
 from datetime import datetime
 from utils_data import data_retrieval, augmented_data
-from utils_smiles import smi2can, smi2unique_rand
+from utils_smiles import smi2can, smi2unique_rand, identify_disconnected_structures
 from utils_encoding import (
     char_replacement,
     get_unique_elements_as_dict,
@@ -36,7 +36,7 @@ TRAIN_AUGMENTATION = 5
 TEST_AUGMENTATION = 2
 BACTH_SIZE = 16
 LEARNING_RATE = 0.01
-NB_EPOCHS = 20
+NB_EPOCHS = 10
 
 if __name__ == "__main__":
 
@@ -53,6 +53,11 @@ if __name__ == "__main__":
 
     # Canonical SMILES
     df["canonical_smiles"] = df["smiles"].apply(smi2can)
+    df["disconnected_smi"] = df["canonical_smiles"].apply(
+        identify_disconnected_structures
+    )
+    df = df.dropna(axis=0)
+    df = df.drop(["disconnected_smi", "smiles"], axis=1)
 
     logging.info(f"Shape of data set: {df.shape} ")
 
