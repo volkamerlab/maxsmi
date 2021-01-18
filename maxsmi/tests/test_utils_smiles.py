@@ -7,7 +7,12 @@ Unit and regression test for the maxsmi package.
 import pytest
 import sys
 
-from maxsmi.utils_smiles import smi2can, smi2rand, smi2unique_rand
+from maxsmi.utils_smiles import (
+    smi2can,
+    smi2rand,
+    smi2unique_rand,
+    identify_disconnected_structures,
+)
 
 
 def test_maxsmi_imported():
@@ -43,3 +48,14 @@ def test_smi2rand(smiles, solution):
 def test_smi2unique_rand(smiles, solution):
     ran_unique_smi = smi2unique_rand(smiles, int_aug=3)
     assert solution == ran_unique_smi
+
+
+@pytest.mark.parametrize(
+    "smiles, solution",
+    [
+        ("C.", None),
+    ],
+)
+def test_identify_disconnected_structures(smiles, solution):
+    disconnected_smi = identify_disconnected_structures(smiles)
+    assert solution == disconnected_smi

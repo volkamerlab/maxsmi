@@ -32,6 +32,27 @@ def smi2can(smiles):
         return Chem.MolToSmiles(mol, canonical=True, doRandom=False)
 
 
+def identify_disconnected_structures(smiles):
+    """
+    Identifiy disconnected structure through the dot symbol.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+
+    Returns
+    -------
+    str :
+        the SMILES if it's not disconnected. None otherwise.
+
+    """
+    if "." in smiles:
+        return None
+    else:
+        return smiles
+
+
 def smi2rand(smiles, int_aug=50):
     """
     smi2rand takes a SMILES (not necessarily canonical)
