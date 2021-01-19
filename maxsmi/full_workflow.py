@@ -32,7 +32,7 @@ TRAIN_AUGMENTATION = 5
 TEST_AUGMENTATION = 2
 BACTH_SIZE = 16
 LEARNING_RATE = 0.01
-NB_EPOCHS = 2
+NB_EPOCHS = 20
 TASK = "ESOL"
 
 if __name__ == "__main__":
@@ -207,9 +207,9 @@ if __name__ == "__main__":
             running_loss = +loss.item()
 
         loss_per_epoch.append(running_loss / len(train_dataset))
-        print("Epoch : ", epoch + 1)
         logging.info(f"Epoch : {epoch + 1} ")
 
+    logging.info("Training: over")
     time_end_training = datetime.now()
     time_training = time_end_training - time_start_training
     logging.info(f"Time for model training {time_training}")
