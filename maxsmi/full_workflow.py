@@ -2,6 +2,7 @@
 From smiles to predictions
 
 """
+import argparse
 import logging
 import logging.handlers
 import pandas
@@ -24,11 +25,6 @@ import torch.nn as nn
 from torch.utils.data import TensorDataset
 from pytorch_models import ConvolutionNetwork
 
-# Logging information
-log_file_name = "output.log"
-logging.basicConfig(filename=log_file_name, level=logging.INFO)
-logging.handlers.RotatingFileHandler(log_file_name, mode="w", backupCount=5)
-
 # Constants
 TEST_RATIO = 0.2
 RANDOM_SEED = 1234
@@ -36,9 +32,43 @@ TRAIN_AUGMENTATION = 5
 TEST_AUGMENTATION = 2
 BACTH_SIZE = 16
 LEARNING_RATE = 0.01
-NB_EPOCHS = 10
+NB_EPOCHS = 20
+TASK = "ESOL"
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--aug-train",
+        dest="augmentation_train",
+        type=int,
+        help="aug-train will be generated on train set",
+        default=TRAIN_AUGMENTATION,
+    )
+    parser.add_argument(
+        "--aug-test",
+        dest="augmentation_test",
+        type=int,
+        help="aug-test will be generated on test set",
+        default=TEST_AUGMENTATION,
+    )
+    parser.add_argument(
+        "--task",
+        dest="task",
+        type=str,
+        help="data to be used",
+        default="ESOL",
+    )
+
+    args = parser.parse_args()
+
+    folder = (
+        f"maxsmi/output/{args.task}_{args.augmentation_train}_{args.augmentation_test}"
+    )
+    os.makedirs(folder, exist_ok=True)
+
+    # Logging information
+    log_file_name = "output.log"
+    logging.basicConfig(filename=f"{folder}/{log_file_name}", level=logging.INFO)
 
     time_execution_start = datetime.now()
 
@@ -49,7 +79,7 @@ if __name__ == "__main__":
     time_start_data = datetime.now()
 
     # Read data
-    df = data_retrieval("ESOL")
+    df = data_retrieval(args.task)
 
     # Canonical SMILES
     df["canonical_smiles"] = df["smiles"].apply(smi2can)
@@ -76,11 +106,10 @@ if __name__ == "__main__":
     # ================================
     # Augmentation
     # ================================
-    train_augmentation = TRAIN_AUGMENTATION
-    test_augmentation = TEST_AUGMENTATION
-
-    smiles_aug_train = smiles_train.apply(smi2unique_rand, args=(train_augmentation,))
-    smiles_aug_test = smiles_test.apply(smi2unique_rand, args=(test_augmentation,))
+    smiles_aug_train = smiles_train.apply(
+        smi2unique_rand, args=(args.augmentation_train,)
+    )
+    smiles_aug_test = smiles_test.apply(smi2unique_rand, args=(args.augmentation_test,))
 
     augmented_train = augmented_data(smiles_aug_train, target_train)
     augmented_test = augmented_data(smiles_aug_test, target_test)
@@ -178,9 +207,9 @@ if __name__ == "__main__":
             running_loss = +loss.item()
 
         loss_per_epoch.append(running_loss / len(train_dataset))
-        print("Epoch : ", epoch + 1)
         logging.info(f"Epoch : {epoch + 1} ")
 
+    logging.info("Training: over")
     time_end_training = datetime.now()
     time_training = time_end_training - time_start_training
     logging.info(f"Time for model training {time_training}")
@@ -192,8 +221,7 @@ if __name__ == "__main__":
     evaluation_train = evaluation_results(output_nn_train, ml_model(input_nn_train))
 
     # Save model
-    os.makedirs("saved_model", exist_ok=True)
-    torch.save(ml_model.state_dict(), "saved_model/model_dict.pth")
+    torch.save(ml_model.state_dict(), f"{folder}/model_dict.pth")
 
     # ================================
     # # Evaluate on test set
@@ -201,7 +229,7 @@ if __name__ == "__main__":
     logging.info("Test set evaluation")
 
     # Load model
-    ml_model.load_state_dict(torch.load("saved_model/model_dict.pth"))
+    # ml_model.load_state_dict(torch.load(f"{folder}/model_dict.pth"))
 
     # Test set
 
@@ -248,5 +276,4 @@ if __name__ == "__main__":
             "test": [evaluation_test],
         }
     )
-    os.makedirs("results", exist_ok=True)
-    results_cv = results_cv.to_csv("results/results_metrics.csv")
+    results_cv = results_cv.to_csv(f"{folder}/results_metrics.csv")

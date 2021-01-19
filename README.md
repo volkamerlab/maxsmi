@@ -12,6 +12,27 @@ maxsmi: SMILES maximum augmentation
 
 Find the optimal SMILES augmentation for accurate prediction.
 
+#### Conda installation
+Create a conda environment:
+
+```sh
+$ conda env create -n maxsmi -f devtools/conda-envs/test_env.yaml
+```
+
+Activate the environment:
+
+```sh
+$ conda activate maxsmi
+```
+
+#### Example
+
+To run an example with the ESOL data set, augmenting the train set 5 times and the test set 2 times:
+
+```console
+(maxsmi) $ python maxsmi/full_workflow.py --task ESOL --aug-train 5 --aug-test 2
+```
+
 ### Copyright
 
 Copyright (c) 2020, Talia B. Kimber

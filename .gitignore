@@ -111,11 +111,8 @@ ENV/
 # VScode
 .vscode
 
-# ML models
-saved_model/
-
 # Results
-results/
+output/
 
 # Testing files
 test_notebooks.ipynb
