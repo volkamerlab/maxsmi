@@ -12,6 +12,19 @@ maxsmi: SMILES maximum augmentation
 
 Find the optimal SMILES augmentation for accurate prediction.
 
+#### Conda installation
+Create a conda environment:
+
+```sh
+$ conda env create -n maxsmi -f devtools/conda-envs/test_env.yaml
+```
+
+Activate the environment:
+
+```sh
+$ conda activate maxsmi
+```
+
 ### Copyright
 
 Copyright (c) 2020, Talia B. Kimber
