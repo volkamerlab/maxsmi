@@ -6,9 +6,7 @@ Unit and regression test for the maxsmi package.
 # import maxsmi
 import pytest
 import sys
-import pandas as pd
-
-from maxsmi.utils_data import data_retrieval, augmented_data
+from maxsmi.utils_data import data_retrieval
 
 
 def test_maxsmi_imported():
