@@ -9,7 +9,9 @@ import pandas
 import os
 from datetime import datetime
 from utils_data import data_retrieval, augmented_data
-from utils_smiles import smi2can, smi2unique_rand, identify_disconnected_structures
+
+from utils_smiles import smi2can, identify_disconnected_structures
+from utils_smiles import *
 from utils_encoding import (
     char_replacement,
     get_unique_elements_as_dict,
@@ -38,6 +40,13 @@ TASK = "ESOL"
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        "--task",
+        dest="task",
+        type=str,
+        help="data to be used",
+        default="ESOL",
+    )
+    parser.add_argument(
         "--aug-train",
         dest="augmentation_train",
         type=int,
@@ -52,11 +61,11 @@ if __name__ == "__main__":
         default=TEST_AUGMENTATION,
     )
     parser.add_argument(
-        "--task",
-        dest="task",
-        type=str,
-        help="data to be used",
-        default="ESOL",
+        "--aug-strategy",
+        dest="augmentation_strategy",
+        type=int,
+        help="augmentation strategy to be used",
+        default=smi2unique_rand,
     )
 
     args = parser.parse_args()
@@ -69,6 +78,11 @@ if __name__ == "__main__":
     # Logging information
     log_file_name = "output.log"
     logging.basicConfig(filename=f"{folder}/{log_file_name}", level=logging.INFO)
+
+    logging.info(f"Data and task: {args.task}")
+    logging.info(f"Augmentation strategy: {args.augmentation_strategy}")
+    logging.info(f"Train augmentation: {args.augmentation_train}")
+    logging.info(f"Test augmentation: {args.augmentation_test}")
 
     time_execution_start = datetime.now()
 
@@ -107,9 +121,11 @@ if __name__ == "__main__":
     # Augmentation
     # ================================
     smiles_aug_train = smiles_train.apply(
-        smi2unique_rand, args=(args.augmentation_train,)
+        args.augmentation_strategy, args=(args.augmentation_train,)
     )
-    smiles_aug_test = smiles_test.apply(smi2unique_rand, args=(args.augmentation_test,))
+    smiles_aug_test = smiles_test.apply(
+        args.augmentation_strategy, args=(args.augmentation_test,)
+    )
 
     augmented_train = augmented_data(smiles_aug_train, target_train)
     augmented_test = augmented_data(smiles_aug_test, target_test)
@@ -159,10 +175,10 @@ if __name__ == "__main__":
 
     output_nn_train = torch.tensor(augmented_train["target"].values).float()
     output_nn_train = output_nn_train.view(-1, 1)
-    logging.info(f"Shape of output: {output_nn_train.shape} ")
+    logging.info(f"Shape of train output: {output_nn_train.shape} ")
 
     input_nn_train = torch.tensor(list(input_train)).float()
-    logging.info(f"Shape of input: {input_nn_train.shape} ")
+    logging.info(f"Shape of train input: {input_nn_train.shape} ")
 
     train_dataset = TensorDataset(input_nn_train, output_nn_train)
 
@@ -207,7 +223,8 @@ if __name__ == "__main__":
             running_loss = +loss.item()
 
         loss_per_epoch.append(running_loss / len(train_dataset))
-        logging.info(f"Epoch : {epoch + 1} ")
+        if epoch % 10 == 0:
+            logging.info(f"Epoch : {epoch + 1} ")
 
     logging.info("Training: over")
     time_end_training = datetime.now()
@@ -219,7 +236,7 @@ if __name__ == "__main__":
     # ================================
 
     evaluation_train = evaluation_results(output_nn_train, ml_model(input_nn_train))
-
+    logging.info(f"Train metrics: {evaluation_train}")
     # Save model
     torch.save(ml_model.state_dict(), f"{folder}/model_dict.pth")
 
@@ -251,11 +268,10 @@ if __name__ == "__main__":
             input_true_test, output_true_test = data
             output_pred_test = ml_model(input_true_test)
             loss_pred = loss_function(output_pred_test, output_true_test)
-            logging.info(f"Loss: {loss_pred.item()} ")
             evaluation_test = evaluation_results(
                 output_true_test, ml_model(input_true_test)
             )
-
+    logging.info(f"Test metrics: {evaluation_test}")
     time_end_testing = datetime.now()
     time_testing = time_end_testing - time_start_testing
     logging.info(f"Time for model testing {time_testing}")
