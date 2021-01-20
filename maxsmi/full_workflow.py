@@ -10,8 +10,7 @@ import os
 from datetime import datetime
 from utils_data import data_retrieval, augmented_data
 
-from utils_smiles import smi2can, identify_disconnected_structures
-from utils_smiles import *
+from utils_smiles import smi2can, identify_disconnected_structures, smi2unique_rand
 from utils_encoding import (
     char_replacement,
     get_unique_elements_as_dict,
