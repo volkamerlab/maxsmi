@@ -20,6 +20,6 @@ def test_maxsmi_imported():
     "pred_output, true_output, solution",
     [(torch.zeros(2), torch.zeros(2), (0, 0, 1))],
 )
-def test_smi2can(pred_output, true_output, solution):
+def test_evaluation_results(pred_output, true_output, solution):
     results = evaluation_results(true_output, pred_output)
     assert solution == results
