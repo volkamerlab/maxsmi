@@ -80,7 +80,7 @@ def smi2rand(smiles, int_aug=50):
         if int_aug > 0:
             return [
                 Chem.MolToSmiles(mol, canonical=False, doRandom=True)
-                for nb in range(int_aug)
+                for _ in range(int_aug)
             ]
         else:
             return [Chem.MolToSmiles(mol, canonical=False, doRandom=False)]
@@ -119,7 +119,7 @@ def smi2unique_rand(smiles, int_aug=50):
             return [Chem.MolToSmiles(mol, canonical=False, doRandom=False)]
 
 
-def smi2max_rand(smiles, max_duplication=1000):
+def smi2max_rand(smiles, max_duplication=10):
     """
     Returns augmented SMILES with estimated maximum number.
 
@@ -127,8 +127,8 @@ def smi2max_rand(smiles, max_duplication=1000):
     ----------
     smiles : str
         SMILES string describing a compound.
-    max_duplication : int, Optional, default: 1000
-        The number of duplicated SMILES that have to be generated before stopping augmentation process.
+    max_duplication : int, Optional, default: 10
+        The number of concecutive redundant SMILES that have to be generated before stopping augmentation process.
 
     Returns
     -------
@@ -146,6 +146,7 @@ def smi2max_rand(smiles, max_duplication=1000):
                 rand = Chem.MolToSmiles(mol, canonical=False, doRandom=True)
                 if rand not in smi_unique:
                     smi_unique.append(rand)
+                    counter = 0
                 else:
                     counter += 1
             return smi_unique
