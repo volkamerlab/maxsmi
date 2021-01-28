@@ -293,4 +293,3 @@ if __name__ == "__main__":
     )
     results_cv = results_cv.to_csv(f"{folder}/results_metrics.csv")
     logging.info("Script completed.")
-
