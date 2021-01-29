@@ -6,9 +6,10 @@ import argparse
 import logging
 import logging.handlers
 import pandas
+import warnings
 import os
 from datetime import datetime
-from utils_data import data_retrieval, augmented_data
+from utils_data import data_retrieval
 
 from utils_smiles import smi2can, identify_disconnected_structures, smi2unique_rand
 from utils_encoding import (
@@ -33,10 +34,11 @@ TRAIN_AUGMENTATION = 5
 TEST_AUGMENTATION = 2
 BACTH_SIZE = 16
 LEARNING_RATE = 0.01
-NB_EPOCHS = 20
+NB_EPOCHS = 2
 TASK = "ESOL"
 
 if __name__ == "__main__":
+    warnings.filterwarnings("ignore")
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--task",
@@ -66,6 +68,13 @@ if __name__ == "__main__":
         help="augmentation strategy to be used",
         default=smi2unique_rand,
     )
+    parser.add_argument(
+        "--eval-strategy",
+        dest="ensemble_learning",
+        type=int,
+        help="ensemble learning used as evaluation strategy",
+        default=False,
+    )
 
     args = parser.parse_args()
 
@@ -77,9 +86,11 @@ if __name__ == "__main__":
     # Logging information
     log_file_name = "output.log"
     logging.basicConfig(filename=f"{folder}/{log_file_name}", level=logging.INFO)
+    logging.info(f"Start at {datetime.now()}")
 
     logging.info(f"Data and task: {args.task}")
     logging.info(f"Augmentation strategy: {args.augmentation_strategy}")
+    logging.info(f"Evaluation strategy (ensemble learning): {args.ensemble_learning}")
     logging.info(f"Train augmentation: {args.augmentation_train}")
     logging.info(f"Test augmentation: {args.augmentation_test}")
 
@@ -92,26 +103,25 @@ if __name__ == "__main__":
     time_start_data = datetime.now()
 
     # Read data
-    df = data_retrieval(args.task)
+    data = data_retrieval(args.task)
 
     # Canonical SMILES
-    df["canonical_smiles"] = df["smiles"].apply(smi2can)
-    df["disconnected_smi"] = df["canonical_smiles"].apply(
+    data["canonical_smiles"] = data["smiles"].apply(smi2can)
+    data["disconnected_smi"] = data["canonical_smiles"].apply(
         identify_disconnected_structures
     )
-    df = df.dropna(axis=0)
-    df = df.drop(["disconnected_smi", "smiles"], axis=1)
+    data = data.dropna(axis=0)
+    data = data.drop(["disconnected_smi", "smiles"], axis=1)
 
-    logging.info(f"Shape of data set: {df.shape} ")
+    logging.info(f"Shape of data set: {data.shape} ")
 
     # ================================
     # Splitting
     # ================================
 
     # Split data into train/test
-    smiles_train, smiles_test, target_train, target_test = train_test_split(
-        df["canonical_smiles"],
-        df["target"],
+    train_data, test_data = train_test_split(
+        data,
         test_size=TEST_RATIO,
         random_state=RANDOM_SEED,
     )
@@ -119,29 +129,33 @@ if __name__ == "__main__":
     # ================================
     # Augmentation
     # ================================
-    smiles_aug_train = smiles_train.apply(
+    train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
         args.augmentation_strategy, args=(args.augmentation_train,)
     )
-    smiles_aug_test = smiles_test.apply(
+    test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
         args.augmentation_strategy, args=(args.augmentation_test,)
     )
 
-    augmented_train = augmented_data(smiles_aug_train, target_train)
-    augmented_test = augmented_data(smiles_aug_test, target_test)
+    augmented_train = train_data.explode("augmented_smiles", ignore_index=False)
+    augmented_test = test_data.explode("augmented_smiles", ignore_index=False)
 
     # ================================
     # Input processing
     # ================================
 
     # Replace double symbols
-    new_smi_train = augmented_train["smiles"].apply(char_replacement)
-    new_smi_test = augmented_test["smiles"].apply(char_replacement)
+    augmented_train["new_smiles"] = augmented_train["augmented_smiles"].apply(
+        char_replacement
+    )
+    augmented_test["new_smiles"] = augmented_test["augmented_smiles"].apply(
+        char_replacement
+    )
 
     # Merge all smiles
-    all_smiles = new_smi_train.append(new_smi_test)
+    all_smiles = augmented_test["new_smiles"].append(augmented_train["new_smiles"])
 
     # Obtain dictionary for these smiles
-    smi_dict = get_unique_elements_as_dict(all_smiles)
+    smi_dict = get_unique_elements_as_dict(list(all_smiles))
     logging.info(f"Number of unique characters: {len(smi_dict)} ")
 
     # Obtain longest of all smiles
@@ -149,8 +163,12 @@ if __name__ == "__main__":
     logging.info(f"Longest smiles in data set: {max_length_smi} ")
 
     # One-hot encode smiles on train and test
-    one_hot_train = new_smi_train.apply(one_hot_encode, dictionary=smi_dict)
-    one_hot_test = new_smi_test.apply(one_hot_encode, dictionary=smi_dict)
+    one_hot_train = augmented_train["new_smiles"].apply(
+        one_hot_encode, dictionary=smi_dict
+    )
+    one_hot_test = augmented_test["new_smiles"].apply(
+        one_hot_encode, dictionary=smi_dict
+    )
 
     # Pad for same shape
     input_train = one_hot_train.apply(pad_matrix, max_pad=max_length_smi)
@@ -266,6 +284,9 @@ if __name__ == "__main__":
         for data in test_loader:
             input_true_test, output_true_test = data
             output_pred_test = ml_model(input_true_test)
+            if args.ensemble_learning:
+                # output_pred_test = torch.mean()
+                print("TODO")
             loss_pred = loss_function(output_pred_test, output_true_test)
             evaluation_test = evaluation_results(
                 output_true_test, ml_model(input_true_test)
