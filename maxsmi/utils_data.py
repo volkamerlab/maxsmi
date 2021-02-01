@@ -26,7 +26,7 @@ def data_retrieval(target_data="ESOL"):
             - `target`: the measured target values.
     """
 
-    if target_data == "free solv":
+    if target_data == "free_solv":
         url = "https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/SAMPL.csv"
         data = pd.read_csv(url)
         task = "expt"
