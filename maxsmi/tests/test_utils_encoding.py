@@ -36,7 +36,8 @@ def test_get_max_length(list_, solution):
 ####################
 @pytest.mark.parametrize(
     "smiles, solution",
-    [("Cl", "L"), ("CBrCC", "CRCC"), ("C@@C", "C$C")],
+    # [("Cl", "L"), ("CBrCC", "CRCC"), ("C@@C", "C$C")],
+    [(["Cl"], ["L"]), (["CBrCC", "C@@C", "CCC"], ["CRCC", "C$C", "CCC"])],
 )
 def test_char_replacement(smiles, solution):
     replace_smiles = char_replacement(smiles)
