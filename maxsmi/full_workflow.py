@@ -22,7 +22,6 @@ from utils_encoding import (
     one_hot_encode,
     pad_matrix,
 )
-from utils_evaluation import evaluation_results
 from sklearn.model_selection import train_test_split
 
 import torch
@@ -31,6 +30,8 @@ import torch.nn as nn
 
 from pytorch_models import ConvolutionNetwork
 from pytorch_data import AugmenteSmilesData
+
+from utils_evaluation import evaluation_results
 
 # Constants
 TEST_RATIO = 0.2
