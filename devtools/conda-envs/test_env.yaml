@@ -13,6 +13,8 @@ dependencies:
   - tqdm
   - pytorch
   - matplotlib
+  - selfies
+  - deepsmiles
     # Testing
   - pytest
   - pytest-cov
