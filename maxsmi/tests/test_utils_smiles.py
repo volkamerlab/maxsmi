@@ -13,6 +13,8 @@ from maxsmi.utils_smiles import (
     smi2unique_rand,
     smi2max_rand,
     identify_disconnected_structures,
+    smi2selfies,
+    smi2deepsmiles,
 )
 
 
@@ -69,3 +71,17 @@ def test_identify_disconnected_structures(smiles, solution):
 def test_smi2max_rand(smiles, max_duplication, solution):
     ran_max_smi = smi2max_rand(smiles, max_duplication)
     assert solution == ran_max_smi
+
+
+@pytest.mark.parametrize(
+    "smiles, solution", [("c1ccccc1", "[C][=C][C][=C][C][=C][Ring1][Branch1_2]")]
+)
+def test_smi2selfies(smiles, solution):
+    selfies = smi2selfies(smiles)
+    assert solution == selfies
+
+
+@pytest.mark.parametrize("smiles, solution", [("c1cccc(C(=O)Cl)c1", "cccccC=O)Cl))c6")])
+def test_smi2deepsmiles(smiles, solution):
+    deepsmiles = smi2deepsmiles(smiles)
+    assert solution == deepsmiles
