@@ -6,6 +6,8 @@ Handles the primary functions
 """
 
 from rdkit import Chem
+import selfies
+import deepsmiles
 
 
 def smi2can(smiles):
@@ -152,3 +154,39 @@ def smi2max_rand(smiles, max_duplication=10):
             return smi_unique
         else:
             return [Chem.MolToSmiles(mol, canonical=False, doRandom=False)]
+
+
+def smi2selfies(smiles):
+    """
+    smi2selfies takes a SMILES and return the selfies encoding.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+
+    Returns
+    -------
+    str
+        The SELFIES encoding of the molecule.
+    """
+
+    return selfies.encoder(smiles)
+
+
+def smi2deepsmiles(smiles):
+    """
+    smi2deepsmiles takes a SMILES and return the DeepSMILES encoding.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+
+    Returns
+    -------
+    str
+        The DeepSmiles encoding of the molecule.
+    """
+    converter = deepsmiles.Converter(rings=True, branches=True)
+    return converter.encode(smiles)
