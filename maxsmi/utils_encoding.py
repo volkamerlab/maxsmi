@@ -26,27 +26,27 @@ def get_max_length(list_):
     return max(length_elements)
 
 
-def char_replacement(smiles):
+def char_replacement(list_smiles):
     """
-    Replace the double characters into single character in a SMILES string.
+    Replace the double characters into single character in a list of SMILES string.
 
     Parameters
     ----------
-    smiles: str
-        SMILES string describing a compound.
+    list_smiles: list
+        list of SMILES string describing a compound.
 
     Returns
     -------
-    str
-        SMILES with character replacement.
+    list
+        list of SMILES with character replacement.
     """
-
-    smiles = smiles.replace("Cl", "L")
-    smiles = smiles.replace("Br", "R")
-    smiles = smiles.replace("@@", "$")
-    smiles = smiles.replace("\\", "|")
-
-    return smiles
+    return [
+        smile.replace("Cl", "L")
+        .replace("Br", "R")
+        .replace("@@", "$")
+        .replace("\\", "|")
+        for smile in list_smiles
+    ]
 
 
 def get_unique_elements_as_dict(list_):
