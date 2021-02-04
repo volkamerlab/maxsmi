@@ -74,7 +74,7 @@ def test_smi2max_rand(smiles, max_duplication, solution):
 
 
 @pytest.mark.parametrize(
-    "smiles, solution", [("c1ccccc1", "[C][=C][C][=C][C][=C][Ring1][Branch1_2]")]
+    "smiles, solution", [("c1ccccc1", ["[C][=C][C][=C][C][=C][Ring1][Branch1_2]"])]
 )
 def test_smi2selfies(smiles, solution):
     selfies = smi2selfies(smiles)
