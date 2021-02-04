@@ -17,11 +17,7 @@ def test_maxsmi_imported():
 ####################
 @pytest.mark.parametrize(
     "string, solution",
-    [
-        ("yes", True),
-        ("True", True),
-        ("False", False),
-    ],
+    [("yes", True), ("True", True), ("False", False), (True, True), (False, False)],
 )
 def test_string_to_bool(string, solution):
     result = string_to_bool(string)
