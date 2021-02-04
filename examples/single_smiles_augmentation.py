@@ -5,7 +5,7 @@ Example with a single SMILES
 """
 
 import argparse
-from utils_smiles import smi2can, smi2rand, smi2unique_rand
+from maxsmi.utils_smiles import smi2can, smi2rand, smi2unique_rand
 
 
 parser = argparse.ArgumentParser()

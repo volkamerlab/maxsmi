@@ -11,6 +11,7 @@ from maxsmi.utils_smiles import (
     smi2can,
     smi2rand,
     smi2unique_rand,
+    smi2max_rand,
     identify_disconnected_structures,
 )
 
@@ -55,3 +56,16 @@ def test_smi2unique_rand(smiles, int_aug, solution):
 def test_identify_disconnected_structures(smiles, solution):
     disconnected_smi = identify_disconnected_structures(smiles)
     assert solution == disconnected_smi
+
+
+@pytest.mark.parametrize(
+    "smiles, max_duplication, solution",
+    [
+        ("Csab", 3, None),
+        ("CO", -1, ["CO"]),
+        ("CCC", 300, ["CCC", "C(C)C"]),
+    ],
+)
+def test_smi2max_rand(smiles, max_duplication, solution):
+    ran_max_smi = smi2max_rand(smiles, max_duplication)
+    assert solution == ran_max_smi

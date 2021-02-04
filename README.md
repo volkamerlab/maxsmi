@@ -33,6 +33,11 @@ To run an example with the ESOL data set, augmenting the train set 5 times and t
 (maxsmi) $ python maxsmi/full_workflow.py --task ESOL --aug-train 5 --aug-test 2
 ```
 
+If no ensemble learning is wanted for the evaluation, run:
+```console
+(maxsmi) $ python maxsmi/full_workflow.py --task ESOL --aug-train 5 --aug-test 2 --eval-strategy False
+```
+
 ### Copyright
 
 Copyright (c) 2020, Talia B. Kimber

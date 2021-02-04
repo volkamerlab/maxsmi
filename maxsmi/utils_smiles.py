@@ -80,7 +80,7 @@ def smi2rand(smiles, int_aug=50):
         if int_aug > 0:
             return [
                 Chem.MolToSmiles(mol, canonical=False, doRandom=True)
-                for nb in range(int_aug)
+                for _ in range(int_aug)
             ]
         else:
             return [Chem.MolToSmiles(mol, canonical=False, doRandom=False)]
@@ -88,7 +88,7 @@ def smi2rand(smiles, int_aug=50):
 
 def smi2unique_rand(smiles, int_aug=50):
     """
-    smi2uniquerand takes a SMILES (not necessarily canonical) and
+    smi2unique_rand takes a SMILES (not necessarily canonical) and
     returns `int_aug` unique random variations of this SMILES.
 
     Parameters
@@ -114,6 +114,41 @@ def smi2unique_rand(smiles, int_aug=50):
                 rand = Chem.MolToSmiles(mol, canonical=False, doRandom=True)
                 if rand not in smi_unique:
                     smi_unique.append(rand)
+            return smi_unique
+        else:
+            return [Chem.MolToSmiles(mol, canonical=False, doRandom=False)]
+
+
+def smi2max_rand(smiles, max_duplication=10):
+    """
+    Returns augmented SMILES with estimated maximum number.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+    max_duplication : int, Optional, default: 10
+        The number of concecutive redundant SMILES that have to be generated before stopping augmentation process.
+
+    Returns
+    -------
+    list
+        A list of "estimated" maximum unique random SMILES.
+    """
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+    else:
+        if max_duplication > 0:
+            smi_unique = []
+            counter = 0
+            while counter < max_duplication:
+                rand = Chem.MolToSmiles(mol, canonical=False, doRandom=True)
+                if rand not in smi_unique:
+                    smi_unique.append(rand)
+                    counter = 0
+                else:
+                    counter += 1
             return smi_unique
         else:
             return [Chem.MolToSmiles(mol, canonical=False, doRandom=False)]

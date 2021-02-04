@@ -4,7 +4,7 @@ One-hot encode SMILES
 Example with a single SMILES
 """
 
-from utils_encoding import (
+from maxsmi.utils_encoding import (
     char_replacement,
     get_unique_elements_as_dict,
     one_hot_encode,
