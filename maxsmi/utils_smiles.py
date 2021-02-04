@@ -167,11 +167,11 @@ def smi2selfies(smiles):
 
     Returns
     -------
-    str
-        The SELFIES encoding of the molecule.
+    list
+        A list of SELFIES encoding of the molecule.
     """
 
-    return selfies.encoder(smiles)
+    return [selfies.encoder(smiles)]
 
 
 def smi2deepsmiles(smiles):
@@ -185,8 +185,8 @@ def smi2deepsmiles(smiles):
 
     Returns
     -------
-    str
-        The DeepSmiles encoding of the molecule.
+    list
+        A list of DeepSmiles encoding of the molecule.
     """
     converter = deepsmiles.Converter(rings=True, branches=True)
-    return converter.encode(smiles)
+    return [converter.encode(smiles)]
