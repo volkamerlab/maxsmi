@@ -81,7 +81,9 @@ def test_smi2selfies(smiles, solution):
     assert solution == selfies
 
 
-@pytest.mark.parametrize("smiles, solution", [("c1cccc(C(=O)Cl)c1", "cccccC=O)Cl))c6")])
+@pytest.mark.parametrize(
+    "smiles, solution", [("c1cccc(C(=O)Cl)c1", ["cccccC=O)Cl))c6"])]
+)
 def test_smi2deepsmiles(smiles, solution):
     deepsmiles = smi2deepsmiles(smiles)
     assert solution == deepsmiles
