@@ -38,6 +38,17 @@ If no ensemble learning is wanted for the evaluation, run:
 (maxsmi) $ python maxsmi/full_workflow.py --task ESOL --aug-train 5 --aug-test 2 --eval-strategy False
 ```
 
+To compare SMILES encoding with DeepSMILES, run:
+```console
+(maxsmi) $ python maxsmi/full_workflow.py --task ESOL --string-encoding deepsmiles
+```
+
+Similarly for SELFIES, run:
+```console
+(maxsmi) $ python maxsmi/full_workflow.py --task ESOL --string-encoding selfies
+```
+
+
 ### Copyright
 
 Copyright (c) 2020, Talia B. Kimber
