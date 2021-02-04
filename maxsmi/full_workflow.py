@@ -14,7 +14,13 @@ import itertools
 from utils import string_to_bool
 from utils_data import data_retrieval
 
-from utils_smiles import smi2can, identify_disconnected_structures, smi2unique_rand
+from utils_smiles import (
+    smi2can,
+    identify_disconnected_structures,
+    smi2unique_rand,
+    smi2selfies,
+    smi2deepsmiles,
+)
 from utils_encoding import (
     char_replacement,
     get_unique_elements_as_dict,
@@ -35,8 +41,9 @@ from pytorch_data import AugmenteSmilesData
 # Constants
 TEST_RATIO = 0.2
 RANDOM_SEED = 1234
-TRAIN_AUGMENTATION = 5
-TEST_AUGMENTATION = 2
+STRING_ENCODING = "smiles"
+TRAIN_AUGMENTATION = 0
+TEST_AUGMENTATION = 0
 BACTH_SIZE = 16
 LEARNING_RATE = 0.01
 NB_EPOCHS = 2
@@ -52,7 +59,14 @@ if __name__ == "__main__":
         dest="task",
         type=str,
         help="data to be used",
-        default="ESOL",
+        default=TASK,
+    )
+    parser.add_argument(
+        "--string-encoding",
+        dest="string_encoding",
+        type=str,
+        help="the string encoding for the molecules",
+        default=STRING_ENCODING,
     )
     parser.add_argument(
         "--aug-train",
@@ -85,9 +99,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    folder = (
-        f"maxsmi/output/{args.task}_{args.augmentation_train}_{args.augmentation_test}"
-    )
+    folder = f"maxsmi/output/{args.task}_{args.string_encoding}_{args.augmentation_train}_{args.augmentation_test}"
     os.makedirs(folder, exist_ok=True)
 
     # Logging information
@@ -131,14 +143,29 @@ if __name__ == "__main__":
     )
 
     # ================================
-    # Augmentation
+    # String encoding & Augmentation
     # ================================
-    train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
-        args.augmentation_strategy, args=(args.augmentation_train,)
-    )
-    test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
-        args.augmentation_strategy, args=(args.augmentation_test,)
-    )
+    if args.string_encoding == "smiles":
+        train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
+            args.augmentation_strategy, args=(args.augmentation_train,)
+        )
+        test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
+            args.augmentation_strategy, args=(args.augmentation_test,)
+        )
+
+    elif args.string_encoding == "selfies":
+        train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
+            smi2selfies
+        )
+        test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(smi2selfies)
+
+    elif args.string_encoding == "deepsmiles":
+        train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
+            smi2deepsmiles
+        )
+        test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
+            smi2deepsmiles
+        )
 
     # ================================
     # Input processing
@@ -157,6 +184,7 @@ if __name__ == "__main__":
     # Obtain dictionary for these smiles
     smi_dict = get_unique_elements_as_dict(list(all_smiles))
     logging.info(f"Number of unique characters: {len(smi_dict)} ")
+    logging.info(f"String dictionary: {smi_dict} ")
 
     # Obtain longest of all smiles
     max_length_smi = get_max_length(all_smiles)
