@@ -29,4 +29,4 @@ def string_to_bool(string):
     elif string in ("no", "False", "false", "0"):
         return False
     else:
-        raise argparse.ArgumentTypeError("Boolean value expected.")
+        raise argparse.ArgumentTypeError("Choose between 'yes' or 'no'.")
