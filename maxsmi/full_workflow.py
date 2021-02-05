@@ -359,8 +359,8 @@ if __name__ == "__main__":
     time_execution = time_execution_end - time_execution_start
     logging.info(f"Time for model execution {time_execution}")
 
-    # Save metrics to a csv
-    results_cv = pandas.DataFrame(
+    # Save metrics
+    results_metrics = pandas.DataFrame(
         data={
             "execution": [time_execution],
             "time_training": [time_training],
@@ -370,5 +370,5 @@ if __name__ == "__main__":
             "test": [evaluation_test],
         }
     )
-    results_cv = results_cv.to_csv(f"{folder}/results_metrics.csv")
+    results_metrics = results_metrics.to_pickle(f"{folder}/results_metrics.pkl")
     logging.info("Script completed. \n \n")
