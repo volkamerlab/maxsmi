@@ -1,4 +1,4 @@
-maxsmi: SMILES maximum augmentation
+maxsmi: a guide to SMILES augmentation
 ==============================
 [//]: # (Badges)
 
