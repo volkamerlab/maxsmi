@@ -111,7 +111,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    folder = f"maxsmi/output/{args.task}_{args.string_encoding}_{args.augmentation_train}_{args.augmentation_test}_{args.machine_learning_model}"
+    folder = (
+        f"maxsmi/output/{args.task}_{args.string_encoding}"
+        f"_{args.augmentation_train}_{args.augmentation_test}_{args.machine_learning_model}"
+    )
     os.makedirs(folder, exist_ok=True)
 
     # Logging information
