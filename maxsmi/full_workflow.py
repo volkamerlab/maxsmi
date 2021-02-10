@@ -35,7 +35,11 @@ import torch
 import torch.optim as optim
 import torch.nn as nn
 
-from pytorch_models import ConvolutionNetwork
+from pytorch_models import (
+    Convolutional1DNetwork,
+    Convolutional2DNetwork,
+    RecurrentNetwork,
+)
 from pytorch_data import AugmenteSmilesData
 
 # Constants
@@ -50,6 +54,7 @@ NB_EPOCHS = 2
 TASK = "ESOL"
 ENSEMBLE_LEARNING = True
 AUGMENTATION_STRATEGY = smi2unique_rand
+ML_MODEL = "CONV1D"
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
@@ -90,6 +95,13 @@ if __name__ == "__main__":
         default=AUGMENTATION_STRATEGY,
     )
     parser.add_argument(
+        "--ml-model",
+        dest="machine_learning_model",
+        type=str,
+        help="machine learning model used for training and testing",
+        default=ML_MODEL,
+    )
+    parser.add_argument(
         "--eval-strategy",
         dest="ensemble_learning",
         type=string_to_bool,
@@ -99,7 +111,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    folder = f"maxsmi/output/{args.task}_{args.string_encoding}_{args.augmentation_train}_{args.augmentation_test}"
+    folder = f"maxsmi/output/{args.task}_{args.string_encoding}_{args.augmentation_train}_{args.augmentation_test}_{args.machine_learning_model}"
     os.makedirs(folder, exist_ok=True)
 
     # Logging information
@@ -111,6 +123,7 @@ if __name__ == "__main__":
     logging.info(f"Evaluation strategy (ensemble learning): {args.ensemble_learning}")
     logging.info(f"Train augmentation: {args.augmentation_train}")
     logging.info(f"Test augmentation: {args.augmentation_test}")
+    logging.info(f"Machine learning model: {args.machine_learning_model}")
 
     time_execution_start = datetime.now()
 
@@ -209,7 +222,17 @@ if __name__ == "__main__":
     )
 
     # Initialize ml model
-    ml_model = ConvolutionNetwork(nb_char=len(smi_dict), max_length=max_length_smi)
+    if args.machine_learning_model == "CONV1D":
+        ml_model = Convolutional1DNetwork(
+            nb_char=len(smi_dict), max_length=max_length_smi
+        )
+    elif args.machine_learning_model == "CONV2D":
+        ml_model = Convolutional2DNetwork(
+            nb_char=len(smi_dict), max_length=max_length_smi
+        )
+    else:
+        ml_model = RecurrentNetwork(nb_char=len(smi_dict), max_length=max_length_smi)
+
     logging.info(f"Summary of ml model: {ml_model} ")
 
     # Loss function

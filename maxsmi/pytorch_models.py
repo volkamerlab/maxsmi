@@ -10,9 +10,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class ConvolutionNetwork(nn.Module):
+class Convolutional1DNetwork(nn.Module):
     """
-    Builds a convolutional neural network and a feed-forward pass.
+    Builds a 1D convolutional neural network and a feed-forward pass.
 
     Parameters
     ----------
@@ -28,7 +28,7 @@ class ConvolutionNetwork(nn.Module):
     hidden_shape : int, default=100
         Number of units in the hidden layer.
     output_shape : int, default=1
-        Size of the last unit, representing delta_g_over_kt in our setting.
+        Size of the last unit.
     activation : torch function, default: relu
         The activation function used in the hidden (only!) layer of the network.
     """
@@ -43,7 +43,7 @@ class ConvolutionNetwork(nn.Module):
         output_shape=1,
         activation=F.relu,
     ):
-        super(ConvolutionNetwork, self).__init__()
+        super(Convolutional1DNetwork, self).__init__()
 
         self.nb_char = nb_char
         self.max_length = max_length
@@ -70,3 +70,71 @@ class ConvolutionNetwork(nn.Module):
         x = torch.flatten(x, 1)
         x = self._activation(self.fully_connected_1(x))
         return self.fully_connected_out(x)
+
+
+class Convolutional2DNetwork(nn.Module):
+    """
+    Builds a 2D convolutional neural network and a feed-forward pass.
+
+    Parameters
+    ----------
+    nb_char : int, default=53
+        Expected number of possible characters
+        For SMILES characters, we assume 53.
+    max_length : int, default=256
+        Maximum length of SMILES, set to 256.
+    output_shape : int, default=1
+        Size of the last unit.
+    activation : torch function, default: relu
+        The activation function used in the hidden (only!) layer of the network.
+    """
+
+    def __init__(
+        self,
+        nb_char=53,
+        max_length=256,
+        output_shape=1,
+        activation=F.relu,
+    ):
+        super(Convolutional2DNetwork, self).__init__()
+        # TODO
+
+    def forward(self, x):
+        """
+        Defines the foward pass for a given input 'x'
+        """
+        pass
+
+
+class RecurrentNetwork(nn.Module):
+    """
+    Builds a recurrent neural network and a feed-forward pass.
+
+    Parameters
+    ----------
+    nb_char : int, default=53
+        Expected number of possible characters
+        For SMILES characters, we assume 53.
+    max_length : int, default=256
+        Maximum length of SMILES, set to 256.
+    output_shape : int, default=1
+        Size of the last unit.
+    activation : torch function, default: relu
+        The activation function used in the hidden (only!) layer of the network.
+    """
+
+    def __init__(
+        self,
+        nb_char=53,
+        max_length=256,
+        output_shape=1,
+        activation=F.relu,
+    ):
+        super(RecurrentNetwork, self).__init__()
+        # TODO
+
+    def forward(self, x):
+        """
+        Defines the foward pass for a given input 'x'
+        """
+        pass
