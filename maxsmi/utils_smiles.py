@@ -93,42 +93,6 @@ def smi2rand(smiles, int_aug=50):
             raise Exception("int_aug must be greater or equal to zero.")
 
 
-def smi2unique_rand(smiles, int_aug=50):
-    """
-    smi2unique_rand takes a SMILES (not necessarily canonical) and
-    returns `int_aug` unique random variations of this SMILES.
-
-    Parameters
-    ----------
-    smiles : str
-        SMILES string describing a compound.
-    int_aug : int, Optional, default: 50
-        The number of random (unique) SMILES generated.
-
-    Returns
-    -------
-    list
-        A list of unique random SMILES.
-    """
-
-    #call smi2canrand
-    #call controlled_rand
-    #return ---
-    mol = Chem.MolFromSmiles(smiles)
-    if mol is None:
-        return None
-    else:
-        if int_aug > 0:
-            smi_unique = []
-            for _ in range(int_aug):
-                rand = Chem.MolToSmiles(mol, canonical=False, doRandom=True)
-                if rand not in smi_unique:
-                    smi_unique.append(rand)
-            return smi_unique
-        else:
-            return [Chem.MolToSmiles(mol, canonical=False, doRandom=False)]
-
-
 def smi2max_rand(smiles, max_duplication=10):
     """
     Returns augmented SMILES with estimated maximum number.
@@ -164,7 +128,7 @@ def smi2max_rand(smiles, max_duplication=10):
             return [Chem.MolToSmiles(mol, canonical=False, doRandom=False)]
 
 
-def control_smiles_duplication(random_smiles, duplicate_control = lambda x:1):
+def control_smiles_duplication(random_smiles, duplicate_control=lambda x: 1):
     """
     Returns augmented SMILES with the number of duplicates controlled by the function duplicate_control.
 
@@ -182,9 +146,16 @@ def control_smiles_duplication(random_smiles, duplicate_control = lambda x:1):
         A list of random SMILES with duplicates.
     """
     counted_smiles = Counter(random_smiles)
-    smiles_duplication = {smiles: math.ceil(duplicate_control(counted_smiles[smiles])) for smiles in counted_smiles}
-    return list(itertools.chain.from_iterable([[smiles]*smiles_duplication[smiles] for smiles in smiles_duplication]))
-    
+    smiles_duplication = {
+        smiles: math.ceil(duplicate_control(counted_smiles[smiles]))
+        for smiles in counted_smiles
+    }
+    return list(
+        itertools.chain.from_iterable(
+            [[smiles] * smiles_duplication[smiles] for smiles in smiles_duplication]
+        )
+    )
+
 
 def smi2selfies(smiles):
     """

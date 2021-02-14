@@ -19,7 +19,6 @@ from augmentation_strategies import no_augmentation, augmentation_with_duplicati
 from utils_smiles import (
     smi2can,
     identify_disconnected_structures,
-    smi2unique_rand,
     smi2selfies,
     smi2deepsmiles,
 )

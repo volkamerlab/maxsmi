@@ -42,9 +42,11 @@ def test_smi2rand(smiles, int_aug, solution):
     rand_smi = smi2rand(smiles, int_aug)
     assert solution == rand_smi
 
+
 def test_smi2rand_exception():
     with pytest.raises(Exception):
         assert smi2rand("OC", -1)
+
 
 @pytest.mark.parametrize(
     "smiles, int_aug, solution",
@@ -78,17 +80,19 @@ def test_smi2max_rand(smiles, max_duplication, solution):
 
 
 @pytest.mark.parametrize(
-    "smiles, control_function, solution", 
+    "smiles, control_function, solution",
     [
         (["CCC", "CCC"], lambda x: 1, ["CCC"]),
         (["CCC", "CCC"], lambda x: x, ["CCC", "CCC"]),
         (["CCC", "CCC", "C(C)C", "C(C)C", "C(C)C"], lambda x: 1, ["CCC", "C(C)C"]),
         (["CCC", "CCC", "C(C)C"], lambda x: x, ["CCC", "CCC", "C(C)C"]),
-        (["CCC", "CCC", "C(C)C"], lambda x: x/2, ["CCC", "C(C)C"]),
+        (["CCC", "CCC", "C(C)C"], lambda x: x / 2, ["CCC", "C(C)C"]),
     ],
 )
 def test_control_smiles_duplication(smiles, control_function, solution):
-    controlled_duplicates = control_smiles_duplication(smiles, duplicate_control=control_function)
+    controlled_duplicates = control_smiles_duplication(
+        smiles, duplicate_control=control_function
+    )
     assert solution == controlled_duplicates
 
 

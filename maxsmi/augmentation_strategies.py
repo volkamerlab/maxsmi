@@ -4,6 +4,7 @@ from utils_smiles import (
     control_smiles_duplication,
 )
 
+
 def no_augmentation(smiles, augmentation_number=0):
     """
     Takes a SMILES and returns it in a list.
@@ -20,6 +21,7 @@ def no_augmentation(smiles, augmentation_number=0):
     """
     return [smiles]
 
+
 def augmentation_with_duplication(smiles, augmentation_number):
     """
     Takes a SMILES and returns a list of random SMILES with possible duplicates.
@@ -34,10 +36,11 @@ def augmentation_with_duplication(smiles, augmentation_number):
     Returns
     -------
     list
-        A list containing the given number of random SMILES, which might include  duplicated SMILES. 
+        A list containing the given number of random SMILES, which might include  duplicated SMILES.
     """
     smiles_list = smi2rand(smiles, augmentation_number)
-    return control_smiles_duplication(smiles_list, lambda x:x)
+    return control_smiles_duplication(smiles_list, lambda x: x)
+
 
 def augmentation_without_duplication(smiles, augmentation_number):
     """
@@ -53,10 +56,11 @@ def augmentation_without_duplication(smiles, augmentation_number):
     Returns
     -------
     list
-        A list of unique random SMILES (no duplicates). 
+        A list of unique random SMILES (no duplicates).
     """
     smiles_list = smi2rand(smiles, augmentation_number)
-    return control_smiles_duplication(smiles_list, lambda x:1)
+    return control_smiles_duplication(smiles_list, lambda x: 1)
+
 
 def augmentation_with_reduced_duplication(smiles, augmentation_number):
     """
@@ -72,7 +76,7 @@ def augmentation_with_reduced_duplication(smiles, augmentation_number):
     Returns
     -------
     list
-        A list of random SMILES with reduced amount of duplicates. 
+        A list of random SMILES with reduced amount of duplicates.
     """
     smiles_list = smi2rand(smiles, augmentation_number)
     return control_smiles_duplication(smiles_list, lambda x: math.sqrt(x))
