@@ -1,5 +1,5 @@
 import math
-from utils_smiles import (
+from .utils_smiles import (
     smi2rand,
     control_smiles_duplication,
 )
