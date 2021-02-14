@@ -11,8 +11,10 @@ import os
 from datetime import datetime
 import itertools
 
-from utils import string_to_bool
+from utils import string_to_bool, augmentation_strategy
 from utils_data import data_retrieval
+
+from augmentation_strategies import no_augmentation, augmentation_with_duplication
 
 from utils_smiles import (
     smi2can,
@@ -46,14 +48,14 @@ from pytorch_data import AugmenteSmilesData
 TEST_RATIO = 0.2
 RANDOM_SEED = 1234
 STRING_ENCODING = "smiles"
-TRAIN_AUGMENTATION = 0
-TEST_AUGMENTATION = 0
+TRAIN_AUGMENTATION = 10
+TEST_AUGMENTATION = 10
 BACTH_SIZE = 16
 LEARNING_RATE = 0.01
 NB_EPOCHS = 2
 TASK = "ESOL"
 ENSEMBLE_LEARNING = True
-AUGMENTATION_STRATEGY = smi2unique_rand
+AUGMENTATION_STRATEGY = no_augmentation
 ML_MODEL = "CONV1D"
 
 if __name__ == "__main__":
@@ -74,24 +76,31 @@ if __name__ == "__main__":
         default=STRING_ENCODING,
     )
     parser.add_argument(
-        "--aug-train",
-        dest="augmentation_train",
+        "--aug-nb-train",
+        dest="augmentation_number_train",
         type=int,
         help="aug-train will be generated on train set",
         default=TRAIN_AUGMENTATION,
     )
     parser.add_argument(
-        "--aug-test",
-        dest="augmentation_test",
+        "--aug-nb-test",
+        dest="augmentation_number_test",
         type=int,
         help="aug-test will be generated on test set",
         default=TEST_AUGMENTATION,
     )
     parser.add_argument(
-        "--aug-strategy",
-        dest="augmentation_strategy",
-        type=int,
-        help="augmentation strategy to be used",
+        "--aug-strategy-train",
+        dest="augmentation_strategy_train",
+        type=augmentation_strategy,
+        help="augmentation strategy to be used on the train set",
+        default=AUGMENTATION_STRATEGY,
+    )
+    parser.add_argument(
+        "--aug-strategy-test",
+        dest="augmentation_strategy_test",
+        type=augmentation_strategy,
+        help="augmentation strategy to be used on the test set",
         default=AUGMENTATION_STRATEGY,
     )
     parser.add_argument(
@@ -113,7 +122,7 @@ if __name__ == "__main__":
 
     folder = (
         f"maxsmi/output/{args.task}_{args.string_encoding}"
-        f"_{args.augmentation_train}_{args.augmentation_test}_{args.machine_learning_model}"
+        f"_{args.augmentation_number_train}_{args.augmentation_number_test}_{args.machine_learning_model}"
     )
     os.makedirs(folder, exist_ok=True)
 
@@ -122,10 +131,11 @@ if __name__ == "__main__":
     logging.basicConfig(filename=f"{folder}/{log_file_name}", level=logging.INFO)
     logging.info(f"Start at {datetime.now()}")
     logging.info(f"Data and task: {args.task}")
-    logging.info(f"Augmentation strategy: {args.augmentation_strategy}")
+    logging.info(f"Augmentation strategy on train: {args.augmentation_strategy_train}")
+    logging.info(f"Augmentation strategy on test: {args.augmentation_strategy_test}")
     logging.info(f"Evaluation strategy (ensemble learning): {args.ensemble_learning}")
-    logging.info(f"Train augmentation: {args.augmentation_train}")
-    logging.info(f"Test augmentation: {args.augmentation_test}")
+    logging.info(f"Train augmentation: {args.augmentation_number_train}")
+    logging.info(f"Test augmentation: {args.augmentation_number_test}")
     logging.info(f"Machine learning model: {args.machine_learning_model}")
 
     time_execution_start = datetime.now()
@@ -163,10 +173,10 @@ if __name__ == "__main__":
     # ================================
     if args.string_encoding == "smiles":
         train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
-            args.augmentation_strategy, args=(args.augmentation_train,)
+            args.augmentation_strategy_train, args=(args.augmentation_number_train,)
         )
         test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
-            args.augmentation_strategy, args=(args.augmentation_test,)
+            args.augmentation_strategy_test, args=(args.augmentation_number_test,)
         )
 
     elif args.string_encoding == "selfies":

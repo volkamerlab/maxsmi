@@ -5,6 +5,9 @@ SMILES augmentation in RDKit.
 Handles the primary functions
 """
 
+import math
+from collections import Counter
+import itertools
 from rdkit import Chem
 import selfies
 import deepsmiles
@@ -84,8 +87,10 @@ def smi2rand(smiles, int_aug=50):
                 Chem.MolToSmiles(mol, canonical=False, doRandom=True)
                 for _ in range(int_aug)
             ]
+        elif int_aug == 0:
+            return [smiles]
         else:
-            return [Chem.MolToSmiles(mol, canonical=False, doRandom=False)]
+            raise Exception("int_aug must be greater or equal to zero.")
 
 
 def smi2unique_rand(smiles, int_aug=50):
@@ -106,6 +111,9 @@ def smi2unique_rand(smiles, int_aug=50):
         A list of unique random SMILES.
     """
 
+    #call smi2canrand
+    #call controlled_rand
+    #return ---
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:
         return None
@@ -155,6 +163,28 @@ def smi2max_rand(smiles, max_duplication=10):
         else:
             return [Chem.MolToSmiles(mol, canonical=False, doRandom=False)]
 
+
+def control_smiles_duplication(random_smiles, duplicate_control = lambda x:1):
+    """
+    Returns augmented SMILES with the number of duplicates controlled by the function duplicate_control.
+
+    Parameters
+    ----------
+    random_smiles : list
+        A list of random SMILES, can be obtained by smi2rand.
+    duplicate_control : func, Optional, default: 1
+        The number of times a SMILES will be duplicated, as function of the number of times it was included in random_smiles.
+        This number is rounded up to the nearest integer.
+
+    Returns
+    -------
+    list
+        A list of random SMILES with duplicates.
+    """
+    counted_smiles = Counter(random_smiles)
+    smiles_duplication = {smiles: math.ceil(duplicate_control(counted_smiles[smiles])) for smiles in counted_smiles}
+    return list(itertools.chain.from_iterable([[smiles]*smiles_duplication[smiles] for smiles in smiles_duplication]))
+    
 
 def smi2selfies(smiles):
     """
