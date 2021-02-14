@@ -7,7 +7,7 @@ Handles the primary functions
 
 import argparse
 
-from augmentation_strategies import (
+from .augmentation_strategies import (
     no_augmentation,
     augmentation_with_duplication,
     augmentation_without_duplication,
