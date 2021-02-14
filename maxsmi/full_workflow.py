@@ -14,7 +14,7 @@ import itertools
 from utils import string_to_bool, augmentation_strategy
 from utils_data import data_retrieval
 
-from augmentation_strategies import no_augmentation, augmentation_with_duplication
+from augmentation_strategies import no_augmentation
 
 from utils_smiles import (
     smi2can,

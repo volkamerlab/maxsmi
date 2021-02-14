@@ -14,6 +14,7 @@ from augmentation_strategies import (
     augmentation_with_reduced_duplication,
 )
 
+
 def string_to_bool(string):
     """
     Converts a string to a bool.
@@ -61,6 +62,8 @@ def augmentation_strategy(string):
     elif string == "augmentation_with_reduced_duplication":
         return augmentation_with_reduced_duplication
     else:
-        raise argparse.ArgumentTypeError("Choose between 'no_augmentation',"
+        raise argparse.ArgumentTypeError(
+            "Choose between 'no_augmentation',"
             "'augmentation_with_duplication', 'augmentation_without_duplication"
-            "or 'augmentation_with_reduced_duplication'.")
+            "or 'augmentation_with_reduced_duplication'."
+        )
