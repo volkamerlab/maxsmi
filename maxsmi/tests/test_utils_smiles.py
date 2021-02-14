@@ -10,7 +10,6 @@ import sys
 from maxsmi.utils_smiles import (
     smi2can,
     smi2rand,
-    smi2unique_rand,
     smi2max_rand,
     identify_disconnected_structures,
     smi2selfies,
@@ -46,15 +45,6 @@ def test_smi2rand(smiles, int_aug, solution):
 def test_smi2rand_exception():
     with pytest.raises(Exception):
         assert smi2rand("OC", -1)
-
-
-@pytest.mark.parametrize(
-    "smiles, int_aug, solution",
-    [("C", 3, ["C"]), ("CO", 3, ["OC", "CO"]), ("KCahsbl", 3, None), ("OC", 0, ["OC"])],
-)
-def test_smi2unique_rand(smiles, int_aug, solution):
-    ran_unique_smi = smi2unique_rand(smiles, int_aug)
-    assert solution == ran_unique_smi
 
 
 @pytest.mark.parametrize(
