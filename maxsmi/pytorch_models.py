@@ -8,6 +8,7 @@ Handles the primary functions
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.autograd import Variable
 
 
 class Convolutional1DNetwork(nn.Module):
@@ -108,7 +109,7 @@ class Convolutional2DNetwork(nn.Module):
 
 class RecurrentNetwork(nn.Module):
     """
-    Builds a recurrent neural network and a feed-forward pass.
+    Builds a recurrent neural network with an LTSM cell and a feed-forward pass.
 
     Parameters
     ----------
@@ -117,6 +118,8 @@ class RecurrentNetwork(nn.Module):
         For SMILES characters, we assume 53.
     max_length : int, default=256
         Maximum length of SMILES, set to 256.
+    hidden_shape : int, default=128
+        Shape of the hidden state.
     output_shape : int, default=1
         Size of the last unit.
     activation : torch function, default: relu
@@ -127,14 +130,35 @@ class RecurrentNetwork(nn.Module):
         self,
         nb_char=53,
         max_length=256,
+        hidden_shape=128,
         output_shape=1,
         activation=F.relu,
     ):
         super(RecurrentNetwork, self).__init__()
-        # TODO
+        self.nb_char = nb_char
+        self.max_length = max_length
+        self.hidden_shape = hidden_shape
+        self.output_shape = output_shape
+        self._activation = activation
+
+        self.lstm = nn.LSTM(
+            input_size=self.nb_char,
+            hidden_size=self.hidden_shape,
+            num_layers=1,
+            batch_first=True,
+        )
+
+        self.fully_connected_1 = nn.Linear(self.hidden_shape, 64)
+        self.fully_connected_out = nn.Linear(64, self.output_shape)
 
     def forward(self, x):
         """
         Defines the foward pass for a given input 'x'
         """
-        pass
+        hidden_initial = Variable(torch.zeros(1, x.shape[0], self.hidden_shape))
+        cell_initial = Variable(torch.zeros(1, x.shape[0], self.hidden_shape))
+        _, (hidden_state, _) = self.lstm(x, (hidden_initial, cell_initial))
+        x = hidden_state.view(-1, self.hidden_shape)
+        x = self._activation(x)
+        x = self._activation(self.fully_connected_1(x))
+        return self.fully_connected_out(x)
