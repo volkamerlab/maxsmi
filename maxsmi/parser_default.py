@@ -3,7 +3,7 @@ parser_default.py
 The default parameters for parser.
 """
 
-from augmentation_strategies import no_augmentation
+from maxsmi.augmentation_strategies import no_augmentation
 
 
 # Data and related task
