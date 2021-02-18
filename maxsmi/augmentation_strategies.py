@@ -1,8 +1,5 @@
 import math
-from .utils_smiles import (
-    smi2rand,
-    control_smiles_duplication,
-)
+from maxsmi.utils_smiles import smi2rand, control_smiles_duplication, smi2max_rand
 
 
 def no_augmentation(smiles, augmentation_number=0):
@@ -13,6 +10,7 @@ def no_augmentation(smiles, augmentation_number=0):
     ----------
     smiles : str
         SMILES string describing a compound.
+    augmentation_number : default 0
 
     Returns
     -------
@@ -36,7 +34,7 @@ def augmentation_with_duplication(smiles, augmentation_number):
     Returns
     -------
     list
-        A list containing the given number of random SMILES, which might include  duplicated SMILES.
+        A list containing the given number of random SMILES, which might include duplicated SMILES.
     """
     smiles_list = smi2rand(smiles, augmentation_number)
     return control_smiles_duplication(smiles_list, lambda x: x)
@@ -64,7 +62,8 @@ def augmentation_without_duplication(smiles, augmentation_number):
 
 def augmentation_with_reduced_duplication(smiles, augmentation_number):
     """
-    Takes a SMILES and returns a list of random SMILES with reduced amount of duplicates.
+    Takes a SMILES and returns a list of random SMILES with a reduced amount of duplicates.
+    The reduction is square root given the number of duplicates.
 
     Parameters
     ----------
@@ -76,7 +75,26 @@ def augmentation_with_reduced_duplication(smiles, augmentation_number):
     Returns
     -------
     list
-        A list of random SMILES with reduced amount of duplicates.
+        A list of random SMILES with a reduced amount of duplicates.
     """
     smiles_list = smi2rand(smiles, augmentation_number)
     return control_smiles_duplication(smiles_list, lambda x: math.sqrt(x))
+
+
+def augmentation_maximum_estimation(smiles, max_duplication=10):
+    """
+    Returns augmented SMILES with estimated maximum number.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+    max_duplication : int, Optional, default: 10
+        The number of concecutive redundant SMILES that have to be generated before stopping augmentation process.
+
+    Returns
+    -------
+    list
+        A list of "estimated" maximum unique random SMILES.
+    """
+    return smi2max_rand(smiles, max_duplication=10)
