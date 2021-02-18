@@ -39,7 +39,7 @@ from pytorch_models import (
     Convolutional2DNetwork,
     RecurrentNetwork,
 )
-from pytorch_data import AugmenteSmilesData
+from pytorch_data import AugmenteSmilesData, data_to_pytorch_format
 
 from splitting_parameters import TEST_RATIO, RANDOM_SEED
 from pytorch_parameters import BACTH_SIZE, NB_EPOCHS, LEARNING_RATE
@@ -232,13 +232,9 @@ if __name__ == "__main__":
     max_length_smi = get_max_length(all_smiles)
     logging.info(f"Longest smiles in data set: {max_length_smi} ")
 
-    # ================================
-    # Machine learning ML
-    # ================================
-
-    # ================================
-    # Pytorch data
-    # ================================
+    # ==================================
+    # Machine learning ML & Pytorch data
+    # ==================================
 
     time_start_training = datetime.now()
 
@@ -259,8 +255,10 @@ if __name__ == "__main__":
         ml_model = Convolutional2DNetwork(
             nb_char=len(smi_dict), max_length=max_length_smi
         )
-    else:
+    elif args.machine_learning_model == "RNN":
         ml_model = RecurrentNetwork(nb_char=len(smi_dict), max_length=max_length_smi)
+    else:
+        logging.warning(f"Unknown machine learning model ")
 
     logging.info(f"Summary of ml model: {ml_model} ")
 
@@ -285,20 +283,17 @@ if __name__ == "__main__":
             # SMILES and target
             smiles, target = data
 
-            one_hot = [one_hot_encode(smi, smi_dict) for smi in list(smiles)]
-            one_hot_pad = [pad_matrix(ohe, max_length_smi) for ohe in one_hot]
-            input_true = torch.tensor(one_hot_pad).float()
-
-            output_true = torch.tensor(target).float()
-            output_true = output_true.view(-1, 1)
+            input_true, output_true = data_to_pytorch_format(
+                smiles,
+                target,
+                smi_dict,
+                max_length_smi,
+                args.machine_learning_model,
+                device,
+            )
 
             # Zero the parameter gradients
             optimizer.zero_grad()
-
-            if args.machine_learning_model == "RNN":
-                input_true = input_true.reshape(
-                    (input_true.shape[0], input_true.shape[2], input_true.shape[1])
-                )
             # Forward
             output_pred = ml_model(input_true)
             # Objective
@@ -323,20 +318,18 @@ if __name__ == "__main__":
     # # Evaluate on train set
     # ================================
 
-    one_hot = [one_hot_encode(smi, smi_dict) for smi in list(train_pytorch.smiles)]
-    one_hot_pad = [pad_matrix(ohe, max_length_smi) for ohe in one_hot]
-    input_train = torch.tensor(one_hot_pad).float()
-
-    output_train = torch.tensor(train_pytorch.target).float()
-    output_train = output_train.view(-1, 1)
+    input_train, output_train = data_to_pytorch_format(
+        list(train_pytorch.smiles),
+        train_pytorch.target,
+        smi_dict,
+        max_length_smi,
+        args.machine_learning_model,
+        device,
+    )
 
     logging.info(f"Train input dimension: {input_train.shape}")
     logging.info(f"Train output dimension: {output_train.shape}")
 
-    if args.machine_learning_model == "RNN":
-        input_train = input_train.reshape(
-            (input_train.shape[0], input_train.shape[2], input_train.shape[1])
-        )
     evaluation_train = evaluation_results(output_train, ml_model(input_train))
 
     logging.info(f"Train metrics: {evaluation_train}")
@@ -350,11 +343,6 @@ if __name__ == "__main__":
     logging.info("Testing")
     logging.info("========")
 
-    # Load model
-    # ml_model.load_state_dict(torch.load(f"{folder}/model_dict.pth"))
-
-    # Test set
-
     time_start_testing = datetime.now()
 
     with torch.no_grad():
@@ -367,6 +355,8 @@ if __name__ == "__main__":
 
                 # Retrive list of random smiles for a given index
                 multiple_smiles = test_pytorch.smiles.__getitem__(item)
+
+                # TODO: use data_to_pytorch_format function
 
                 one_hot = [one_hot_encode(smi, smi_dict) for smi in multiple_smiles]
                 one_hot_pad = [pad_matrix(ohe, max_length_smi) for ohe in one_hot]
@@ -394,14 +384,14 @@ if __name__ == "__main__":
 
         else:
             test_pytorch = AugmenteSmilesData(test_data, index_augmentation=True)
-            one_hot = [
-                one_hot_encode(smi, smi_dict) for smi in list(test_pytorch.smiles)
-            ]
-            one_hot_pad = [pad_matrix(ohe, max_length_smi) for ohe in one_hot]
-            input_true_test = torch.tensor(one_hot_pad).float()
-
-            output_true_test = torch.tensor(test_pytorch.target).float()
-            output_true_test = output_true_test.view(-1, 1)
+            input_true_test, output_true_test = data_to_pytorch_format(
+                list(test_pytorch.smiles),
+                test_pytorch.target,
+                smi_dict,
+                max_length_smi,
+                args.machine_learning_model,
+                device,
+            )
 
             output_pred_test = ml_model(input_true_test)
 
