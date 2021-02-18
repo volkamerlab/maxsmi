@@ -141,6 +141,19 @@ if __name__ == "__main__":
     logging.info(f"Test augmentation: {args.augmentation_number_test}")
     logging.info(f"Machine learning model: {args.machine_learning_model}")
 
+    # ================================
+    # Computing device
+    # ================================
+
+    is_cuda = torch.cuda.is_available()
+
+    if is_cuda:
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
+
+    logging.info(f"CUDA available: {is_cuda}")
+
     time_execution_start = datetime.now()
 
     # ================================
