@@ -7,11 +7,12 @@ Handles the primary functions
 
 import argparse
 
-from .augmentation_strategies import (
+from maxsmi.augmentation_strategies import (
     no_augmentation,
     augmentation_with_duplication,
     augmentation_without_duplication,
     augmentation_with_reduced_duplication,
+    augmentation_maximum_estimation,
 )
 
 
@@ -61,9 +62,11 @@ def augmentation_strategy(string):
         return augmentation_without_duplication
     elif string == "augmentation_with_reduced_duplication":
         return augmentation_with_reduced_duplication
+    elif string == "augmentation_maximum_estimation":
+        return augmentation_maximum_estimation
     else:
         raise argparse.ArgumentTypeError(
             "Choose between 'no_augmentation',"
             "'augmentation_with_duplication', 'augmentation_without_duplication"
-            "or 'augmentation_with_reduced_duplication'."
+            "'augmentation_with_reduced_duplication' and 'augmentation_maximum_estimation'."
         )
