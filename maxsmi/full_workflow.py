@@ -11,10 +11,8 @@ import os
 from datetime import datetime
 import itertools
 
-from utils import string_to_bool, augmentation_strategy
+from maxsmi.utils import string_to_bool, augmentation_strategy
 from utils_data import data_retrieval
-
-from augmentation_strategies import no_augmentation
 
 from utils_smiles import (
     smi2can,
@@ -43,23 +41,23 @@ from pytorch_models import (
 )
 from pytorch_data import AugmenteSmilesData
 
-# Constants
-TEST_RATIO = 0.2
-RANDOM_SEED = 1234
-STRING_ENCODING = "smiles"
-TRAIN_AUGMENTATION = 10
-TEST_AUGMENTATION = 10
-BACTH_SIZE = 16
-LEARNING_RATE = 0.01
-NB_EPOCHS = 2
-TASK = "ESOL"
-ENSEMBLE_LEARNING = True
-AUGMENTATION_STRATEGY = no_augmentation
-ML_MODEL = "CONV1D"
+from splitting_parameters import TEST_RATIO, RANDOM_SEED
+from pytorch_parameters import BACTH_SIZE, NB_EPOCHS, LEARNING_RATE
+
+from parser_default import (
+    TASK,
+    STRING_ENCODING,
+    TRAIN_AUGMENTATION,
+    TEST_AUGMENTATION,
+    ENSEMBLE_LEARNING,
+    AUGMENTATION_STRATEGY,
+    ML_MODEL,
+)
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     parser = argparse.ArgumentParser()
+
     parser.add_argument(
         "--task",
         dest="task",
@@ -119,8 +117,14 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    # TODO
+    if args.augmentation_strategy_train == "no_augmentation":
+        args.augmentation_number_train = 0
+    if args.augmentation_strategy_test == "no_augmentation":
+        args.augmentation_number_test = 0
+
     folder = (
-        f"maxsmi/output/{args.task}_{args.string_encoding}"
+        f"maxsmi/output/{args.task}_{args.string_encoding}_{args.augmentation_strategy_train}"
         f"_{args.augmentation_number_train}_{args.augmentation_number_test}_{args.machine_learning_model}"
     )
     os.makedirs(folder, exist_ok=True)
@@ -278,6 +282,10 @@ if __name__ == "__main__":
             # Zero the parameter gradients
             optimizer.zero_grad()
 
+            if args.machine_learning_model == "RNN":
+                input_true = input_true.reshape(
+                    (input_true.shape[0], input_true.shape[2], input_true.shape[1])
+                )
             # Forward
             output_pred = ml_model(input_true)
             # Objective
@@ -312,6 +320,10 @@ if __name__ == "__main__":
     logging.info(f"Train input dimension: {input_train.shape}")
     logging.info(f"Train output dimension: {output_train.shape}")
 
+    if args.machine_learning_model == "RNN":
+        input_train = input_train.reshape(
+            (input_train.shape[0], input_train.shape[2], input_train.shape[1])
+        )
     evaluation_train = evaluation_results(output_train, ml_model(input_train))
 
     logging.info(f"Train metrics: {evaluation_train}")
