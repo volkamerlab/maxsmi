@@ -260,8 +260,9 @@ if __name__ == "__main__":
     elif args.machine_learning_model == "RNN":
         ml_model = RecurrentNetwork(nb_char=len(smi_dict), max_length=max_length_smi)
     else:
-        logging.warning(f"Unknown machine learning model ")
+        logging.warning("Unknown machine learning model ")
 
+    ml_model.to(device)
     logging.info(f"Summary of ml model: {ml_model} ")
 
     # Loss function
