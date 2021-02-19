@@ -3,7 +3,7 @@ parser_default.py
 The default parameters for parser.
 """
 
-from maxsmi.augmentation_strategies import no_augmentation
+from maxsmi.augmentation_strategies import augmentation_with_duplication
 
 
 # Data and related task
@@ -13,7 +13,7 @@ TASK = "ESOL"
 STRING_ENCODING = "smiles"
 
 # Augmentation strategy for the train and test sets
-AUGMENTATION_STRATEGY = no_augmentation
+AUGMENTATION_STRATEGY = augmentation_with_duplication
 
 # Augmentation on train and test sets
 TRAIN_AUGMENTATION = 10
