@@ -333,7 +333,7 @@ if __name__ == "__main__":
     logging.info(f"Train input dimension: {input_train.shape}")
     logging.info(f"Train output dimension: {output_train.shape}")
 
-    evaluation_train = evaluation_results(output_train, ml_model(input_train))
+    evaluation_train = evaluation_results(output_train, ml_model(input_train), is_cuda)
 
     logging.info(f"Train metrics: {evaluation_train}")
     # Save model
@@ -407,7 +407,9 @@ if __name__ == "__main__":
             output_pred_test = ml_model(input_true_test)
 
         loss_pred = loss_function(output_pred_test, output_true_test)
-        evaluation_test = evaluation_results(output_true_test, output_pred_test)
+        evaluation_test = evaluation_results(
+            output_true_test, output_pred_test, is_cuda
+        )
 
         logging.info(f"Test output dimension {output_true_test.shape}")
 
