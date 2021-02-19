@@ -49,10 +49,23 @@ class AugmenteSmilesData(Dataset):
 
 
 def data_to_pytorch_format(
-    smiles, target, dictionary, maximum_length, machine_learning_model, device_to_use
+    smiles,
+    target,
+    dictionary,
+    maximum_length,
+    machine_learning_model,
+    device_to_use,
+    per_mol=False,
 ):
     """
     # TODO
+    Parameters
+    ----------
+
+    Returns
+    -------
+    tuple :
+
     """
     one_hot = [one_hot_encode(smile, dictionary) for smile in list(smiles)]
     one_hot_pad = [pad_matrix(ohe, maximum_length) for ohe in one_hot]
@@ -60,8 +73,14 @@ def data_to_pytorch_format(
 
     if machine_learning_model == "RNN":
         input_true = torch.transpose(input_true, 1, 2)
+    if machine_learning_model == "CONV2D":
+        input_true = input_true.unsqueeze(1)
 
     output_true = torch.tensor(target, device=device_to_use).float()
-    output_true = output_true.view(-1, 1)
+
+    if per_mol:
+        output_true = output_true.view(1)
+    else:
+        output_true = output_true.view(-1, 1)
 
     return input_true, output_true

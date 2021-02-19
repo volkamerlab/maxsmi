@@ -80,10 +80,17 @@ class Convolutional2DNetwork(nn.Module):
     Parameters
     ----------
     nb_char : int, default=53
-        Expected number of possible characters
-        For SMILES characters, we assume 53.
+        Expected number of possible characters. For SMILES characters, we assume 53.
     max_length : int, default=256
         Maximum length of SMILES, set to 256.
+    in_channels : int, default=1
+        Number of channel of the input.
+    out_channels : int, default=3
+        Number of output channels.
+    kernel_shape : int, default=10
+        Size of the kernel for the convolution.
+    hidden_shape : int, default=100
+        Number of units in the hidden layer.
     output_shape : int, default=1
         Size of the last unit.
     activation : torch function, default: relu
@@ -94,17 +101,44 @@ class Convolutional2DNetwork(nn.Module):
         self,
         nb_char=53,
         max_length=256,
+        in_channels=1,
+        out_channels=3,
+        kernel_shape=10,
+        hidden_shape=100,
         output_shape=1,
         activation=F.relu,
     ):
         super(Convolutional2DNetwork, self).__init__()
-        # TODO
+
+        self.nb_char = nb_char
+        self.max_length = max_length
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.kernel_shape = kernel_shape
+        self.hidden_shape = hidden_shape
+        self.output_shape = output_shape
+        self._activation = activation
+
+        self.convolution = nn.Conv2d(
+            in_channels=self.in_channels,
+            out_channels=self.out_channels,
+            kernel_size=self.kernel_shape,
+        )
+
+        self.temp1 = self.nb_char - self.kernel_shape + 1
+        self.temp2 = self.max_length - self.kernel_shape + 1
+        self.temp3 = self.temp1 * self.temp2 * self.out_channels
+        self.fully_connected_1 = nn.Linear(self.temp3, self.hidden_shape)
+        self.fully_connected_out = nn.Linear(self.hidden_shape, self.output_shape)
 
     def forward(self, x):
         """
         Defines the foward pass for a given input 'x'
         """
-        pass
+        x = self._activation(self.convolution(x))
+        x = torch.flatten(x, 1)
+        x = self._activation(self.fully_connected_1(x))
+        return self.fully_connected_out(x)
 
 
 class RecurrentNetwork(nn.Module):
