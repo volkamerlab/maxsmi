@@ -24,8 +24,6 @@ from utils_encoding import (
     char_replacement,
     get_unique_elements_as_dict,
     get_max_length,
-    one_hot_encode,
-    pad_matrix,
 )
 from utils_evaluation import evaluation_results
 from sklearn.model_selection import train_test_split
@@ -134,8 +132,12 @@ if __name__ == "__main__":
     logging.basicConfig(filename=f"{folder}/{log_file_name}", level=logging.INFO)
     logging.info(f"Start at {datetime.now()}")
     logging.info(f"Data and task: {args.task}")
-    logging.info(f"Augmentation strategy on train: {args.augmentation_strategy_train}")
-    logging.info(f"Augmentation strategy on test: {args.augmentation_strategy_test}")
+    logging.info(
+        f"Augmentation strategy on train: {args.augmentation_strategy_train.__name__}"
+    )
+    logging.info(
+        f"Augmentation strategy on test: {args.augmentation_strategy_test.__name__}"
+    )
     logging.info(f"Evaluation strategy (ensemble learning): {args.ensemble_learning}")
     logging.info(f"Train augmentation: {args.augmentation_number_train}")
     logging.info(f"Test augmentation: {args.augmentation_number_test}")
@@ -353,34 +355,42 @@ if __name__ == "__main__":
 
             for item in test_pytorch.pandas_dataframe.index:
 
-                # Retrive list of random smiles for a given index
-                multiple_smiles = test_pytorch.smiles.__getitem__(item)
+                # Retrive list of random smiles & true target for a given index/mol
+                (
+                    multiple_smiles_input_per_mol,
+                    output_true_test_per_mol,
+                ) = data_to_pytorch_format(
+                    test_pytorch.smiles.__getitem__(item),
+                    test_pytorch.target.__getitem__(item),
+                    smi_dict,
+                    max_length_smi,
+                    args.machine_learning_model,
+                    device,
+                    per_mol=True,
+                )
 
-                # TODO: use data_to_pytorch_format function
-
-                one_hot = [one_hot_encode(smi, smi_dict) for smi in multiple_smiles]
-                one_hot_pad = [pad_matrix(ohe, max_length_smi) for ohe in one_hot]
-                multiple_input = torch.tensor(one_hot_pad).float()
-
-                if len(multiple_input.shape) < 3:
-                    multiple_input = multiple_input.reshape(
-                        (1, multiple_input.shape[0], multiple_input.shape[1])
+                # Reshape if there is only one random smiles for a given index/mol
+                if len(multiple_smiles_input_per_mol.shape) < 3:
+                    multiple_smiles_input_per_mol = (
+                        multiple_smiles_input_per_mol.reshape(
+                            (
+                                1,
+                                multiple_smiles_input_per_mol.shape[0],
+                                multiple_smiles_input_per_mol.shape[1],
+                            )
+                        )
                     )
 
                 # Obtain prediction for each of the random smiles of a given molecule
-                multiple_output = ml_model(multiple_input)
+                multiple_output = ml_model(multiple_smiles_input_per_mol)
                 # Average the predictions for a given molecule
                 prediction_per_mol = torch.mean(multiple_output, dim=0)
-                # Retrieve true target of a given molecule
-                output_true_test_per_mol = torch.tensor(
-                    test_pytorch.target.__getitem__(item)
-                )
 
                 output_true_test.append(output_true_test_per_mol)
                 output_pred_test.append(prediction_per_mol)
 
-            output_pred_test = torch.tensor(output_pred_test)
-            output_true_test = torch.tensor(output_true_test)
+            output_pred_test = torch.stack(output_pred_test)
+            output_true_test = torch.stack(output_true_test)
 
         else:
             test_pytorch = AugmenteSmilesData(test_data, index_augmentation=True)
