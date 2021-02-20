@@ -306,7 +306,7 @@ if __name__ == "__main__":
             # Optimization
             optimizer.step()
             # Save loss
-            running_loss = +loss.item()
+            running_loss += float(loss.item())
 
         loss_per_epoch.append(running_loss / len(train_pytorch))
         if epoch % 10 == 0:
