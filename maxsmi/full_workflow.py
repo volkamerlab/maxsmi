@@ -333,7 +333,8 @@ if __name__ == "__main__":
     logging.info(f"Train input dimension: {input_train.shape}")
     logging.info(f"Train output dimension: {output_train.shape}")
 
-    evaluation_train = evaluation_results(output_train, ml_model(input_train), is_cuda)
+    with torch.no_grad():
+        evaluation_train = evaluation_results(output_train, ml_model(input_train), is_cuda)
 
     logging.info(f"Train metrics: {evaluation_train}")
     # Save model
