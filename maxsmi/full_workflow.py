@@ -312,6 +312,9 @@ if __name__ == "__main__":
         if epoch % 10 == 0:
             logging.info(f"Epoch : {epoch + 1} ")
 
+        if is_cuda:
+            torch.cuda.empty_cache()
+
     logging.info("Training: over")
     time_end_training = datetime.now()
     time_training = time_end_training - time_start_training
@@ -334,7 +337,9 @@ if __name__ == "__main__":
     logging.info(f"Train output dimension: {output_train.shape}")
 
     with torch.no_grad():
-        evaluation_train = evaluation_results(output_train, ml_model(input_train), is_cuda)
+        evaluation_train = evaluation_results(
+            output_train, ml_model(input_train), is_cuda
+        )
 
     logging.info(f"Train metrics: {evaluation_train}")
     # Save model
