@@ -5,29 +5,33 @@ Example with a single SMILES
 """
 
 import argparse
-from maxsmi.utils_smiles import smi2can, smi2rand, smi2unique_rand
+from maxsmi.utils_smiles import smi2can, smi2rand, control_smiles_duplication
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--nb_rand", type=int, help="nb_rand will be generated", default=3)
+parser.add_argument("--nb_rand", type=int, help="nb_rand will be generated", default=5)
 args = parser.parse_args()
 
 if __name__ == "__main__":
 
     # ==================== Example with a SMILES ================
-    smile = "Nc2nc1n(COCCO)cnc1c(=O)[nH]2"
+    smile = "CCC1CC1"
 
-    can_smi = smi2can(smile)
-    print("Initial SMILES")
-    print(can_smi)
+    canonical_smile = smi2can(smile)
+    print("Initial SMILES:")
+    print(canonical_smile)
+    print("==============")
 
-    ran_smi = smi2rand(smile, int_aug=args.nb_rand)
-    print(f"List of {args.nb_rand} random SMILES")
-    print(*ran_smi)
+    random_smiles = smi2rand(smile, int_aug=args.nb_rand)
+    print(f"List of {args.nb_rand} random SMILES: \n")
+    for random_smile in random_smiles:
+        print(f"{random_smile} \n")
+    print("==============")
 
-    ran_unique_smi = smi2unique_rand(smile, int_aug=args.nb_rand)
+    random_unique_smiles = control_smiles_duplication(random_smiles, lambda x: 1)
     print(
-        f"List of {len(ran_unique_smi)} (unique) out of "
-        f"{args.nb_rand} generated random SMILES"
+        f"List of {len(random_unique_smiles)} (unique) out of "
+        f"{args.nb_rand} generated random SMILES:"
     )
-    print(*ran_unique_smi)
+    for unique_smile in random_unique_smiles:
+        print(f"{unique_smile} \n")

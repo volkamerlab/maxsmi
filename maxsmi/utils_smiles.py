@@ -146,6 +146,10 @@ def control_smiles_duplication(random_smiles, duplicate_control=lambda x: 1):
     -------
     list
         A list of random SMILES with duplicates.
+
+    Notes
+    -----
+    When `duplicate_control=lambda x: 1`, then the returned list contains only unique SMILES.
     """
     counted_smiles = Counter(random_smiles)
     smiles_duplication = {
