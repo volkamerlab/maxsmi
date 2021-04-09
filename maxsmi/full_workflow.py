@@ -341,7 +341,7 @@ if __name__ == "__main__":
             output_train, ml_model(input_train), is_cuda
         )
 
-    logging.info(f"Train metrics: {evaluation_train}")
+    logging.info(f"Train metrics (MSE, RMSE, R2): {evaluation_train}")
     # Save model
     torch.save(ml_model.state_dict(), f"{folder}/model_dict.pth")
 
@@ -419,7 +419,7 @@ if __name__ == "__main__":
 
         logging.info(f"Test output dimension {output_true_test.shape}")
 
-    logging.info(f"Test metrics: {evaluation_test}")
+    logging.info(f"Test metrics (MSE, RMSE, R2): {evaluation_test}")
     time_end_testing = datetime.now()
     time_testing = time_end_testing - time_start_testing
     logging.info(f"Time for model testing {time_testing}")
