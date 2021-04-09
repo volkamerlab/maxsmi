@@ -116,3 +116,4 @@ output/
 
 # Testing files
 test_notebooks.ipynb
+test_results.ipynb

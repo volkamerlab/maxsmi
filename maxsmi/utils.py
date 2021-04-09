@@ -7,6 +7,14 @@ Handles the primary functions
 
 import argparse
 
+from maxsmi.augmentation_strategies import (
+    no_augmentation,
+    augmentation_with_duplication,
+    augmentation_without_duplication,
+    augmentation_with_reduced_duplication,
+    augmentation_maximum_estimation,
+)
+
 
 def string_to_bool(string):
     """
@@ -29,4 +37,36 @@ def string_to_bool(string):
     elif string in ("no", "False", "false", "0"):
         return False
     else:
-        raise argparse.ArgumentTypeError("Boolean value expected.")
+        raise argparse.ArgumentTypeError("Choose between 'yes' or 'no'.")
+
+
+def augmentation_strategy(string):
+    """
+    Converts a string to an augmentation strategy.
+
+    Parameters
+    ----------
+    string : str
+        String describing the augmentation strategy to be used.
+
+    Returns
+    -------
+    function :
+        The augmentation strategy.
+    """
+    if string == "no_augmentation":
+        return no_augmentation
+    elif string == "augmentation_with_duplication":
+        return augmentation_with_duplication
+    if string == "augmentation_without_duplication":
+        return augmentation_without_duplication
+    elif string == "augmentation_with_reduced_duplication":
+        return augmentation_with_reduced_duplication
+    elif string == "augmentation_maximum_estimation":
+        return augmentation_maximum_estimation
+    else:
+        raise argparse.ArgumentTypeError(
+            "Choose between 'no_augmentation',"
+            "'augmentation_with_duplication', 'augmentation_without_duplication"
+            "'augmentation_with_reduced_duplication' and 'augmentation_maximum_estimation'."
+        )

@@ -1,4 +1,4 @@
-maxsmi: SMILES maximum augmentation
+maxsmi: a guide to SMILES augmentation
 ==============================
 [//]: # (Badges)
 
@@ -30,12 +30,27 @@ $ conda activate maxsmi
 To run an example with the ESOL data set, augmenting the train set 5 times and the test set 2 times:
 
 ```console
-(maxsmi) $ python maxsmi/full_workflow.py --task ESOL --aug-train 5 --aug-test 2
+(maxsmi) $ python maxsmi/full_workflow.py --task ESOL --aug-strategy-train augmentation_without_duplication --aug-nb-train 5 --aug-nb-test 2
 ```
 
 If no ensemble learning is wanted for the evaluation, run:
 ```console
-(maxsmi) $ python maxsmi/full_workflow.py --task ESOL --aug-train 5 --aug-test 2 --eval-strategy False
+(maxsmi) $ python maxsmi/full_workflow.py --task ESOL --eval-strategy False
+```
+
+To compare SMILES encoding with DeepSMILES, run:
+```console
+(maxsmi) $ python maxsmi/full_workflow.py --task ESOL --string-encoding deepsmiles
+```
+
+Similarly for SELFIES, run:
+```console
+(maxsmi) $ python maxsmi/full_workflow.py --task ESOL --string-encoding selfies
+```
+
+To run an example with all chosen arguments:
+```console
+(maxsmi) $ python maxsmi/full_workflow.py --task free_solv --string-encoding smiles --aug-strategy-train augmentation_with_duplication --aug-strategy-test augmentation_with_reduced_duplication --aug-nb-train 5 --aug-nb-test 2 --ml-model CONV1D --eval-strategy True
 ```
 
 ### Copyright

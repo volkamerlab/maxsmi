@@ -17,9 +17,9 @@ def test_maxsmi_imported():
 
 ####################
 @pytest.mark.parametrize(
-    "pred_output, true_output, solution",
-    [(torch.zeros(2), torch.zeros(2), (0, 0, 1))],
+    "pred_output, true_output, cuda_available, solution",
+    [(torch.zeros(2), torch.zeros(2), False, (0, 0, 1))],
 )
-def test_evaluation_results(pred_output, true_output, solution):
-    results = evaluation_results(true_output, pred_output)
+def test_evaluation_results(pred_output, true_output, cuda_available, solution):
+    results = evaluation_results(true_output, pred_output, cuda_available)
     assert solution == results

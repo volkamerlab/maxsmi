@@ -14,17 +14,17 @@ from maxsmi.utils_encoding import (
 if __name__ == "__main__":
 
     # ==================== Example with a SMILES ================
-    smile = "Nc2nc1n(COCCO)cnc1c(=O)[nH]2"
-    print("Length of original smile: ", len(smile))
+    smiles = "Clc1cc(Cl)c(c(Cl)c1)c2c(Cl)cccc2Cl"
+    print("Length of original smile: ", len(smiles))
 
     # Replace double symbols
-    smile = char_replacement(smile)
-    print("Length of double characters replaced smile : ", len(smile))
+    new_smiles = char_replacement([smiles])[0]
+    print("Length of double characters replaced smiles : ", len(new_smiles))
 
     # Obtain dictionary for this smile
-    smi_dict = get_unique_elements_as_dict(smile)
+    smi_dict = get_unique_elements_as_dict(new_smiles)
     print("Number of unique characters: ", len(smi_dict))
 
     # One-hot encode smile
-    ohe = one_hot_encode(smile, smi_dict)
-    print("Shape of one-hot encoded matrix: ", ohe.shape)
+    one_hot_smiles = one_hot_encode(new_smiles, smi_dict)
+    print("Shape of one-hot encoded matrix: ", one_hot_smiles.shape)
