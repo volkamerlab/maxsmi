@@ -8,7 +8,7 @@ Handles the primary functions
 import torch
 from torch.utils.data import Dataset
 
-from utils_encoding import one_hot_encode, pad_matrix
+from maxsmi.utils_encoding import one_hot_encode, pad_matrix
 
 
 class AugmenteSmilesData(Dataset):
