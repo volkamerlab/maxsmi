@@ -25,6 +25,7 @@ from utils_encoding import (
     get_unique_elements_as_dict,
     get_max_length,
 )
+from utils_evaluation import evaluation_results
 from sklearn.model_selection import train_test_split
 
 import torch
