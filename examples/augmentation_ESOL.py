@@ -7,7 +7,7 @@ Given the ESOL data set, generate augmentation.
 
 import argparse
 from maxsmi.utils_data import data_retrieval
-from maxsmi.utils_smiles import smi2can, smi2rand, control_smiles_duplication
+from maxsmi.utils_smiles import smi2can, smi2rand
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--nb_rand", type=int, help="nb_rand will be generated", default=10)
