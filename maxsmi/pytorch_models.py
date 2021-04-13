@@ -8,7 +8,6 @@ Handles the primary functions
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.autograd import Variable
 
 
 class Convolutional1DNetwork(nn.Module):
