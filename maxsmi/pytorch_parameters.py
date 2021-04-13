@@ -6,4 +6,4 @@ Pytorch models parameters
 
 BACTH_SIZE = 16
 LEARNING_RATE = 0.01
-NB_EPOCHS = 2
+NB_EPOCHS = 100
