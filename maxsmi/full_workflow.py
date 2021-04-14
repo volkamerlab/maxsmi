@@ -393,6 +393,8 @@ if __name__ == "__main__":
                 # Average the predictions for a given molecule
                 prediction_per_mol = torch.mean(multiple_output, dim=0)
 
+                # TODO: add variance!
+
                 output_true_test.append(output_true_test_per_mol)
                 output_pred_test.append(prediction_per_mol)
 
