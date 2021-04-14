@@ -8,7 +8,6 @@ Handles the primary functions
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.autograd import Variable
 
 
 class Convolutional1DNetwork(nn.Module):
@@ -182,17 +181,21 @@ class RecurrentNetwork(nn.Module):
             batch_first=True,
         )
 
-        self.fully_connected_1 = nn.Linear(self.hidden_shape, 64)
+        self.fully_connected_1 = nn.Linear(
+            self.hidden_shape * self.max_length, self.hidden_shape
+        )
+        self.fully_connected_2 = nn.Linear(self.hidden_shape, 64)
         self.fully_connected_out = nn.Linear(64, self.output_shape)
 
     def forward(self, x):
         """
         Defines the foward pass for a given input 'x'
         """
-        hidden_initial = Variable(torch.zeros(1, x.shape[0], self.hidden_shape))
-        cell_initial = Variable(torch.zeros(1, x.shape[0], self.hidden_shape))
-        _, (hidden_state, _) = self.lstm(x, (hidden_initial, cell_initial))
-        x = hidden_state.view(-1, self.hidden_shape)
-        x = self._activation(x)
-        x = self._activation(self.fully_connected_1(x))
+        lstm_output, _ = self.lstm(x)
+        x = torch.reshape(
+            lstm_output,
+            (lstm_output.shape[0], lstm_output.shape[1] * lstm_output.shape[2]),
+        )
+        x = self.fully_connected_1(x)
+        x = self._activation(self.fully_connected_2(x))
         return self.fully_connected_out(x)
