@@ -390,10 +390,25 @@ if __name__ == "__main__":
 
                 # Obtain prediction for each of the random smiles of a given molecule
                 multiple_output = ml_model(multiple_smiles_input_per_mol)
+
                 # Average the predictions for a given molecule
                 prediction_per_mol = torch.mean(multiple_output, dim=0)
 
-                # TODO: add variance!
+                # Compute the standard deviation for a given molecule
+                std_prediction_per_mol = torch.std(multiple_output, dim=0)
+
+                # Create a data frame with important information:
+                # True value, canonical smiles, random smiles, mean prediction and standard deviation
+                test_pytorch_ensemble_learning = test_pytorch.pandas_dataframe
+                test_pytorch_ensemble_learning.loc[
+                    item, "average_prediction"
+                ] = prediction_per_mol.numpy()
+                test_pytorch_ensemble_learning.loc[
+                    item, "std_prediction"
+                ] = std_prediction_per_mol.numpy()
+                test_pytorch_ensemble_learning.to_pickle(
+                    f"{folder}/results_ensemble_learning.pkl"
+                )
 
                 output_true_test.append(output_true_test_per_mol)
                 output_pred_test.append(prediction_per_mol)
