@@ -271,15 +271,14 @@ if __name__ == "__main__":
     # Use optimizer for objective function
     optimizer = optim.SGD(ml_model.parameters(), lr=LEARNING_RATE)
 
-    nb_epochs = NB_EPOCHS
     loss_per_epoch = []
 
     logging.info("========")
-    logging.info("Training")
+    logging.info(f"Training for {NB_EPOCHS} epochs")
     logging.info("========")
 
     # Train model
-    for epoch in range(nb_epochs):
+    for epoch in range(NB_EPOCHS):
         running_loss = 0.0
         for i, data in enumerate(train_loader):
 
