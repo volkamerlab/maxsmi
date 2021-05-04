@@ -123,7 +123,8 @@ if __name__ == "__main__":
 
     folder = (
         f"maxsmi/output/{args.task}_{args.string_encoding}_{args.augmentation_strategy_train.__name__}"
-        f"_{args.augmentation_number_train}_{args.augmentation_number_test}_{args.machine_learning_model}"
+        f"_{args.augmentation_number_train}_{args.augmentation_strategy_test.__name__}"
+        f"_{args.augmentation_number_test}_{args.machine_learning_model}"
     )
     os.makedirs(folder, exist_ok=True)
 
