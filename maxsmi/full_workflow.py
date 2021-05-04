@@ -115,7 +115,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # TODO
     if args.augmentation_strategy_train.__name__ == "no_augmentation":
         args.augmentation_number_train = 0
     if args.augmentation_strategy_test.__name__ == "no_augmentation":
