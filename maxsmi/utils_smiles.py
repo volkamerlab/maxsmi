@@ -102,7 +102,7 @@ def smi2max_rand(smiles, max_duplication=10):
     smiles : str
         SMILES string describing a compound.
     max_duplication : int, Optional, default: 10
-        The number of concecutive redundant SMILES that have to be generated before stopping augmentation process.
+        The number of consecutive redundant SMILES that have to be generated before stopping augmentation process.
 
     Returns
     -------

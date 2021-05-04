@@ -115,11 +115,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # TODO
-    if args.augmentation_strategy_train == "no_augmentation":
+    if args.augmentation_strategy_train.__name__ == "no_augmentation":
         args.augmentation_number_train = 0
-    if args.augmentation_strategy_test == "no_augmentation":
+    if args.augmentation_strategy_test.__name__ == "no_augmentation":
         args.augmentation_number_test = 0
+        args.ensemble_learning = False
 
     folder = (
         f"maxsmi/output/{args.task}_{args.string_encoding}_{args.augmentation_strategy_train.__name__}"
@@ -271,15 +271,14 @@ if __name__ == "__main__":
     # Use optimizer for objective function
     optimizer = optim.SGD(ml_model.parameters(), lr=LEARNING_RATE)
 
-    nb_epochs = NB_EPOCHS
     loss_per_epoch = []
 
     logging.info("========")
-    logging.info("Training")
+    logging.info(f"Training for {NB_EPOCHS} epochs")
     logging.info("========")
 
     # Train model
-    for epoch in range(nb_epochs):
+    for epoch in range(NB_EPOCHS):
         running_loss = 0.0
         for i, data in enumerate(train_loader):
 
@@ -390,8 +389,25 @@ if __name__ == "__main__":
 
                 # Obtain prediction for each of the random smiles of a given molecule
                 multiple_output = ml_model(multiple_smiles_input_per_mol)
+
                 # Average the predictions for a given molecule
                 prediction_per_mol = torch.mean(multiple_output, dim=0)
+
+                # Compute the standard deviation for a given molecule
+                std_prediction_per_mol = torch.std(multiple_output, dim=0)
+
+                # Create a data frame with important information:
+                # True value, canonical smiles, random smiles, mean prediction and standard deviation
+                test_pytorch_ensemble_learning = test_pytorch.pandas_dataframe
+                test_pytorch_ensemble_learning.loc[
+                    item, "average_prediction"
+                ] = prediction_per_mol.numpy()
+                test_pytorch_ensemble_learning.loc[
+                    item, "std_prediction"
+                ] = std_prediction_per_mol.numpy()
+                test_pytorch_ensemble_learning.to_pickle(
+                    f"{folder}/results_ensemble_learning.pkl"
+                )
 
                 output_true_test.append(output_true_test_per_mol)
                 output_pred_test.append(prediction_per_mol)

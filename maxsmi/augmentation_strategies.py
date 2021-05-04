@@ -81,7 +81,7 @@ def augmentation_with_reduced_duplication(smiles, augmentation_number):
     return control_smiles_duplication(smiles_list, lambda x: math.sqrt(x))
 
 
-def augmentation_maximum_estimation(smiles, max_duplication=10):
+def augmentation_maximum_estimation(smiles, max_duplication=100):
     """
     Returns augmented SMILES with estimated maximum number.
 
@@ -89,7 +89,7 @@ def augmentation_maximum_estimation(smiles, max_duplication=10):
     ----------
     smiles : str
         SMILES string describing a compound.
-    max_duplication : int, Optional, default: 10
+    max_duplication : int, Optional, default: 100
         The number of concecutive redundant SMILES that have to be generated before stopping augmentation process.
 
     Returns
@@ -97,4 +97,4 @@ def augmentation_maximum_estimation(smiles, max_duplication=10):
     list
         A list of "estimated" maximum unique random SMILES.
     """
-    return smi2max_rand(smiles, max_duplication=10)
+    return smi2max_rand(smiles, max_duplication=100)
