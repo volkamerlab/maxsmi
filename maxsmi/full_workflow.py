@@ -116,10 +116,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # TODO
-    if args.augmentation_strategy_train == "no_augmentation":
+    if args.augmentation_strategy_train.__name__ == "no_augmentation":
         args.augmentation_number_train = 0
-    if args.augmentation_strategy_test == "no_augmentation":
+    if args.augmentation_strategy_test.__name__ == "no_augmentation":
         args.augmentation_number_test = 0
+        args.ensemble_learning = False
 
     folder = (
         f"maxsmi/output/{args.task}_{args.string_encoding}_{args.augmentation_strategy_train.__name__}"
