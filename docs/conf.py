@@ -173,7 +173,7 @@ texinfo_documents = [
         "maxsmi Documentation",
         author,
         "maxsmi",
-        "Find the optimal SMILES augmentationn for accurate prediction.",
+        "Find the optimal SMILES augmentation for accurate prediction.",
         "Miscellaneous",
     ),
 ]
