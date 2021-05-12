@@ -1,6 +1,6 @@
 """
-SMILES Augmentation and max
-Find the optimal SMILES augmentationn for accurate prediction.
+maxsmi
+Find the optimal SMILES augmentation for accurate prediction.
 """
 import sys
 from setuptools import setup, find_packages
