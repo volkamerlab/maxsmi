@@ -1,4 +1,4 @@
 Getting Started
 ===============
 
-This page details how to get started with SMILES Augmentation and max. 
+This page details how to get started with maxsmi. 
