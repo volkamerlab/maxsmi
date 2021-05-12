@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 
-project = "SMILES Augmentation and max"
+project = "maxsmi"
 copyright = (
     "2020, Talia B. Kimber. Project structure based on the "
     "Computational Molecular Science Python Cookiecutter version 1.4"
@@ -145,7 +145,7 @@ latex_documents = [
     (
         master_doc,
         "maxsmi.tex",
-        "SMILES Augmentation and max Documentation",
+        "maxsmi Documentation",
         "maxsmi",
         "manual",
     ),
@@ -157,7 +157,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, "maxsmi", "SMILES Augmentation and max Documentation", [author], 1)
+    (master_doc, "maxsmi", "maxsmi Documentation", [author], 1)
 ]
 
 
@@ -170,7 +170,7 @@ texinfo_documents = [
     (
         master_doc,
         "maxsmi",
-        "SMILES Augmentation and max Documentation",
+        "maxsmi Documentation",
         author,
         "maxsmi",
         "Find the optimal SMILES augmentationn for accurate prediction.",
