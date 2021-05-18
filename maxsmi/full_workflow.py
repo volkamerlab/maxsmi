@@ -308,6 +308,8 @@ if __name__ == "__main__":
             optimizer.step()
             # Save loss
             running_loss += float(loss.item())
+            # free memory
+            del data
 
         loss_per_epoch.append(running_loss / len(train_pytorch))
         if epoch % 10 == 0:
