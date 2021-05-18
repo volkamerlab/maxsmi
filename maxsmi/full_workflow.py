@@ -278,6 +278,7 @@ if __name__ == "__main__":
     logging.info(f"Training for {NB_EPOCHS} epochs")
     logging.info("========")
 
+    ml_model.train()
     # Train model
     for epoch in range(NB_EPOCHS):
         running_loss = 0.0
@@ -336,6 +337,7 @@ if __name__ == "__main__":
     logging.info(f"Train input dimension: {input_train.shape}")
     logging.info(f"Train output dimension: {output_train.shape}")
 
+    ml_model.eval()
     with torch.no_grad():
         evaluation_train = evaluation_results(
             output_train, ml_model(input_train), is_cuda
@@ -402,10 +404,10 @@ if __name__ == "__main__":
                 test_pytorch_ensemble_learning = test_pytorch.pandas_dataframe
                 test_pytorch_ensemble_learning.loc[
                     item, "average_prediction"
-                ] = prediction_per_mol.numpy()
+                ] = prediction_per_mol.cpu().numpy()
                 test_pytorch_ensemble_learning.loc[
                     item, "std_prediction"
-                ] = std_prediction_per_mol.numpy()
+                ] = std_prediction_per_mol.cpu().numpy()
                 test_pytorch_ensemble_learning.to_pickle(
                     f"{folder}/results_ensemble_learning.pkl"
                 )
