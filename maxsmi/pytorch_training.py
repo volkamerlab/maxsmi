@@ -72,4 +72,4 @@ def model_training(
         if is_cuda:
             torch.cuda.empty_cache()
 
-        return loss_per_epoch
+    return loss_per_epoch
