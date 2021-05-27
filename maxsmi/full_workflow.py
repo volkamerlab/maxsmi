@@ -192,6 +192,8 @@ if __name__ == "__main__":
         test_size=TEST_RATIO,
         random_state=RANDOM_SEED,
     )
+    logging.info(f"Number of training points before augmentation: {len(train_data)} ")
+    logging.info(f"Number of testing points before augmentation: {len(test_data)} ")
 
     # ================================
     # String encoding & Augmentation
@@ -247,6 +249,7 @@ if __name__ == "__main__":
 
     # Pytorch train set
     train_pytorch = AugmenteSmilesData(train_data)
+    logging.info(f"Number of data points in training set: {len(train_pytorch)} ")
 
     # Pytorch data loader for mini batches
     train_loader = torch.utils.data.DataLoader(
