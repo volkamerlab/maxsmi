@@ -12,37 +12,43 @@ from datetime import datetime
 import itertools
 
 from maxsmi.utils import string_to_bool, augmentation_strategy
-from utils_data import data_retrieval
+from maxsmi.utils_data import data_retrieval
 
-from utils_smiles import (
+from maxsmi.utils_smiles import (
     smi2can,
     identify_disconnected_structures,
     smi2selfies,
     smi2deepsmiles,
 )
-from utils_encoding import (
+from maxsmi.utils_encoding import (
     char_replacement,
     get_unique_elements_as_dict,
     get_max_length,
 )
-from utils_evaluation import evaluation_results
 from sklearn.model_selection import train_test_split
 
 import torch
 import torch.optim as optim
 import torch.nn as nn
 
-from pytorch_models import (
+from maxsmi.pytorch_models import (
     Convolutional1DNetwork,
     Convolutional2DNetwork,
     RecurrentNetwork,
 )
-from pytorch_data import AugmenteSmilesData, data_to_pytorch_format
+from maxsmi.pytorch_data import AugmenteSmilesData, data_to_pytorch_format
 
-from splitting_parameters import TEST_RATIO, RANDOM_SEED
-from pytorch_parameters import BACTH_SIZE, NB_EPOCHS, LEARNING_RATE
+from maxsmi.splitting_parameters import TEST_RATIO, RANDOM_SEED
+from maxsmi.pytorch_evaluation import model_evaluation
+from maxsmi.pytorch_training import (
+    BACTH_SIZE,
+    NB_EPOCHS,
+    LEARNING_RATE,
+    model_training,
+)
+from maxsmi.utils_evaluation import evaluation_results
 
-from parser_default import (
+from maxsmi.parser_default import (
     TASK,
     STRING_ENCODING,
     TRAIN_AUGMENTATION,
@@ -236,10 +242,8 @@ if __name__ == "__main__":
     logging.info(f"Longest smiles in data set: {max_length_smi} ")
 
     # ==================================
-    # Machine learning ML & Pytorch data
+    # Pytorch data
     # ==================================
-
-    time_start_training = datetime.now()
 
     # Pytorch train set
     train_pytorch = AugmenteSmilesData(train_data)
@@ -248,6 +252,10 @@ if __name__ == "__main__":
     train_loader = torch.utils.data.DataLoader(
         train_pytorch, batch_size=BACTH_SIZE, shuffle=True
     )
+
+    # ==================================
+    # Machine learning ML
+    # ==================================
 
     # Initialize ml model
     if args.machine_learning_model == "CONV1D":
@@ -266,88 +274,61 @@ if __name__ == "__main__":
     ml_model.to(device)
     logging.info(f"Summary of ml model: {ml_model} ")
 
-    # Loss function
-    loss_function = nn.MSELoss()
-
     # Use optimizer for objective function
     optimizer = optim.SGD(ml_model.parameters(), lr=LEARNING_RATE)
 
-    loss_per_epoch = []
+    # Loss function
+    loss_function = nn.MSELoss()
 
-    logging.info("========")
-    logging.info(f"Training for {NB_EPOCHS} epochs")
-    logging.info("========")
+    # ==================================
+    # ML Training
+    # ==================================
 
-    ml_model.train()
-    # Train model
-    for epoch in range(NB_EPOCHS):
-        running_loss = 0.0
-        for i, data in enumerate(train_loader):
+    logging.info("Training: start")
+    time_start_training = datetime.now()
 
-            # SMILES and target
-            smiles, target = data
-
-            input_true, output_true = data_to_pytorch_format(
-                smiles,
-                target,
-                smi_dict,
-                max_length_smi,
-                args.machine_learning_model,
-                device,
-            )
-
-            # Zero the parameter gradients
-            optimizer.zero_grad()
-            # Forward
-            output_pred = ml_model(input_true)
-            # Objective
-            loss = loss_function(output_pred, output_true)
-            # Backward
-            loss.backward()
-            # Optimization
-            optimizer.step()
-            # Save loss
-            running_loss += float(loss.item())
-            # free memory
-            del data
-
-        loss_per_epoch.append(running_loss / len(train_pytorch))
-        if epoch % 10 == 0:
-            logging.info(f"Epoch : {epoch + 1} ")
-
-        if is_cuda:
-            torch.cuda.empty_cache()
+    loss_per_epoch = model_training(
+        data_loader=train_loader,
+        ml_model=ml_model,
+        loss_function=loss_function,
+        optimizer=optimizer,
+        nb_epochs=NB_EPOCHS,
+        is_cuda=is_cuda,
+        len_full_data=len(train_pytorch),
+        smi_dict=smi_dict,
+        max_length_smi=max_length_smi,
+        device=device,
+    )
 
     logging.info("Training: over")
     time_end_training = datetime.now()
     time_training = time_end_training - time_start_training
     logging.info(f"Time for model training {time_training}")
 
+    # Save model
+    torch.save(ml_model.state_dict(), f"{folder}/model_dict.pth")
+
     # ================================
     # # Evaluate on train set
     # ================================
 
-    input_train, output_train = data_to_pytorch_format(
-        list(train_pytorch.smiles),
-        train_pytorch.target,
-        smi_dict,
-        max_length_smi,
-        args.machine_learning_model,
-        device,
+    # Pytorch data loader
+    train_loader = torch.utils.data.DataLoader(
+        train_pytorch, batch_size=1, shuffle=False
     )
 
-    logging.info(f"Train input dimension: {input_train.shape}")
-    logging.info(f"Train output dimension: {output_train.shape}")
+    model_evaluation = model_evaluation(
+        data_loader=train_loader,
+        ml_model=ml_model,
+        smi_dict=smi_dict,
+        max_length_smi=max_length_smi,
+        device=device,
+    )
 
-    ml_model.eval()
-    with torch.no_grad():
-        evaluation_train = evaluation_results(
-            output_train, ml_model(input_train), is_cuda
-        )
+    (output_true_train, output_pred_train) = model_evaluation
+    evaluation_train = evaluation_results(output_true_train, output_pred_train, is_cuda)
 
     logging.info(f"Train metrics (MSE, RMSE, R2): {evaluation_train}")
-    # Save model
-    torch.save(ml_model.state_dict(), f"{folder}/model_dict.pth")
 
     # ================================
     # # Evaluate on test set
@@ -433,7 +414,6 @@ if __name__ == "__main__":
 
             output_pred_test = ml_model(input_true_test)
 
-        loss_pred = loss_function(output_pred_test, output_true_test)
         evaluation_test = evaluation_results(
             output_true_test, output_pred_test, is_cuda
         )
