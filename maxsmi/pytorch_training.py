@@ -10,7 +10,7 @@ from maxsmi.pytorch_data import data_to_pytorch_format
 
 BACTH_SIZE = 16
 LEARNING_RATE = 0.001
-NB_EPOCHS = 5
+NB_EPOCHS = 250
 
 
 def model_training(
