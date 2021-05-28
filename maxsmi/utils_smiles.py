@@ -134,7 +134,8 @@ def control_smiles_duplication(random_smiles, duplicate_control=lambda x: 1):
     random_smiles : list
         A list of random SMILES, can be obtained by `smiles_to_random()`.
     duplicate_control : func, Optional, default: 1
-        The number of times a SMILES will be duplicated, as function of the number of times it was included in `random_smiles`.
+        The number of times a SMILES will be duplicated, as function of the number of times
+        it was included in `random_smiles`.
         This number is rounded up to the nearest integer.
 
     Returns
