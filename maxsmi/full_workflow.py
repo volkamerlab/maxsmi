@@ -15,10 +15,10 @@ from maxsmi.utils import string_to_bool, augmentation_strategy
 from maxsmi.utils_data import data_retrieval
 
 from maxsmi.utils_smiles import (
-    smi2can,
+    smiles_to_canonical,
     identify_disconnected_structures,
-    smi2selfies,
-    smi2deepsmiles,
+    smiles_to_selfies,
+    smiles_to_deepsmiles,
 )
 from maxsmi.utils_encoding import (
     char_replacement,
@@ -28,22 +28,17 @@ from maxsmi.utils_encoding import (
 from sklearn.model_selection import train_test_split
 
 import torch
-import torch.optim as optim
 import torch.nn as nn
 
-from maxsmi.pytorch_models import (
-    Convolutional1DNetwork,
-    Convolutional2DNetwork,
-    RecurrentNetwork,
-)
+from maxsmi.pytorch_models import model_type
 from maxsmi.pytorch_data import AugmenteSmilesData, data_to_pytorch_format
 
 from maxsmi.splitting_parameters import TEST_RATIO, RANDOM_SEED
 from maxsmi.pytorch_evaluation import model_evaluation
 from maxsmi.pytorch_training import (
     BACTH_SIZE,
-    NB_EPOCHS,
     LEARNING_RATE,
+    NB_EPOCHS,
     model_training,
 )
 from maxsmi.utils_evaluation import evaluation_results
@@ -173,7 +168,7 @@ if __name__ == "__main__":
     data = data_retrieval(args.task)
 
     # Canonical SMILES
-    data["canonical_smiles"] = data["smiles"].apply(smi2can)
+    data["canonical_smiles"] = data["smiles"].apply(smiles_to_canonical)
     data["disconnected_smi"] = data["canonical_smiles"].apply(
         identify_disconnected_structures
     )
@@ -208,16 +203,18 @@ if __name__ == "__main__":
 
     elif args.string_encoding == "selfies":
         train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
-            smi2selfies
+            smiles_to_selfies
         )
-        test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(smi2selfies)
+        test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
+            smiles_to_selfies
+        )
 
     elif args.string_encoding == "deepsmiles":
         train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
-            smi2deepsmiles
+            smiles_to_deepsmiles
         )
         test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
-            smi2deepsmiles
+            smiles_to_deepsmiles
         )
 
     # ================================
@@ -260,25 +257,10 @@ if __name__ == "__main__":
     # Machine learning ML
     # ==================================
 
-    # Initialize ml model
-    if args.machine_learning_model == "CONV1D":
-        ml_model = Convolutional1DNetwork(
-            nb_char=len(smi_dict), max_length=max_length_smi
-        )
-    elif args.machine_learning_model == "CONV2D":
-        ml_model = Convolutional2DNetwork(
-            nb_char=len(smi_dict), max_length=max_length_smi
-        )
-    elif args.machine_learning_model == "RNN":
-        ml_model = RecurrentNetwork(nb_char=len(smi_dict), max_length=max_length_smi)
-    else:
-        logging.warning("Unknown machine learning model ")
-
-    ml_model.to(device)
+    (ml_model_name, ml_model) = model_type(
+        args.machine_learning_model, device, smi_dict, max_length_smi
+    )
     logging.info(f"Summary of ml model: {ml_model} ")
-
-    # Use optimizer for objective function
-    optimizer = optim.SGD(ml_model.parameters(), lr=LEARNING_RATE)
 
     # Loss function
     loss_function = nn.MSELoss()
@@ -287,20 +269,23 @@ if __name__ == "__main__":
     # ML Training
     # ==================================
 
-    logging.info("Training: start")
+    logging.info("========")
+    logging.info(f"Training for {NB_EPOCHS} epochs")
+    logging.info("========")
     time_start_training = datetime.now()
 
     loss_per_epoch = model_training(
         data_loader=train_loader,
+        ml_model_name=ml_model_name,
         ml_model=ml_model,
         loss_function=loss_function,
-        optimizer=optimizer,
         nb_epochs=NB_EPOCHS,
         is_cuda=is_cuda,
-        len_full_data=len(train_pytorch),
-        smi_dict=smi_dict,
-        max_length_smi=max_length_smi,
-        device=device,
+        len_train_data=len(train_pytorch),
+        smiles_dictionary=smi_dict,
+        max_length_smiles=max_length_smi,
+        device_to_use=device,
+        learning_rate=LEARNING_RATE,
     )
 
     logging.info("Training: over")
@@ -322,10 +307,11 @@ if __name__ == "__main__":
 
     model_evaluation = model_evaluation(
         data_loader=train_loader,
+        ml_model_name=ml_model_name,
         ml_model=ml_model,
-        smi_dict=smi_dict,
-        max_length_smi=max_length_smi,
-        device=device,
+        smiles_dictionary=smi_dict,
+        max_length_smiles=max_length_smi,
+        device_to_use=device,
     )
 
     (output_true_train, output_pred_train) = model_evaluation
