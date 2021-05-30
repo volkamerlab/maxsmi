@@ -2,11 +2,13 @@ maxsmi: a guide to SMILES augmentation
 ==============================
 [//]: # (Badges)
 
-[![Actions Status](https://github.com/t-kimber/maxsmi/workflows/CI/badge.svg)](https://github.com/t-kimber/maxsmi/actions)
+[![Actions Status](https://github.com/t-kimber/maxsmi/workflows/CI/badge.svg)](https://github.com/t-kimber/maxsmi/actions) [![codecov](https://codecov.io/gh/t-kimber/maxsmi/branch/main/graph/badge.svg)](https://codecov.io/gh/t-kimber/maxsmi/branch/main) [![Actions Status](https://github.com/t-kimber/maxsmi/workflows/flake8/badge.svg)](https://github.com/t-kimber/maxsmi/actions)
 
-[![codecov](https://codecov.io/gh/t-kimber/maxsmi/branch/main/graph/badge.svg)](https://codecov.io/gh/t-kimber/maxsmi/branch/main)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-[![Actions Status](https://github.com/t-kimber/maxsmi/workflows/flake8/badge.svg)](https://github.com/t-kimber/maxsmi/actions)
+![GitHub closed pr](https://img.shields.io/github/issues-pr-closed-raw/volkamerlab/maxsmi) ![GitHub open pr](https://img.shields.io/github/issues-pr-raw/volkamerlab/maxsmi) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/volkamerlab/maxsmi) ![GitHub open issues](https://img.shields.io/github/issues/volkamerlab/maxsmi)
+
+![maxsmi](https://img.shields.io/badge/..-maxsmi-pink)
 
 
 
