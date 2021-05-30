@@ -153,10 +153,11 @@ if __name__ == "__main__":
 
     if is_cuda:
         device = torch.device("cuda")
+        device_name = torch.cuda.get_device_name(device)
+        logging.info(f"CUDA available: {is_cuda} with {device_name}")
     else:
         device = torch.device("cpu")
-
-    logging.info(f"CUDA available: {is_cuda}")
+        logging.info(f"CUDA available: {is_cuda}")
 
     time_execution_start = datetime.now()
 
