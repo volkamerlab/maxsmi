@@ -1,5 +1,9 @@
 import math
-from maxsmi.utils_smiles import smi2rand, control_smiles_duplication, smi2max_rand
+from maxsmi.utils_smiles import (
+    smiles_to_random,
+    control_smiles_duplication,
+    smiles_to_max_random,
+)
 
 
 def no_augmentation(smiles, augmentation_number=0):
@@ -36,7 +40,7 @@ def augmentation_with_duplication(smiles, augmentation_number):
     list
         A list containing the given number of random SMILES, which might include duplicated SMILES.
     """
-    smiles_list = smi2rand(smiles, augmentation_number)
+    smiles_list = smiles_to_random(smiles, augmentation_number)
     return control_smiles_duplication(smiles_list, lambda x: x)
 
 
@@ -56,7 +60,7 @@ def augmentation_without_duplication(smiles, augmentation_number):
     list
         A list of unique random SMILES (no duplicates).
     """
-    smiles_list = smi2rand(smiles, augmentation_number)
+    smiles_list = smiles_to_random(smiles, augmentation_number)
     return control_smiles_duplication(smiles_list, lambda x: 1)
 
 
@@ -77,11 +81,11 @@ def augmentation_with_reduced_duplication(smiles, augmentation_number):
     list
         A list of random SMILES with a reduced amount of duplicates.
     """
-    smiles_list = smi2rand(smiles, augmentation_number)
+    smiles_list = smiles_to_random(smiles, augmentation_number)
     return control_smiles_duplication(smiles_list, lambda x: math.sqrt(x))
 
 
-def augmentation_maximum_estimation(smiles, max_duplication=100):
+def augmentation_maximum_estimation(smiles, max_duplication=10):
     """
     Returns augmented SMILES with estimated maximum number.
 
@@ -89,7 +93,7 @@ def augmentation_maximum_estimation(smiles, max_duplication=100):
     ----------
     smiles : str
         SMILES string describing a compound.
-    max_duplication : int, Optional, default: 100
+    max_duplication : int, Optional, default: 10
         The number of concecutive redundant SMILES that have to be generated before stopping augmentation process.
 
     Returns
@@ -97,4 +101,4 @@ def augmentation_maximum_estimation(smiles, max_duplication=100):
     list
         A list of "estimated" maximum unique random SMILES.
     """
-    return smi2max_rand(smiles, max_duplication=100)
+    return smiles_to_max_random(smiles, max_duplication=10)

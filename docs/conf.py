@@ -51,6 +51,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
+    "nbsphinx",
 ]
 
 autosummary_generate = True
@@ -156,9 +157,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    (master_doc, "maxsmi", "maxsmi Documentation", [author], 1)
-]
+man_pages = [(master_doc, "maxsmi", "maxsmi Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output ----------------------------------------------

@@ -199,3 +199,45 @@ class RecurrentNetwork(nn.Module):
         x = self.fully_connected_1(x)
         x = self._activation(self.fully_connected_2(x))
         return self.fully_connected_out(x)
+
+
+def model_type(model_name, device_to_use, smiles_dictionary, max_length_smiles):
+    """
+    Instanciates a pytorch machine learning model.
+
+    Parameters
+    ----------
+    model_name : str
+        Name of the machine learning model. It can be either "CON1D", "CONV2D", or "RNN".
+    device_to_use : torch.device
+        The device to use for model instance, "cpu" or "cuda".
+    smiles_dictionary : dict
+        The dictionary of SMILES characters.
+    max_length_smiles : int
+        The length of the longest SMILES.
+
+    Returns
+    -------
+    tuple of (str, nn.Module):
+        The name of the model itself, the instance of the model.
+    """
+
+    # Initialize machine learning model
+    if model_name == "CONV1D":
+        model_instanciated = Convolutional1DNetwork(
+            nb_char=len(smiles_dictionary), max_length=max_length_smiles
+        )
+    elif model_name == "CONV2D":
+        model_instanciated = Convolutional2DNetwork(
+            nb_char=len(smiles_dictionary), max_length=max_length_smiles
+        )
+    elif model_name == "RNN":
+        model_instanciated = RecurrentNetwork(
+            nb_char=len(smiles_dictionary), max_length=max_length_smiles
+        )
+    else:
+        raise Exception("Unknown machine learning model. ")
+
+    model_instanciated.to(device_to_use)
+
+    return (model_name, model_instanciated)

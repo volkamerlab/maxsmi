@@ -20,7 +20,7 @@ def data_retrieval(target_data="ESOL"):
 
     Returns
     -------
-    data: pd.Pandas
+    dataframe: pd.Pandas
         Pandas data frame with two columns:
             - `smiles`: SMILES encoding of the compounds.
             - `target`: the measured target values.
@@ -40,12 +40,13 @@ def data_retrieval(target_data="ESOL"):
 
     else:
         if target_data != "ESOL":
+            # TODO: use warnings
             print("Invalid data. Choosing ESOL by default. ")
         url = "https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/delaney-processed.csv"
         data = pd.read_csv(url)
         task = "measured log solubility in mols per litre"
 
-    df = data[[task, "smiles"]]
-    df = df.rename(columns={task: "target"})
+    dataframe = data[[task, "smiles"]]
+    dataframe = dataframe.rename(columns={task: "target"})
 
-    return df
+    return dataframe

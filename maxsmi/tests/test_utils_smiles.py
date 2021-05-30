@@ -8,12 +8,12 @@ import pytest
 import sys
 
 from maxsmi.utils_smiles import (
-    smi2can,
-    smi2rand,
-    smi2max_rand,
+    smiles_to_canonical,
+    smiles_to_random,
+    smiles_to_max_random,
     identify_disconnected_structures,
-    smi2selfies,
-    smi2deepsmiles,
+    smiles_to_selfies,
+    smiles_to_deepsmiles,
     control_smiles_duplication,
 )
 
@@ -28,23 +28,23 @@ def test_maxsmi_imported():
     "smiles, solution",
     [("C", "C"), ("OC", "CO"), ("KCahsbl", None)],
 )
-def test_smi2can(smiles, solution):
-    can_smi = smi2can(smiles)
-    assert solution == can_smi
+def test_smiles_to_canonical(smiles, solution):
+    canonical_smi = smiles_to_canonical(smiles)
+    assert solution == canonical_smi
 
 
 @pytest.mark.parametrize(
     "smiles, int_aug, solution",
     [("C", 3, ["C", "C", "C"]), ("sakjncal", 3, None), ("OC", 0, ["OC"])],
 )
-def test_smi2rand(smiles, int_aug, solution):
-    rand_smi = smi2rand(smiles, int_aug)
+def test_smiles_to_random(smiles, int_aug, solution):
+    rand_smi = smiles_to_random(smiles, int_aug)
     assert solution == rand_smi
 
 
-def test_smi2rand_exception():
+def test_smiles_to_random_exception():
     with pytest.raises(Exception):
-        assert smi2rand("OC", -1)
+        assert smiles_to_random("OC", -1)
 
 
 @pytest.mark.parametrize(
@@ -64,8 +64,8 @@ def test_identify_disconnected_structures(smiles, solution):
         ("CCC", 300, ["CCC", "C(C)C"]),
     ],
 )
-def test_smi2max_rand(smiles, max_duplication, solution):
-    ran_max_smi = smi2max_rand(smiles, max_duplication)
+def test_smiles_to_max_random(smiles, max_duplication, solution):
+    ran_max_smi = smiles_to_max_random(smiles, max_duplication)
     assert solution == ran_max_smi
 
 
@@ -89,14 +89,14 @@ def test_control_smiles_duplication(smiles, control_function, solution):
 @pytest.mark.parametrize(
     "smiles, solution", [("c1ccccc1", ["[C][=C][C][=C][C][=C][Ring1][Branch1_2]"])]
 )
-def test_smi2selfies(smiles, solution):
-    selfies = smi2selfies(smiles)
+def test_smiles_to_selfies(smiles, solution):
+    selfies = smiles_to_selfies(smiles)
     assert solution == selfies
 
 
 @pytest.mark.parametrize(
     "smiles, solution", [("c1cccc(C(=O)Cl)c1", ["cccccC=O)Cl))c6"])]
 )
-def test_smi2deepsmiles(smiles, solution):
-    deepsmiles = smi2deepsmiles(smiles)
+def test_smiles_to_deepsmiles(smiles, solution):
+    deepsmiles = smiles_to_deepsmiles(smiles)
     assert solution == deepsmiles

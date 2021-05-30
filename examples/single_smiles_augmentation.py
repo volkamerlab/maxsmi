@@ -5,7 +5,11 @@ Example with a single SMILES
 """
 
 import argparse
-from maxsmi.utils_smiles import smi2can, smi2rand, control_smiles_duplication
+from maxsmi.utils_smiles import (
+    smiles_to_canonical,
+    smiles_to_random,
+    control_smiles_duplication,
+)
 
 
 parser = argparse.ArgumentParser()
@@ -17,12 +21,12 @@ if __name__ == "__main__":
     # ==================== Example with a SMILES ================
     smile = "CCC1CC1"
 
-    canonical_smile = smi2can(smile)
+    canonical_smile = smiles_to_canonical(smile)
     print("Initial SMILES:")
     print(canonical_smile)
     print("==============")
 
-    random_smiles = smi2rand(smile, int_aug=args.nb_rand)
+    random_smiles = smiles_to_random(smile, int_aug=args.nb_rand)
     print(f"List of {args.nb_rand} random SMILES: \n")
     for random_smile in random_smiles:
         print(f"{random_smile} \n")

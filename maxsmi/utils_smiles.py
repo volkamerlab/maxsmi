@@ -13,9 +13,9 @@ import selfies
 import deepsmiles
 
 
-def smi2can(smiles):
+def smiles_to_canonical(smiles):
     """
-    smi2can takes a SMILES and return its canonical form.
+    Takes a SMILES and return its canonical form.
 
     Parameters
     ----------
@@ -25,8 +25,7 @@ def smi2can(smiles):
     Returns
     -------
     str
-        The canonical version of the SMILES
-        or None if SMILES is not valid.
+        The canonical version of the SMILES or None if SMILES is not valid.
     """
 
     mol = Chem.MolFromSmiles(smiles)
@@ -58,10 +57,9 @@ def identify_disconnected_structures(smiles):
         return smiles
 
 
-def smi2rand(smiles, int_aug=50):
+def smiles_to_random(smiles, int_aug=50):
     """
-    smi2rand takes a SMILES (not necessarily canonical)
-    and returns `int_aug` random variations of this SMILES.
+    Takes a SMILES (not necessarily canonical) and returns `int_aug` random variations of this SMILES.
 
     Parameters
     ----------
@@ -73,8 +71,7 @@ def smi2rand(smiles, int_aug=50):
     Returns
     -------
     list
-        A list of `int_aug` random (may not be unique) SMILES
-        or None if the initial SMILES is not valid.
+        A list of `int_aug` random (may not be unique) SMILES or None if the initial SMILES is not valid.
     """
 
     mol = Chem.MolFromSmiles(smiles)
@@ -93,9 +90,9 @@ def smi2rand(smiles, int_aug=50):
             raise Exception("int_aug must be greater or equal to zero.")
 
 
-def smi2max_rand(smiles, max_duplication=10):
+def smiles_to_max_random(smiles, max_duplication=10):
     """
-    Returns augmented SMILES with estimated maximum number.
+    Returns estimated maximum number of random SMILES.
 
     Parameters
     ----------
@@ -130,16 +127,15 @@ def smi2max_rand(smiles, max_duplication=10):
 
 def control_smiles_duplication(random_smiles, duplicate_control=lambda x: 1):
     """
-    Returns augmented SMILES with the number of duplicates controlled
-    by the function duplicate_control.
+    Returns augmented SMILES with the number of duplicates controlled by the function duplicate_control.
 
     Parameters
     ----------
     random_smiles : list
-        A list of random SMILES, can be obtained by smi2rand.
+        A list of random SMILES, can be obtained by `smiles_to_random()`.
     duplicate_control : func, Optional, default: 1
-        The number of times a SMILES will be duplicated,
-        as function of the number of times it was included in random_smiles.
+        The number of times a SMILES will be duplicated, as function of the number of times
+        it was included in `random_smiles`.
         This number is rounded up to the nearest integer.
 
     Returns
@@ -163,9 +159,9 @@ def control_smiles_duplication(random_smiles, duplicate_control=lambda x: 1):
     )
 
 
-def smi2selfies(smiles):
+def smiles_to_selfies(smiles):
     """
-    smi2selfies takes a SMILES and return the selfies encoding.
+    Takes a SMILES and return the selfies encoding.
 
     Parameters
     ----------
@@ -181,9 +177,9 @@ def smi2selfies(smiles):
     return [selfies.encoder(smiles)]
 
 
-def smi2deepsmiles(smiles):
+def smiles_to_deepsmiles(smiles):
     """
-    smi2deepsmiles takes a SMILES and return the DeepSMILES encoding.
+    Takes a SMILES and return the DeepSMILES encoding.
 
     Parameters
     ----------

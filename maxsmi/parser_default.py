@@ -22,5 +22,8 @@ TEST_AUGMENTATION = 10
 # The machine learning model
 ML_MODEL = "CONV1D"
 
+# Number of epochs for training
+NB_EPOCHS = 250
+
 # If ensemble learning is applied in the evaluation
 ENSEMBLE_LEARNING = True

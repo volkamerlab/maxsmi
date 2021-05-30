@@ -7,7 +7,7 @@ Unit and regression test for the maxsmi package.
 import pytest
 import sys
 import pandas
-from maxsmi.pytorch_data import AugmenteSmilesData
+from maxsmi.pytorch_data import AugmentSmilesData
 
 
 def test_maxsmi_imported():
@@ -26,7 +26,7 @@ pandas_df = pandas.DataFrame({"new_smiles": ["CC", "C", "CO"], "target": [3, 4, 
     ],
 )
 def test___len___(pandas_data_frame, solution):
-    smiles_data = AugmenteSmilesData(pandas_data_frame, index_augmentation=True)
+    smiles_data = AugmentSmilesData(pandas_data_frame, index_augmentation=True)
     result = smiles_data.__len__()
     assert solution == result
 
@@ -38,6 +38,6 @@ def test___len___(pandas_data_frame, solution):
     ],
 )
 def test___getitem___(pandas_data_frame, ind, solution):
-    smiles_data = AugmenteSmilesData(pandas_data_frame)
+    smiles_data = AugmentSmilesData(pandas_data_frame)
     result = smiles_data.__getitem__(ind)
     assert solution == result

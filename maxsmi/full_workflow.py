@@ -12,37 +12,33 @@ from datetime import datetime
 import itertools
 
 from maxsmi.utils import string_to_bool, augmentation_strategy
-from utils_data import data_retrieval
+from maxsmi.utils_data import data_retrieval
 
-from utils_smiles import (
-    smi2can,
+from maxsmi.utils_smiles import (
+    smiles_to_canonical,
     identify_disconnected_structures,
-    smi2selfies,
-    smi2deepsmiles,
+    smiles_to_selfies,
+    smiles_to_deepsmiles,
 )
-from utils_encoding import (
+from maxsmi.utils_encoding import (
     char_replacement,
     get_unique_elements_as_dict,
     get_max_length,
 )
-from utils_evaluation import evaluation_results
 from sklearn.model_selection import train_test_split
 
 import torch
-import torch.optim as optim
 import torch.nn as nn
 
-from pytorch_models import (
-    Convolutional1DNetwork,
-    Convolutional2DNetwork,
-    RecurrentNetwork,
-)
-from pytorch_data import AugmenteSmilesData, data_to_pytorch_format
+from maxsmi.pytorch_models import model_type
+from maxsmi.pytorch_data import AugmentSmilesData, data_to_pytorch_format
 
-from splitting_parameters import TEST_RATIO, RANDOM_SEED
-from pytorch_parameters import BACTH_SIZE, NB_EPOCHS, LEARNING_RATE
+from maxsmi.constants import TEST_RATIO, RANDOM_SEED, BACTH_SIZE, LEARNING_RATE
+from maxsmi.pytorch_evaluation import model_evaluation
+from maxsmi.pytorch_training import model_training
+from maxsmi.utils_evaluation import evaluation_results
 
-from parser_default import (
+from maxsmi.parser_default import (
     TASK,
     STRING_ENCODING,
     TRAIN_AUGMENTATION,
@@ -50,6 +46,7 @@ from parser_default import (
     ENSEMBLE_LEARNING,
     AUGMENTATION_STRATEGY,
     ML_MODEL,
+    NB_EPOCHS,
 )
 
 if __name__ == "__main__":
@@ -106,6 +103,13 @@ if __name__ == "__main__":
         default=ML_MODEL,
     )
     parser.add_argument(
+        "--nb-epochs",
+        dest="number_epochs",
+        type=int,
+        help="Number of epochs for training",
+        default=NB_EPOCHS,
+    )
+    parser.add_argument(
         "--eval-strategy",
         dest="ensemble_learning",
         type=string_to_bool,
@@ -152,10 +156,11 @@ if __name__ == "__main__":
 
     if is_cuda:
         device = torch.device("cuda")
+        device_name = torch.cuda.get_device_name(device)
+        logging.info(f"CUDA available: {is_cuda} with {device_name}")
     else:
         device = torch.device("cpu")
-
-    logging.info(f"CUDA available: {is_cuda}")
+        logging.info(f"CUDA available: {is_cuda}")
 
     time_execution_start = datetime.now()
 
@@ -167,7 +172,7 @@ if __name__ == "__main__":
     data = data_retrieval(args.task)
 
     # Canonical SMILES
-    data["canonical_smiles"] = data["smiles"].apply(smi2can)
+    data["canonical_smiles"] = data["smiles"].apply(smiles_to_canonical)
     data["disconnected_smi"] = data["canonical_smiles"].apply(
         identify_disconnected_structures
     )
@@ -186,6 +191,8 @@ if __name__ == "__main__":
         test_size=TEST_RATIO,
         random_state=RANDOM_SEED,
     )
+    logging.info(f"Number of training points before augmentation: {len(train_data)} ")
+    logging.info(f"Number of testing points before augmentation: {len(test_data)} ")
 
     # ================================
     # String encoding & Augmentation
@@ -200,16 +207,18 @@ if __name__ == "__main__":
 
     elif args.string_encoding == "selfies":
         train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
-            smi2selfies
+            smiles_to_selfies
         )
-        test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(smi2selfies)
+        test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
+            smiles_to_selfies
+        )
 
     elif args.string_encoding == "deepsmiles":
         train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
-            smi2deepsmiles
+            smiles_to_deepsmiles
         )
         test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
-            smi2deepsmiles
+            smiles_to_deepsmiles
         )
 
     # ================================
@@ -236,114 +245,82 @@ if __name__ == "__main__":
     logging.info(f"Longest smiles in data set: {max_length_smi} ")
 
     # ==================================
-    # Machine learning ML & Pytorch data
+    # Pytorch data
     # ==================================
 
-    time_start_training = datetime.now()
-
     # Pytorch train set
-    train_pytorch = AugmenteSmilesData(train_data)
+    train_pytorch = AugmentSmilesData(train_data)
+    logging.info(f"Number of data points in training set: {len(train_pytorch)} ")
 
     # Pytorch data loader for mini batches
     train_loader = torch.utils.data.DataLoader(
         train_pytorch, batch_size=BACTH_SIZE, shuffle=True
     )
 
-    # Initialize ml model
-    if args.machine_learning_model == "CONV1D":
-        ml_model = Convolutional1DNetwork(
-            nb_char=len(smi_dict), max_length=max_length_smi
-        )
-    elif args.machine_learning_model == "CONV2D":
-        ml_model = Convolutional2DNetwork(
-            nb_char=len(smi_dict), max_length=max_length_smi
-        )
-    elif args.machine_learning_model == "RNN":
-        ml_model = RecurrentNetwork(nb_char=len(smi_dict), max_length=max_length_smi)
-    else:
-        logging.warning("Unknown machine learning model ")
+    # ==================================
+    # Machine learning ML
+    # ==================================
 
-    ml_model.to(device)
+    (ml_model_name, ml_model) = model_type(
+        args.machine_learning_model, device, smi_dict, max_length_smi
+    )
     logging.info(f"Summary of ml model: {ml_model} ")
 
     # Loss function
     loss_function = nn.MSELoss()
 
-    # Use optimizer for objective function
-    optimizer = optim.SGD(ml_model.parameters(), lr=LEARNING_RATE)
-
-    loss_per_epoch = []
+    # ==================================
+    # ML Training
+    # ==================================
 
     logging.info("========")
-    logging.info(f"Training for {NB_EPOCHS} epochs")
+    logging.info(f"Training for {args.number_epochs} epochs")
     logging.info("========")
+    time_start_training = datetime.now()
 
-    # Train model
-    for epoch in range(NB_EPOCHS):
-        running_loss = 0.0
-        for i, data in enumerate(train_loader):
-
-            # SMILES and target
-            smiles, target = data
-
-            input_true, output_true = data_to_pytorch_format(
-                smiles,
-                target,
-                smi_dict,
-                max_length_smi,
-                args.machine_learning_model,
-                device,
-            )
-
-            # Zero the parameter gradients
-            optimizer.zero_grad()
-            # Forward
-            output_pred = ml_model(input_true)
-            # Objective
-            loss = loss_function(output_pred, output_true)
-            # Backward
-            loss.backward()
-            # Optimization
-            optimizer.step()
-            # Save loss
-            running_loss += float(loss.item())
-
-        loss_per_epoch.append(running_loss / len(train_pytorch))
-        if epoch % 10 == 0:
-            logging.info(f"Epoch : {epoch + 1} ")
-
-        if is_cuda:
-            torch.cuda.empty_cache()
+    loss_per_epoch = model_training(
+        data_loader=train_loader,
+        ml_model_name=ml_model_name,
+        ml_model=ml_model,
+        loss_function=loss_function,
+        nb_epochs=args.number_epochs,
+        is_cuda=is_cuda,
+        len_train_data=len(train_pytorch),
+        smiles_dictionary=smi_dict,
+        max_length_smiles=max_length_smi,
+        device_to_use=device,
+        learning_rate=LEARNING_RATE,
+    )
 
     logging.info("Training: over")
     time_end_training = datetime.now()
     time_training = time_end_training - time_start_training
     logging.info(f"Time for model training {time_training}")
 
+    # Save model
+    torch.save(ml_model.state_dict(), f"{folder}/model_dict.pth")
+
     # ================================
     # # Evaluate on train set
     # ================================
 
-    input_train, output_train = data_to_pytorch_format(
-        list(train_pytorch.smiles),
-        train_pytorch.target,
-        smi_dict,
-        max_length_smi,
-        args.machine_learning_model,
-        device,
+    # Pytorch data loader
+    train_loader = torch.utils.data.DataLoader(
+        train_pytorch, batch_size=1, shuffle=False
     )
 
-    logging.info(f"Train input dimension: {input_train.shape}")
-    logging.info(f"Train output dimension: {output_train.shape}")
+    (output_true_train, output_pred_train) = model_evaluation(
+        data_loader=train_loader,
+        ml_model_name=ml_model_name,
+        ml_model=ml_model,
+        smiles_dictionary=smi_dict,
+        max_length_smiles=max_length_smi,
+        device_to_use=device,
+    )
 
-    with torch.no_grad():
-        evaluation_train = evaluation_results(
-            output_train, ml_model(input_train), is_cuda
-        )
+    evaluation_train = evaluation_results(output_true_train, output_pred_train, is_cuda)
 
     logging.info(f"Train metrics (MSE, RMSE, R2): {evaluation_train}")
-    # Save model
-    torch.save(ml_model.state_dict(), f"{folder}/model_dict.pth")
 
     # ================================
     # # Evaluate on test set
@@ -354,9 +331,9 @@ if __name__ == "__main__":
 
     time_start_testing = datetime.now()
 
-    with torch.no_grad():
-        if args.ensemble_learning:
-            test_pytorch = AugmenteSmilesData(test_data, index_augmentation=False)
+    if args.ensemble_learning:
+        with torch.no_grad():
+            test_pytorch = AugmentSmilesData(test_data, index_augmentation=False)
             output_true_test = []
             output_pred_test = []
 
@@ -402,10 +379,10 @@ if __name__ == "__main__":
                 test_pytorch_ensemble_learning = test_pytorch.pandas_dataframe
                 test_pytorch_ensemble_learning.loc[
                     item, "average_prediction"
-                ] = prediction_per_mol.numpy()
+                ] = prediction_per_mol.cpu().numpy()
                 test_pytorch_ensemble_learning.loc[
                     item, "std_prediction"
-                ] = std_prediction_per_mol.numpy()
+                ] = std_prediction_per_mol.cpu().numpy()
                 test_pytorch_ensemble_learning.to_pickle(
                     f"{folder}/results_ensemble_learning.pkl"
                 )
@@ -416,25 +393,22 @@ if __name__ == "__main__":
             output_pred_test = torch.stack(output_pred_test)
             output_true_test = torch.stack(output_true_test)
 
-        else:
-            test_pytorch = AugmenteSmilesData(test_data, index_augmentation=True)
-            input_true_test, output_true_test = data_to_pytorch_format(
-                list(test_pytorch.smiles),
-                test_pytorch.target,
-                smi_dict,
-                max_length_smi,
-                args.machine_learning_model,
-                device,
-            )
-
-            output_pred_test = ml_model(input_true_test)
-
-        loss_pred = loss_function(output_pred_test, output_true_test)
-        evaluation_test = evaluation_results(
-            output_true_test, output_pred_test, is_cuda
+    else:
+        test_pytorch = AugmentSmilesData(test_data)
+        test_loader = torch.utils.data.DataLoader(
+            test_pytorch, batch_size=1, shuffle=False
         )
+        (output_true_test, output_pred_test) = model_evaluation(
+            data_loader=test_loader,
+            ml_model_name=ml_model_name,
+            ml_model=ml_model,
+            smiles_dictionary=smi_dict,
+            max_length_smiles=max_length_smi,
+            device_to_use=device,
+        )
+    evaluation_test = evaluation_results(output_true_test, output_pred_test, is_cuda)
 
-        logging.info(f"Test output dimension {output_true_test.shape}")
+    logging.info(f"Test output dimension {output_true_test.shape}")
 
     logging.info(f"Test metrics (MSE, RMSE, R2): {evaluation_test}")
     time_end_testing = datetime.now()
