@@ -33,14 +33,9 @@ import torch.nn as nn
 from maxsmi.pytorch_models import model_type
 from maxsmi.pytorch_data import AugmentSmilesData, data_to_pytorch_format
 
-from maxsmi.splitting_parameters import TEST_RATIO, RANDOM_SEED
+from maxsmi.constants import TEST_RATIO, RANDOM_SEED, BACTH_SIZE, LEARNING_RATE
 from maxsmi.pytorch_evaluation import model_evaluation
-from maxsmi.pytorch_training import (
-    BACTH_SIZE,
-    LEARNING_RATE,
-    NB_EPOCHS,
-    model_training,
-)
+from maxsmi.pytorch_training import model_training
 from maxsmi.utils_evaluation import evaluation_results
 
 from maxsmi.parser_default import (
@@ -51,6 +46,7 @@ from maxsmi.parser_default import (
     ENSEMBLE_LEARNING,
     AUGMENTATION_STRATEGY,
     ML_MODEL,
+    NB_EPOCHS,
 )
 
 if __name__ == "__main__":
@@ -105,6 +101,13 @@ if __name__ == "__main__":
         type=str,
         help="machine learning model used for training and testing",
         default=ML_MODEL,
+    )
+    parser.add_argument(
+        "--nb-epochs",
+        dest="number_epochs",
+        type=int,
+        help="Number of epochs for training",
+        default=NB_EPOCHS,
     )
     parser.add_argument(
         "--eval-strategy",
@@ -271,7 +274,7 @@ if __name__ == "__main__":
     # ==================================
 
     logging.info("========")
-    logging.info(f"Training for {NB_EPOCHS} epochs")
+    logging.info(f"Training for {args.number_epochs} epochs")
     logging.info("========")
     time_start_training = datetime.now()
 
@@ -280,7 +283,7 @@ if __name__ == "__main__":
         ml_model_name=ml_model_name,
         ml_model=ml_model,
         loss_function=loss_function,
-        nb_epochs=NB_EPOCHS,
+        nb_epochs=args.number_epochs,
         is_cuda=is_cuda,
         len_train_data=len(train_pytorch),
         smiles_dictionary=smi_dict,

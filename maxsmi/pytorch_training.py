@@ -9,10 +9,6 @@ import torch.optim as optim
 
 from maxsmi.pytorch_data import data_to_pytorch_format
 
-BACTH_SIZE = 16
-LEARNING_RATE = 0.001
-NB_EPOCHS = 2
-
 
 def model_training(
     data_loader,
