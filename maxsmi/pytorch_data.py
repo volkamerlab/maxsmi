@@ -51,29 +51,45 @@ class AugmenteSmilesData(Dataset):
 def data_to_pytorch_format(
     smiles,
     target,
-    dictionary,
+    smiles_dictionary,
     maximum_length,
-    machine_learning_model,
+    machine_learning_model_name,
     device_to_use,
     per_mol=False,
 ):
     """
-    # TODO
+    One-hot encodes the SMILES in the batch and associated target value.
+
     Parameters
     ----------
+    smiles : tuple
+        The SMILES to be considered.
+    target : torch.Tensor
+        The true target tensor.
+    smiles_ dictionary : dict
+        The dictionary of SMILES characters.
+    maximum_length : int
+        The maximum length of SMILES.
+    machine_learning_model_name :
+        Name of the machine learning model. It can be either "CON1D", "CONV2D", or "RNN".
+    device_to_use : torch.device
+        The device to use for model instance, "cpu" or "cuda".
+    per_mol : bool, default False
+        If the target should be viewed per molecule or per SMILES.
 
     Returns
     -------
-    tuple :
-
+    tuple : (torch.tensor, torch.tensor)
+        The one-hot encoded true input tensor and tensor output.
     """
-    one_hot = [one_hot_encode(smile, dictionary) for smile in list(smiles)]
+
+    one_hot = [one_hot_encode(smile, smiles_dictionary) for smile in list(smiles)]
     one_hot_pad = [pad_matrix(ohe, maximum_length) for ohe in one_hot]
     input_true = torch.tensor(one_hot_pad, device=device_to_use).float()
 
-    if machine_learning_model == "RNN":
+    if machine_learning_model_name == "RNN":
         input_true = torch.transpose(input_true, 1, 2)
-    if machine_learning_model == "CONV2D":
+    if machine_learning_model_name == "CONV2D":
         input_true = input_true.unsqueeze(1)
 
     output_true = torch.tensor(target, device=device_to_use).float()

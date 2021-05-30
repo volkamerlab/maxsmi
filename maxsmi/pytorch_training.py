@@ -28,6 +28,8 @@ def model_training(
     learning_rate,
 ):
     """
+    # Train the machine learning model using the otpimization loop in pytorch.
+
     Parameters
     ----------
     data_loader : torch.utils.data
