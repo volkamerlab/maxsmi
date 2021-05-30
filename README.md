@@ -37,7 +37,7 @@ pip install -e .
 To run an example with the ESOL data set, augmenting the train set 5 times and the test set 2 times, training for 5 epochs:
 
 ```console
-python maxsmi/full_workflow.py --task ESOL --aug-strategy-train augmentation_without_duplication --aug-nb-train 5 --aug-nb-test 2 --nb-epochs 2
+python maxsmi/full_workflow.py --task ESOL --aug-strategy-train augmentation_without_duplication --aug-nb-train 5 --aug-nb-test 2 --nb-epochs 5
 ```
 
 If no ensemble learning is wanted for the evaluation, run:
