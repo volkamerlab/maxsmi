@@ -309,7 +309,7 @@ if __name__ == "__main__":
         train_pytorch, batch_size=1, shuffle=False
     )
 
-    model_evaluation = model_evaluation(
+    (output_true_train, output_pred_train) = model_evaluation(
         data_loader=train_loader,
         ml_model_name=ml_model_name,
         ml_model=ml_model,
@@ -318,7 +318,6 @@ if __name__ == "__main__":
         device_to_use=device,
     )
 
-    (output_true_train, output_pred_train) = model_evaluation
     evaluation_train = evaluation_results(output_true_train, output_pred_train, is_cuda)
 
     logging.info(f"Train metrics (MSE, RMSE, R2): {evaluation_train}")
@@ -332,8 +331,8 @@ if __name__ == "__main__":
 
     time_start_testing = datetime.now()
 
-    with torch.no_grad():
-        if args.ensemble_learning:
+    if args.ensemble_learning:
+        with torch.no_grad():
             test_pytorch = AugmentSmilesData(test_data, index_augmentation=False)
             output_true_test = []
             output_pred_test = []
@@ -394,24 +393,22 @@ if __name__ == "__main__":
             output_pred_test = torch.stack(output_pred_test)
             output_true_test = torch.stack(output_true_test)
 
-        else:
-            test_pytorch = AugmentSmilesData(test_data, index_augmentation=True)
-            input_true_test, output_true_test = data_to_pytorch_format(
-                list(test_pytorch.smiles),
-                test_pytorch.target,
-                smi_dict,
-                max_length_smi,
-                args.machine_learning_model,
-                device,
-            )
-
-            output_pred_test = ml_model(input_true_test)
-
-        evaluation_test = evaluation_results(
-            output_true_test, output_pred_test, is_cuda
+    else:
+        test_pytorch = AugmentSmilesData(test_data)
+        test_loader = torch.utils.data.DataLoader(
+            test_pytorch, batch_size=1, shuffle=False
         )
+        (output_true_test, output_pred_test) = model_evaluation(
+            data_loader=test_loader,
+            ml_model_name=ml_model_name,
+            ml_model=ml_model,
+            smiles_dictionary=smi_dict,
+            max_length_smiles=max_length_smi,
+            device_to_use=device,
+        )
+    evaluation_test = evaluation_results(output_true_test, output_pred_test, is_cuda)
 
-        logging.info(f"Test output dimension {output_true_test.shape}")
+    logging.info(f"Test output dimension {output_true_test.shape}")
 
     logging.info(f"Test metrics (MSE, RMSE, R2): {evaluation_test}")
     time_end_testing = datetime.now()
