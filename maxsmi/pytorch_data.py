@@ -11,7 +11,7 @@ from torch.utils.data import Dataset
 from maxsmi.utils_encoding import one_hot_encode, pad_matrix
 
 
-class AugmenteSmilesData(Dataset):
+class AugmentSmilesData(Dataset):
     """
     Data set for Pytorch compatibility.
 

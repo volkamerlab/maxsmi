@@ -31,7 +31,7 @@ import torch
 import torch.nn as nn
 
 from maxsmi.pytorch_models import model_type
-from maxsmi.pytorch_data import AugmenteSmilesData, data_to_pytorch_format
+from maxsmi.pytorch_data import AugmentSmilesData, data_to_pytorch_format
 
 from maxsmi.splitting_parameters import TEST_RATIO, RANDOM_SEED
 from maxsmi.pytorch_evaluation import model_evaluation
@@ -246,7 +246,7 @@ if __name__ == "__main__":
     # ==================================
 
     # Pytorch train set
-    train_pytorch = AugmenteSmilesData(train_data)
+    train_pytorch = AugmentSmilesData(train_data)
     logging.info(f"Number of data points in training set: {len(train_pytorch)} ")
 
     # Pytorch data loader for mini batches
@@ -331,7 +331,7 @@ if __name__ == "__main__":
 
     with torch.no_grad():
         if args.ensemble_learning:
-            test_pytorch = AugmenteSmilesData(test_data, index_augmentation=False)
+            test_pytorch = AugmentSmilesData(test_data, index_augmentation=False)
             output_true_test = []
             output_pred_test = []
 
@@ -392,7 +392,7 @@ if __name__ == "__main__":
             output_true_test = torch.stack(output_true_test)
 
         else:
-            test_pytorch = AugmenteSmilesData(test_data, index_augmentation=True)
+            test_pytorch = AugmentSmilesData(test_data, index_augmentation=True)
             input_true_test, output_true_test = data_to_pytorch_format(
                 list(test_pytorch.smiles),
                 test_pytorch.target,
