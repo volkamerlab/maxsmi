@@ -408,7 +408,7 @@ if __name__ == "__main__":
                                          all_output_pred_test, 
                                          is_cuda)
 
-    logging.info(f"Test output dimension {output_true_test.shape}")
+    logging.info(f"Test output dimension {all_output_true_test.shape}")
 
     logging.info(f"Test metrics (MSE, RMSE, R2): {evaluation_test}")
     time_end_testing = datetime.now()
