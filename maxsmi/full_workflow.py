@@ -197,6 +197,8 @@ if __name__ == "__main__":
     # ================================
     # String encoding & Augmentation
     # ================================
+    time_start_augmenting = datetime.now()
+
     if args.string_encoding == "smiles":
         train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
             args.augmentation_strategy_train, args=(args.augmentation_number_train,)
@@ -220,6 +222,10 @@ if __name__ == "__main__":
         test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
             smiles_to_deepsmiles
         )
+
+    time_end_augmenting = datetime.now()
+    time_augmenting = time_end_augmenting - time_start_augmenting
+    logging.info(f"Time for augmentation {time_augmenting}")
 
     # ================================
     # Input processing
