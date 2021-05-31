@@ -389,15 +389,14 @@ if __name__ == "__main__":
                 index, "std_prediction"
             ] = std_prediction_per_mol.cpu().numpy()
 
-            output_true_test.append(output_true_test_per_mol)
-            output_pred_test.append(prediction_per_mol)
+            all_output_true_test.append(torch.tensor(row["target"]))
+            all_output_pred_test.append(prediction_per_mol)
 
         test_ensemble_learning.to_pickle(
             f"{folder}/results_ensemble_learning.pkl"
         )
-        output_pred_test = torch.stack(output_pred_test)
-        output_true_test = torch.stack(output_true_test)
-
+        all_output_true_test = torch.stack(all_output_true_test)
+        all_output_pred_test = torch.stack(all_output_pred_test)
     else:
         all_output_true_test = torch.cat(
                             [output_true_test[smiles] for smiles in output_true_test]
