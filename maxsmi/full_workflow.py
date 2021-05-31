@@ -315,7 +315,7 @@ if __name__ == "__main__":
         train_pytorch, batch_size=1, shuffle=False
     )
 
-    (output_true_train, output_pred_train) = model_evaluation(
+    (output_pred_train, output_true_train) = model_evaluation(
         data_loader=train_loader,
         ml_model_name=ml_model_name,
         ml_model=ml_model,
@@ -324,7 +324,16 @@ if __name__ == "__main__":
         device_to_use=device,
     )
 
-    evaluation_train = evaluation_results(output_true_train, output_pred_train, is_cuda)
+    all_output_pred_train = torch.cat(
+                            [output_pred_train[smiles] for smiles in output_pred_train]
+                            )
+    all_output_true_train = torch.cat(
+                            [output_true_train[smiles] for smiles in output_true_train]
+                            )
+
+    evaluation_train = evaluation_results(all_output_true_train, 
+                                          all_output_pred_train, 
+                                          is_cuda)
 
     logging.info(f"Train metrics (MSE, RMSE, R2): {evaluation_train}")
 
@@ -336,83 +345,69 @@ if __name__ == "__main__":
     logging.info("========")
 
     time_start_testing = datetime.now()
+    
+    test_pytorch = AugmentSmilesData(test_data)
+
+    test_loader = torch.utils.data.DataLoader(
+        test_pytorch, batch_size=1, shuffle=False
+    )
+
+    (output_pred_test, output_true_test) = model_evaluation(
+        data_loader=test_loader,
+        ml_model_name=ml_model_name,
+        ml_model=ml_model,
+        smiles_dictionary=smi_dict,
+        max_length_smiles=max_length_smi,
+        device_to_use=device,
+    )
 
     if args.ensemble_learning:
-        with torch.no_grad():
-            test_pytorch = AugmentSmilesData(test_data, index_augmentation=False)
-            output_true_test = []
-            output_pred_test = []
+        # Create a data frame with important information:
+        # True value, canonical smiles, random smiles, mean prediction and standard deviation
+        test_ensemble_learning = test_data.copy()
 
-            for item in test_pytorch.pandas_dataframe.index:
+        all_output_true_test = []
+        all_output_pred_test = []
 
-                # Retrive list of random smiles & true target for a given index/mol
-                (
-                    multiple_smiles_input_per_mol,
-                    output_true_test_per_mol,
-                ) = data_to_pytorch_format(
-                    test_pytorch.smiles.__getitem__(item),
-                    test_pytorch.target.__getitem__(item),
-                    smi_dict,
-                    max_length_smi,
-                    args.machine_learning_model,
-                    device,
-                    per_mol=True,
-                )
+        for index, row in test_data.iterrows():
+            # Obtain prediction for each of the random smiles of a given molecule
+            multiple_output = torch.cat(
+                                [output_pred_test[smiles] for smiles in row["new_smiles"]]
+                              )
+            # Average the predictions for a given molecule
+            prediction_per_mol = torch.mean(multiple_output)
 
-                # Reshape if there is only one random smiles for a given index/mol
-                if len(multiple_smiles_input_per_mol.shape) < 3:
-                    multiple_smiles_input_per_mol = (
-                        multiple_smiles_input_per_mol.reshape(
-                            (
-                                1,
-                                multiple_smiles_input_per_mol.shape[0],
-                                multiple_smiles_input_per_mol.shape[1],
-                            )
-                        )
-                    )
+            # Compute the standard deviation for a given molecule
+            std_prediction_per_mol = torch.std(multiple_output)
 
-                # Obtain prediction for each of the random smiles of a given molecule
-                multiple_output = ml_model(multiple_smiles_input_per_mol)
+            # Add the new values to the data frame:
+            test_ensemble_learning.loc[
+                index, "average_prediction"
+            ] = prediction_per_mol.cpu().numpy()
 
-                # Average the predictions for a given molecule
-                prediction_per_mol = torch.mean(multiple_output, dim=0)
+            test_ensemble_learning.loc[
+                index, "std_prediction"
+            ] = std_prediction_per_mol.cpu().numpy()
 
-                # Compute the standard deviation for a given molecule
-                std_prediction_per_mol = torch.std(multiple_output, dim=0)
+            output_true_test.append(output_true_test_per_mol)
+            output_pred_test.append(prediction_per_mol)
 
-                # Create a data frame with important information:
-                # True value, canonical smiles, random smiles, mean prediction and standard deviation
-                test_pytorch_ensemble_learning = test_pytorch.pandas_dataframe
-                test_pytorch_ensemble_learning.loc[
-                    item, "average_prediction"
-                ] = prediction_per_mol.cpu().numpy()
-                test_pytorch_ensemble_learning.loc[
-                    item, "std_prediction"
-                ] = std_prediction_per_mol.cpu().numpy()
-                test_pytorch_ensemble_learning.to_pickle(
-                    f"{folder}/results_ensemble_learning.pkl"
-                )
-
-                output_true_test.append(output_true_test_per_mol)
-                output_pred_test.append(prediction_per_mol)
-
-            output_pred_test = torch.stack(output_pred_test)
-            output_true_test = torch.stack(output_true_test)
+        test_ensemble_learning.to_pickle(
+            f"{folder}/results_ensemble_learning.pkl"
+        )
+        output_pred_test = torch.stack(output_pred_test)
+        output_true_test = torch.stack(output_true_test)
 
     else:
-        test_pytorch = AugmentSmilesData(test_data)
-        test_loader = torch.utils.data.DataLoader(
-            test_pytorch, batch_size=1, shuffle=False
-        )
-        (output_true_test, output_pred_test) = model_evaluation(
-            data_loader=test_loader,
-            ml_model_name=ml_model_name,
-            ml_model=ml_model,
-            smiles_dictionary=smi_dict,
-            max_length_smiles=max_length_smi,
-            device_to_use=device,
-        )
-    evaluation_test = evaluation_results(output_true_test, output_pred_test, is_cuda)
+        all_output_true_test = torch.cat(
+                            [output_true_test[smiles] for smiles in output_true_test]
+                            )
+        all_output_pred_test = torch.cat(
+                            [output_pred_test[smiles] for smiles in output_pred_test]
+                            )
+    evaluation_test = evaluation_results(all_output_true_test, 
+                                         all_output_pred_test, 
+                                         is_cuda)
 
     logging.info(f"Test output dimension {output_true_test.shape}")
 
