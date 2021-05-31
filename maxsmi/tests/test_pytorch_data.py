@@ -9,7 +9,7 @@ import sys
 import pandas
 import torch
 from maxsmi.pytorch_data import AugmentSmilesData, data_to_pytorch_format
-from maxsmi.utils_encoding import get_unique_elements_as_dict, get_max_length
+from maxsmi.utils_encoding import get_unique_elements_as_dict
 
 
 def test_maxsmi_imported():
