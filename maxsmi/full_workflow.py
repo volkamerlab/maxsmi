@@ -31,7 +31,7 @@ import torch
 import torch.nn as nn
 
 from maxsmi.pytorch_models import model_type
-from maxsmi.pytorch_data import AugmentSmilesData, data_to_pytorch_format
+from maxsmi.pytorch_data import AugmentSmilesData
 
 from maxsmi.constants import TEST_RATIO, RANDOM_SEED, BACTH_SIZE, LEARNING_RATE
 from maxsmi.pytorch_evaluation import model_evaluation
@@ -325,15 +325,15 @@ if __name__ == "__main__":
     )
 
     all_output_pred_train = torch.cat(
-                            [output_pred_train[smiles] for smiles in output_pred_train]
-                            )
+        [output_pred_train[smiles] for smiles in output_pred_train]
+    )
     all_output_true_train = torch.cat(
-                            [output_true_train[smiles] for smiles in output_true_train]
-                            )
+        [output_true_train[smiles] for smiles in output_true_train]
+    )
 
-    evaluation_train = evaluation_results(all_output_true_train, 
-                                          all_output_pred_train, 
-                                          is_cuda)
+    evaluation_train = evaluation_results(
+        all_output_true_train, all_output_pred_train, is_cuda
+    )
 
     logging.info(f"Train metrics (MSE, RMSE, R2): {evaluation_train}")
 
@@ -345,12 +345,10 @@ if __name__ == "__main__":
     logging.info("========")
 
     time_start_testing = datetime.now()
-    
+
     test_pytorch = AugmentSmilesData(test_data)
 
-    test_loader = torch.utils.data.DataLoader(
-        test_pytorch, batch_size=1, shuffle=False
-    )
+    test_loader = torch.utils.data.DataLoader(test_pytorch, batch_size=1, shuffle=False)
 
     (output_pred_test, output_true_test) = model_evaluation(
         data_loader=test_loader,
@@ -372,8 +370,8 @@ if __name__ == "__main__":
         for index, row in test_data.iterrows():
             # Obtain prediction for each of the random smiles of a given molecule
             multiple_output = torch.cat(
-                                [output_pred_test[smiles] for smiles in row["new_smiles"]]
-                              )
+                [output_pred_test[smiles] for smiles in row["new_smiles"]]
+            )
             # Average the predictions for a given molecule
             prediction_per_mol = torch.mean(multiple_output)
 
@@ -392,21 +390,19 @@ if __name__ == "__main__":
             all_output_true_test.append(torch.tensor(row["target"]))
             all_output_pred_test.append(prediction_per_mol)
 
-        test_ensemble_learning.to_pickle(
-            f"{folder}/results_ensemble_learning.pkl"
-        )
+        test_ensemble_learning.to_pickle(f"{folder}/results_ensemble_learning.pkl")
         all_output_true_test = torch.stack(all_output_true_test)
         all_output_pred_test = torch.stack(all_output_pred_test)
     else:
         all_output_true_test = torch.cat(
-                            [output_true_test[smiles] for smiles in output_true_test]
-                            )
+            [output_true_test[smiles] for smiles in output_true_test]
+        )
         all_output_pred_test = torch.cat(
-                            [output_pred_test[smiles] for smiles in output_pred_test]
-                            )
-    evaluation_test = evaluation_results(all_output_true_test, 
-                                         all_output_pred_test, 
-                                         is_cuda)
+            [output_pred_test[smiles] for smiles in output_pred_test]
+        )
+    evaluation_test = evaluation_results(
+        all_output_true_test, all_output_pred_test, is_cuda
+    )
 
     logging.info(f"Test output dimension {all_output_true_test.shape}")
 
