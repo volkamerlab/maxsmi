@@ -77,5 +77,6 @@ def process_ESOL(num_heavy_atoms=25):
     )
     data = pd.read_csv(url)
     data["num_heavy_atom"] = data["smiles"].apply(get_num_heavy_atoms)
+    data = data.loc[data["num_heavy_atom"] <= num_heavy_atoms]
 
-    return data[data["num_heavy_atom"] <= num_heavy_atoms]
+    return data.reset_index(drop=True)
