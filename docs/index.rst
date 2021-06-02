@@ -11,7 +11,7 @@ Welcome to maxsmi's documentation!
    :caption: Contents:
 
    getting_started
-   example/smiles_one_hot_encoded
+   example/smiles_augmentation
    api
 
 
