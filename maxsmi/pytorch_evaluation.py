@@ -37,13 +37,13 @@ def model_evaluation(
     Returns
     -------
     tuple : (torch.tensor, torch.tensor)
-        The true, predicted output values in the data loader.
+        The predicted, true output values in the data loader.
     """
 
     ml_model.eval()
     with torch.no_grad():
-        all_output_pred = []
-        all_output_true = []
+        all_output_pred = {}
+        all_output_true = {}
         for _, data in enumerate(data_loader):
             # SMILES and target
             smiles, target = data
@@ -59,9 +59,9 @@ def model_evaluation(
 
             # Prediction
             output_pred = ml_model(input_true)
-            all_output_pred.append(output_pred)
-            all_output_true.append(output_true)
 
-        all_output_pred = torch.stack(all_output_pred).view(-1, 1)
-        all_output_true = torch.stack(all_output_true).view(-1, 1)
-    return (all_output_true, all_output_pred)
+            for smile in smiles:
+                all_output_pred[smile] = output_pred
+                all_output_true[smile] = output_true
+
+    return (all_output_pred, all_output_true)
