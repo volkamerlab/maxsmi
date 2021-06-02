@@ -15,6 +15,7 @@ from maxsmi.utils_smiles import (
     smiles_to_selfies,
     smiles_to_deepsmiles,
     control_smiles_duplication,
+    get_num_heavy_atoms,
 )
 
 
@@ -100,3 +101,12 @@ def test_smiles_to_selfies(smiles, solution):
 def test_smiles_to_deepsmiles(smiles, solution):
     deepsmiles = smiles_to_deepsmiles(smiles)
     assert solution == deepsmiles
+
+
+@pytest.mark.parametrize(
+    "smiles, solution",
+    [("C", 1), ("OC", 2), ("KCahsbl", None)],
+)
+def test_get_num_heavy_atoms(smiles, solution):
+    num_heavy_atoms = get_num_heavy_atoms(smiles)
+    assert solution == num_heavy_atoms
