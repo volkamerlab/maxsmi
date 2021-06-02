@@ -37,7 +37,7 @@ def model_evaluation(
     Returns
     -------
     tuple : (torch.tensor, torch.tensor)
-        The true, predicted output values in the data loader.
+        The predicted, true output values in the data loader.
     """
 
     ml_model.eval()
