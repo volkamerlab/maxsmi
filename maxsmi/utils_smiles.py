@@ -193,3 +193,26 @@ def smiles_to_deepsmiles(smiles):
     """
     converter = deepsmiles.Converter(rings=True, branches=True)
     return [converter.encode(smiles)]
+
+
+def get_num_heavy_atoms(smiles):
+    """
+    Takes a SMILES and return the number of heavy atoms of the molecule.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+
+    Returns
+    -------
+    int
+        The number of heavy atoms of the molecule.
+    """
+
+    mol = Chem.MolFromSmiles(smiles)
+
+    if mol is None:
+        return None
+    else:
+        return mol.GetNumHeavyAtoms()
