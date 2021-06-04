@@ -101,4 +101,4 @@ def augmentation_maximum_estimation(smiles, max_duplication=10):
     list
         A list of "estimated" maximum unique random SMILES.
     """
-    return smiles_to_max_random(smiles, max_duplication=10)
+    return smiles_to_max_random(smiles, max_duplication)
