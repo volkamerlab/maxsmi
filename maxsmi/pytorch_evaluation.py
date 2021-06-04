@@ -36,8 +36,8 @@ def model_evaluation(
 
     Returns
     -------
-    tuple : (torch.tensor, torch.tensor)
-        The predicted, true output values in the data loader.
+    tuple of dict:
+        Dictionary of the predicted, true output values, respectively, in the data loader, with SMILES as keys.
     """
 
     ml_model.eval()
@@ -59,6 +59,10 @@ def model_evaluation(
 
             # Prediction
             output_pred = ml_model(input_true)
+
+            # Convert to numpy arrays
+            output_pred = output_pred.cpu().detach().numpy()
+            output_true = output_true.cpu().detach().numpy()
 
             for smile in smiles:
                 all_output_pred[smile] = output_pred

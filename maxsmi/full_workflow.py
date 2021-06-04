@@ -10,6 +10,7 @@ import warnings
 import os
 from datetime import datetime
 import itertools
+import numpy
 
 from maxsmi.utils import string_to_bool, augmentation_strategy
 from maxsmi.utils_data import data_retrieval
@@ -324,16 +325,14 @@ if __name__ == "__main__":
         device_to_use=device,
     )
 
-    all_output_pred_train = torch.cat(
+    all_output_pred_train = numpy.concatenate(
         [output_pred_train[smiles] for smiles in output_pred_train]
     )
-    all_output_true_train = torch.cat(
+    all_output_true_train = numpy.concatenate(
         [output_true_train[smiles] for smiles in output_true_train]
     )
 
-    evaluation_train = evaluation_results(
-        all_output_true_train, all_output_pred_train, is_cuda
-    )
+    evaluation_train = evaluation_results(all_output_true_train, all_output_pred_train)
 
     logging.info(f"Train metrics (MSE, RMSE, R2): {evaluation_train}")
 
@@ -369,40 +368,35 @@ if __name__ == "__main__":
 
         for index, row in test_data.iterrows():
             # Obtain prediction for each of the random smiles of a given molecule
-            multiple_output = torch.cat(
+            multiple_output = numpy.concatenate(
                 [output_pred_test[smiles] for smiles in row["new_smiles"]]
             )
             # Average the predictions for a given molecule
-            prediction_per_mol = torch.mean(multiple_output)
+            prediction_per_mol = numpy.mean(multiple_output)
 
             # Compute the standard deviation for a given molecule
-            std_prediction_per_mol = torch.std(multiple_output)
+            std_prediction_per_mol = numpy.std(multiple_output)
 
             # Add the new values to the data frame:
-            test_ensemble_learning.loc[
-                index, "average_prediction"
-            ] = prediction_per_mol.cpu().numpy()
+            test_ensemble_learning.loc[index, "average_prediction"] = prediction_per_mol
 
-            test_ensemble_learning.loc[
-                index, "std_prediction"
-            ] = std_prediction_per_mol.cpu().numpy()
+            test_ensemble_learning.loc[index, "std_prediction"] = std_prediction_per_mol
 
-            all_output_true_test.append(torch.tensor(row["target"]))
+            all_output_true_test.append(row["target"])
             all_output_pred_test.append(prediction_per_mol)
 
         test_ensemble_learning.to_pickle(f"{folder}/results_ensemble_learning.pkl")
-        all_output_true_test = torch.stack(all_output_true_test)
-        all_output_pred_test = torch.stack(all_output_pred_test)
+        all_output_true_test = numpy.array(all_output_true_test)
+        all_output_pred_test = numpy.array(all_output_pred_test)
     else:
-        all_output_true_test = torch.cat(
+        all_output_true_test = numpy.concatenate(
             [output_true_test[smiles] for smiles in output_true_test]
         )
-        all_output_pred_test = torch.cat(
+        all_output_pred_test = numpy.concatenate(
             [output_pred_test[smiles] for smiles in output_pred_test]
         )
-    evaluation_test = evaluation_results(
-        all_output_true_test, all_output_pred_test, is_cuda
-    )
+
+    evaluation_test = evaluation_results(all_output_true_test, all_output_pred_test)
 
     logging.info(f"Test output dimension {all_output_true_test.shape}")
 
