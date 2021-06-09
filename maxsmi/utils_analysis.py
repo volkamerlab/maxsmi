@@ -235,7 +235,7 @@ def plot_metric(metric, set_, augmentation_strategy, max_augmentation=100):
             else:
                 print(
                     f"{caption}, \t"
-                    f"max value: {np.min(np.array(y_task_model)):.2f},"
+                    f"min value: {np.min(np.array(y_task_model)):.2f},"
                     f"\t {np.argmin(np.array(y_task_model))*10}"
                 )
             legend_.append(caption)
