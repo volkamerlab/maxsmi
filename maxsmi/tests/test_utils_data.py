@@ -6,7 +6,7 @@ Unit and regression test for the maxsmi package.
 # import maxsmi
 import pytest
 import sys
-from maxsmi.utils_data import data_retrieval, process_ESOL
+from maxsmi.utils_data import data_retrieval, process_ESOL, process_ChEMBL
 
 
 def test_maxsmi_imported():
@@ -23,6 +23,7 @@ def test_maxsmi_imported():
         ("dncn", "OCC3OC(OCC2OC(OC(C#N)c1ccccc1)C(O)C(O)C2O)C(O)C(O)C3O "),
         ("free_solv", "CN(C)C(=O)c1ccc(cc1)OC"),
         ("ESOL_small", "Cc1occc1C(=O)Nc2ccccc2"),
+        ("chembl28", "Brc1cccc(Nc2ncnc3cc4ccccc4cc23)c1"),
     ],
 )
 def test_data_retrieval(task, solution):
@@ -39,3 +40,14 @@ def test_data_retrieval(task, solution):
 def test_process_ESOL(num_heavy_atoms, solution):
     dataframe = process_ESOL(num_heavy_atoms)
     assert solution == dataframe.loc[0, "num_heavy_atom"]
+
+
+@pytest.mark.parametrize(
+    "uniprotID, solution",
+    [
+        ("P00533", 11.522878745280336),
+    ],
+)
+def test_process_ChEMBL(uniprotID, solution):
+    dataframe = process_ChEMBL(uniprotID)
+    assert solution == dataframe.loc[0, "activities.standard_value"]
