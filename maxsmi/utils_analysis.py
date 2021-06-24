@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def load_data(
+def load_results(
     task,
     augmentation_strategy_train,
     train_augmentation,
@@ -18,9 +18,10 @@ def load_data(
     test_augmentation,
     ml_model,
     string_encoding="smiles",
+    ensemble_learning=False,
 ):
     """
-    Loads the data from simulations.
+    Loads the result data from simulations.
 
     Parameters
     ----------
@@ -38,6 +39,8 @@ def load_data(
         The machine learning model, e.g. "CONV1D".
     string_encoding : str
         The molecular encoding, default is "smiles".
+    ensemble_learning : bool, default False.
+        Whether the results from ensemble learning should be loaded.
 
     Returns
     -------
@@ -45,14 +48,24 @@ def load_data(
         Pandas data frame with performance metrics (on train and test sets), such as r2 score and time.
 
     """
-    with open(
-        f"output/{task}_{string_encoding}_{augmentation_strategy_train}_"
-        f"{train_augmentation}_{augmentation_strategy_test}_"
-        f"{test_augmentation}_{ml_model}/"
-        f"results_metrics.pkl",
-        "rb",
-    ) as f:
-        data = pickle.load(f)
+    if ensemble_learning:
+        with open(
+            f"output/{task}_{string_encoding}_{augmentation_strategy_train}_"
+            f"{train_augmentation}_{augmentation_strategy_test}_"
+            f"{test_augmentation}_{ml_model}/"
+            f"results_ensemble_learning.pkl",
+            "rb",
+        ) as f:
+            data = pickle.load(f)
+    else:
+        with open(
+            f"output/{task}_{string_encoding}_{augmentation_strategy_train}_"
+            f"{train_augmentation}_{augmentation_strategy_test}_"
+            f"{test_augmentation}_{ml_model}/"
+            f"results_metrics.pkl",
+            "rb",
+        ) as f:
+            data = pickle.load(f)
     return data
 
 
@@ -87,7 +100,7 @@ def plot_loss(
     legend_ = []
     for task in ["ESOL", "free_solv"]:
         for model in ["CONV1D", "CONV2D", "RNN"]:
-            data = load_data(
+            data = load_results(
                 task,
                 augmentation_strategy_train,
                 train_augmentation,
@@ -151,7 +164,7 @@ def retrieve_metric(
     float
         The metric of interest on the set of interest.
     """
-    data = load_data(
+    data = load_results(
         task,
         augmentation_strategy_train,
         train_augmentation,
