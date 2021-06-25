@@ -122,3 +122,25 @@ def process_ChEMBL(uniprotID="P00533"):
         columns={"compound_structures.canonical_smiles": "smiles"}
     )
     return dataframe.reset_index(drop=True)
+
+
+def smiles_in_training(smiles, data):
+    """
+    Determines if a SMILES is a dataset.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+    dataframe : pd.Pandas
+        A pandas dataframe with a "smiles" column.
+
+    Returns
+    -------
+    bool :
+        If the SMILES is in the dataset.
+    """
+    if smiles in list(data["smiles"]):
+        return True
+    else:
+        return False
