@@ -85,7 +85,7 @@ def out_of_sample_prediction(
     Parameters
     ----------
     data_loader : torch.utils.data
-        The unlabelled data as seen by Pytorch.
+        The unlabeled data as seen by Pytorch.
     ml_model_name : str
         Name of the machine learning model. It can be either "CON1D", "CONV2D", or "RNN".
     ml_model : nn.Module
