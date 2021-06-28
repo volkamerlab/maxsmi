@@ -40,7 +40,7 @@ def data_retrieval(target_data="ESOL"):
         data = pd.read_csv(url)
         task = "exp"
 
-    elif target_data == "chembl28" or "affinity":
+    elif target_data in ["chembl28", "affinity"]:
         data = process_ChEMBL()
         task = "activities.standard_value"
 
@@ -140,7 +140,20 @@ def smiles_in_training(smiles, data):
     bool :
         If the SMILES is in the dataset.
     """
-    if smiles in list(data["smiles"]):
+    if smiles in list(data["canonical_smiles"]):
         return True
     else:
         return False
+
+
+def data_checker(task_name):
+    """
+    #TODO
+    #"""
+    if task_name in ["free_solv", "ESOL", "ESOL_small", "lipophilicity", "affinity"]:
+        pass
+    else:
+        raise NameError(
+            "The task is unknown. Please choose between 'free_solv', 'ESOL', 'lipophilicity' and 'affinity'. \
+                Program aborting."
+        )
