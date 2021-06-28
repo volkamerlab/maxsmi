@@ -149,7 +149,11 @@ if __name__ == "__main__":
 
     # Obtain longest of all smiles
     max_length_smi = longest_smiles
-    new_data["new_smiles"].apply(unlabeled_smiles_max_length, args=(max_length_smi,))
+    # Check that all random SMILES are not longer than the maximum length
+    [
+        unlabeled_smiles_max_length(smiles, max_length_smi)
+        for smiles in new_data["new_smiles"][0]
+    ]
     logging.info(f"Longest smiles in training data set: {max_length_smi} ")
 
     # ==================================
