@@ -29,13 +29,13 @@ def retrieve_optimal_model(task):
         augmentation_number = 5
         longest_smiles = 110
 
-    elif task == "lipho" or "lipophilicity":
+    elif task in ["lipho", "lipophilicity"]:
         ml_model = "CONV1D"
         augmentation_strategy = augmentation_with_duplication
         augmentation_number = 5
         longest_smiles = 268
 
-    elif task == "chembl28" or "affinity":
+    elif task in ["chembl28", "affinity"]:
         ml_model = "CONV1D"
         augmentation_strategy = augmentation_with_duplication
         augmentation_number = 5
@@ -48,3 +48,44 @@ def retrieve_optimal_model(task):
             )
 
     return (ml_model, augmentation_strategy, augmentation_number, longest_smiles)
+
+
+def unlabeled_smiles_max_length(unlabeled_smiles, maximum_length_smiles):
+    """
+    Checks whether the unlabeled SMILES for prediction is longer than the longest SMILES in the training dataset.
+
+    Parameters
+    ----------
+    unlabeled_smiles : str
+        SMILES string describing a compound.
+
+    maximum_length_smiles : int
+        The longest SMILES in the dataset on which the model was trained on.
+    """
+    if len(unlabeled_smiles) > maximum_length_smiles:
+        raise ValueError("The SMILES is too long for this model. Program aborting")
+    else:
+        pass
+
+
+def mixture_check(unlabeled_smiles):
+    """
+    Aborts the prediction if the SMILES contains mixtures.
+
+    Parameters
+    ----------
+    unlabeled_smiles : str
+        SMILES string describing a compound.
+
+    Returns
+    -------
+    str :
+        the SMILES if it's not disconnected. Raises an error otherwise.
+
+    """
+    if "." in unlabeled_smiles:
+        raise ValueError(
+            "SMILES containing mixtures cannot be processed. Program aborting"
+        )
+    else:
+        return unlabeled_smiles
