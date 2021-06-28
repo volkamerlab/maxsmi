@@ -40,7 +40,7 @@ def data_retrieval(target_data="ESOL"):
         data = pd.read_csv(url)
         task = "exp"
 
-    elif target_data == "chembl28":
+    elif target_data == "chembl28" or "affinity":
         data = process_ChEMBL()
         task = "activities.standard_value"
 
