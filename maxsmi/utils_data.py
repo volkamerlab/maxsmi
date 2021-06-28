@@ -149,7 +149,7 @@ def smiles_in_training(smiles, data):
 def data_checker(task_name):
     """
     #TODO
-    #"""
+    """
     if task_name in ["free_solv", "ESOL", "ESOL_small", "lipophilicity", "affinity"]:
         pass
     else:
