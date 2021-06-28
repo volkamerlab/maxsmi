@@ -1,5 +1,7 @@
 """
-From smiles to predictions
+full_workflow_optimal.py
+
+Workflow to run a pytorch machine learning model on a task with the best augmentation stragegy.
 
 """
 import argparse
@@ -20,7 +22,6 @@ from maxsmi.utils_smiles import (
 )
 from maxsmi.utils_encoding import char_replacement
 from maxsmi.utils_prediction import retrieve_optimal_model
-
 from maxsmi.constants import BACTH_SIZE, LEARNING_RATE
 from maxsmi.pytorch_models import model_type
 from maxsmi.pytorch_data import AugmentSmilesData
@@ -48,6 +49,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    if args.task == "chembl":
+        args.task = "affinity"
+
     folder = f"maxsmi/prediction_models/{args.task}"
     os.makedirs(folder, exist_ok=True)
 
@@ -56,6 +60,7 @@ if __name__ == "__main__":
     logging.basicConfig(filename=f"{folder}/{log_file_name}", level=logging.INFO)
     logging.info(f"Start at {datetime.now()}")
     logging.info(f"Data and task: {args.task}")
+
     (
         ml_model,
         augmentation_strategy,
