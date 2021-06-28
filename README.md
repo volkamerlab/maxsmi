@@ -59,6 +59,17 @@ To run an example with all chosen arguments:
 python maxsmi/full_workflow.py --task free_solv --string-encoding smiles --aug-strategy-train augmentation_with_duplication --aug-strategy-test augmentation_with_reduced_duplication --aug-nb-train 5 --aug-nb-test 2 --ml-model CONV1D --eval-strategy True --nb-epochs 250
 ```
 
+#### Prediction
+To predict the affinity of a compound, e.g. given by the SMILES `CC1CC1`, run:
+```console
+python maxsmi/prediction_unlabeled_data.py --task affinity --smiles_prediction CC1CC1
+```
+
+Similarly for lipophilicity prediction, run:
+```console
+python maxsmi/prediction_unlabeled_data.py --task lipophilicity --smiles_prediction CC1CC1
+```
+
 ### Copyright
 
 Copyright (c) 2020, Talia B. Kimber
