@@ -47,14 +47,24 @@ def load_results(
 
     """
     if ensemble_learning:
-        with open(
-            f"output/{task}_{string_encoding}_{augmentation_strategy_train}_"
-            f"{train_augmentation}_{augmentation_strategy_test}_"
-            f"{test_augmentation}_{ml_model}/"
-            f"results_ensemble_learning.pkl",
-            "rb",
-        ) as f:
-            data = pickle.load(f)
+        try:
+            with open(
+                f"output/{task}_{string_encoding}_{augmentation_strategy_train}_"
+                f"{train_augmentation}_{augmentation_strategy_test}_"
+                f"{test_augmentation}_{ml_model}/"
+                f"results_ensemble_learning.pkl",
+                "rb",
+            ) as f:
+                data = pickle.load(f)
+        except FileNotFoundError:
+            with open(
+                f"output_/{task}_{string_encoding}_{augmentation_strategy_train}_"
+                f"{train_augmentation}_{augmentation_strategy_test}_"
+                f"{test_augmentation}_{ml_model}/"
+                f"results_ensemble_learning.pkl",
+                "rb",
+            ) as f:
+                data = pickle.load(f)
     else:
         with open(
             f"output/{task}_{string_encoding}_{augmentation_strategy_train}_"
