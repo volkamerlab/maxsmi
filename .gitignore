@@ -117,3 +117,6 @@ output/
 # Testing files
 test_notebooks.ipynb
 test_results.ipynb
+test_results_ensemble_learning.ipynb
+test_results_general_stats.ipynb
+workflow_debug.ipynb

@@ -15,6 +15,7 @@ dependencies:
   - matplotlib
   - selfies
   - deepsmiles
+  - dataframe_image
     # Testing
   - pytest
   - pytest-cov
