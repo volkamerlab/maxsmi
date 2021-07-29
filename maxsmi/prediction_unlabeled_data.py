@@ -22,7 +22,7 @@ from maxsmi.utils_smiles import (
 )
 from maxsmi.utils_encoding import char_replacement
 from maxsmi.utils_prediction import (
-    retrieve_optimal_model,
+    retrieve_longest_smiles_from_optimal_model,
     unlabeled_smiles_max_length,
     mixture_check,
 )
@@ -30,6 +30,7 @@ from maxsmi.utils_prediction import (
 from maxsmi.pytorch_models import model_type
 from maxsmi.pytorch_data import AugmentSmilesData
 from maxsmi.pytorch_evaluation import out_of_sample_prediction
+from maxsmi.pytorch_training import retrieve_optimal_model_for_training
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
@@ -123,8 +124,8 @@ if __name__ == "__main__":
         ml_model,
         augmentation_strategy,
         augmentation_number,
-        longest_smiles,
-    ) = retrieve_optimal_model(args.task)
+    ) = retrieve_optimal_model_for_training(args.task)
+    longest_smiles = retrieve_longest_smiles_from_optimal_model(args.task)
 
     new_data["augmented_smiles"] = new_data["canonical_smiles"].apply(
         augmentation_strategy, args=(augmentation_number,)
