@@ -20,12 +20,12 @@ from maxsmi.utils_smiles import (
     identify_disconnected_structures,
     ALL_SMILES_CHARACTERS,
 )
-from maxsmi.utils_encoding import char_replacement
-from maxsmi.utils_prediction import retrieve_optimal_model
+from maxsmi.utils_encoding import char_replacement, get_max_length
 from maxsmi.constants import BACTH_SIZE, LEARNING_RATE
 from maxsmi.pytorch_models import model_type
 from maxsmi.pytorch_data import AugmentSmilesData
 from maxsmi.pytorch_training import model_training
+from maxsmi.utils_optimal_model import retrieve_optimal_model
 from maxsmi.parser_default import NB_EPOCHS
 
 
@@ -65,7 +65,6 @@ if __name__ == "__main__":
         ml_model,
         augmentation_strategy,
         augmentation_number,
-        longest_smiles,
     ) = retrieve_optimal_model(args.task)
 
     logging.info(f"Augmentation strategy: {augmentation_strategy.__name__}")
@@ -132,7 +131,7 @@ if __name__ == "__main__":
     logging.info(f"String dictionary: {smi_dict} ")
 
     # Obtain longest of all smiles
-    max_length_smi = longest_smiles
+    max_length_smi = get_max_length(list(data["new_smiles"]))
     logging.info(f"Longest smiles in data set: {max_length_smi} ")
 
     # ==================================
