@@ -11,6 +11,7 @@ import itertools
 from rdkit import Chem
 import selfies
 import deepsmiles
+from maxsmi.utils_encoding import get_unique_elements_as_dict
 
 
 def smiles_to_canonical(smiles):
@@ -218,45 +219,65 @@ def get_num_heavy_atoms(smiles):
         return mol.GetNumHeavyAtoms()
 
 
-ALL_SMILES_CHARACTERS = {
-    "#": 0,
-    "$": 1,
-    "%": 2,
-    "(": 3,
-    ")": 4,
-    "+": 5,
-    "-": 6,
-    "/": 7,
-    "0": 8,
-    "1": 9,
-    "2": 10,
-    "3": 11,
-    "4": 12,
-    "5": 13,
-    "6": 14,
-    "7": 15,
-    "8": 16,
-    "9": 17,
-    "=": 18,
-    "@": 19,
-    "B": 20,
-    "C": 21,
-    "F": 22,
-    "H": 23,
-    "I": 24,
-    "L": 25,
-    "N": 26,
-    "O": 27,
-    "P": 28,
-    "R": 29,
-    "S": 30,
-    "[": 31,
-    "]": 32,
-    "c": 33,
-    "e": 34,
-    "i": 35,
-    "n": 36,
-    "o": 37,
-    "s": 38,
-    "|": 39,
-}
+ALL_SMILES_CHARACTERS = get_unique_elements_as_dict(
+    [
+        # See https://www.daylight.com/dayhtml/doc/theory/theory.smiles.html
+        # Bonds
+        "-",  # single bond
+        "=",  # double bond
+        "#",  # triple bond
+        "/",  # directional bond
+        "\\",  # directional bond
+        # Chirality
+        "@",  # chirality specification
+        "$",  # replacement for @@
+        # Formal charge
+        "+",  # formal charge
+        "-",  # formal charge
+        # Branches
+        "(",  # branch opening
+        ")",  # branch closing
+        # Rings
+        "0",  # ring opening and closure
+        "1",  #
+        "2",  #
+        "3",  #
+        "4",  #
+        "5",  #
+        "6",  #
+        "7",  #
+        "8",  #
+        "9",  # ring opening and closure
+        "%",  # ring nb > 9
+        # Atoms
+        "B",  # Boron
+        "C",  # Carbon
+        "E",  # replacement for Se
+        "F",  # Fluorine
+        "H",  # Hydrogen
+        "I",  # Iodine
+        "K",  # Potassium
+        "L",  # replacement for Cl
+        "N",  # Nitrogen
+        "O",  # Oxygen
+        "P",  # Phosphorus
+        "R",  # replacement for Br
+        "S",  # Sulfur
+        "T",  # replacement for Si
+        "Z",  # replacement for Zn
+        # aromatic atoms
+        "b",  # boron
+        "c",  # carbon
+        "e",  # remplacement for se
+        "i",  # iodine
+        "n",  # nitrogen
+        "o",  # oxygen
+        "s",  # sulfur
+        # Extra
+        ".",  # disconnected structure
+        "*",  # wild card
+        ":",  # atom map (reaction)
+        "[",  # for non organic or unormal valence
+        "]",  # same
+    ]
+)
