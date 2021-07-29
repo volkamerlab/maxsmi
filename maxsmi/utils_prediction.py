@@ -3,43 +3,35 @@ prediction_optimal.py
 Retrieves optimal prediction for each task.
 """
 import logging
-from maxsmi.augmentation_strategies import augmentation_with_duplication
 
 
-def retrieve_optimal_model(task):
+def retrieve_longest_smiles_from_optimal_model(task):
     """
-    #TODO.
+    From the optimal models that were trained on the full data set using `full_working_optimal.py`,
+    we retrieve the longest SMILES that was generated.
 
     Parameters
     ----------
     task : str
+        The task to consider.
 
     Returns
     -------
+    int :
+        The longest SMILES that was generated when training the best model strategy for `task` data.
+
     """
     if task == "free_solv":
-        ml_model = "CONV1D"
-        augmentation_strategy = augmentation_with_duplication
-        augmentation_number = 5
-        longest_smiles = 74
+        longest_smiles = 76 + 4  # TODO
 
     elif task == "ESOL":
-        ml_model = "CONV1D"
-        augmentation_strategy = augmentation_with_duplication
-        augmentation_number = 5
-        longest_smiles = 110
+        longest_smiles = 111 + 4  # TODO
 
-    elif task in ["lipho", "lipophilicity"]:
-        ml_model = "CONV1D"
-        augmentation_strategy = augmentation_with_duplication
-        augmentation_number = 5
-        longest_smiles = 268
+    elif task in ["lipo", "lipophilicity"]:
+        longest_smiles = 268 + 2  # TODO
 
     elif task in ["chembl28", "affinity"]:
-        ml_model = "CONV1D"
-        augmentation_strategy = augmentation_with_duplication
-        augmentation_number = 5
-        longest_smiles = 74
+        longest_smiles = 280  # TODO
     else:
         if task != "ESOL":
             logging.warning("Invalid data. Choosing ESOL by default.")
@@ -47,7 +39,7 @@ def retrieve_optimal_model(task):
                 "Task unknown. Please choose between free_solv, ESOL, lipophilicity or affinity"
             )
 
-    return (ml_model, augmentation_strategy, augmentation_number, longest_smiles)
+    return longest_smiles
 
 
 def unlabeled_smiles_max_length(unlabeled_smiles, maximum_length_smiles):
