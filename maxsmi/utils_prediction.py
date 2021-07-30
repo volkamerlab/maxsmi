@@ -22,7 +22,7 @@ def retrieve_longest_smiles_from_optimal_model(task):
 
     """
     if task == "free_solv":
-        longest_smiles = 76 + 4  # TODO
+        longest_smiles = 76  # TODO
 
     elif task == "ESOL":
         longest_smiles = 111 + 4  # TODO
