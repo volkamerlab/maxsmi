@@ -10,6 +10,7 @@ import logging.handlers
 import warnings
 import os
 from datetime import datetime
+import itertools
 
 import torch
 import torch.nn as nn
@@ -61,16 +62,6 @@ if __name__ == "__main__":
     logging.info(f"Start at {datetime.now()}")
     logging.info(f"Data and task: {args.task}")
 
-    (
-        ml_model,
-        augmentation_strategy,
-        augmentation_number,
-    ) = retrieve_optimal_model(args.task)
-
-    logging.info(f"Augmentation strategy: {augmentation_strategy.__name__}")
-    logging.info(f"Augmentation number: {augmentation_number}")
-    logging.info(f"Machine learning model: {ml_model}")
-
     # ================================
     # Computing device
     # ================================
@@ -106,6 +97,19 @@ if __name__ == "__main__":
     logging.info(f"Number of training points before augmentation: {len(data)} ")
 
     # ================================
+    # Retrieve best model
+    # ================================
+    (
+        ml_model,
+        augmentation_strategy,
+        augmentation_number,
+    ) = retrieve_optimal_model(args.task)
+
+    logging.info(f"Augmentation strategy: {augmentation_strategy.__name__}")
+    logging.info(f"Augmentation number: {augmentation_number}")
+    logging.info(f"Machine learning model: {ml_model}")
+
+    # ================================
     # String encoding & Augmentation
     # ================================
     time_start_augmenting = datetime.now()
@@ -131,7 +135,9 @@ if __name__ == "__main__":
     logging.info(f"String dictionary: {smi_dict} ")
 
     # Obtain longest of all smiles
-    max_length_smi = get_max_length(list(data["new_smiles"]))
+    max_length_smi = get_max_length(
+        list(itertools.chain.from_iterable(data["new_smiles"]))
+    )
     logging.info(f"Longest smiles in data set: {max_length_smi} ")
 
     # ==================================
