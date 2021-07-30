@@ -30,7 +30,7 @@ from maxsmi.utils_prediction import (
 from maxsmi.pytorch_models import model_type
 from maxsmi.pytorch_data import AugmentSmilesData
 from maxsmi.pytorch_evaluation import out_of_sample_prediction
-from maxsmi.pytorch_training import retrieve_optimal_model_for_training
+from maxsmi.utils_optimal_model import retrieve_optimal_model
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--smiles_prediction",
-        dest="new_smiles",
+        dest="user_smiles",
         type=str,
         help="SMILES for prediction",
     )
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # SMILES checker
-    mixture_check(args.new_smiles)
+    mixture_check(args.user_smiles)
 
     # Data checker
     data_checker(args.task)
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
     # Create data frame with unlabeled SMILES
     new_data = pandas.DataFrame(columns=["target", "smiles"])
-    new_data.loc[0] = [numpy.nan, args.new_smiles]
+    new_data.loc[0] = [numpy.nan, args.user_smiles]
 
     new_data["smiles_in_training"] = new_data["smiles"].apply(
         smiles_in_training, args=(data,)
@@ -124,7 +124,7 @@ if __name__ == "__main__":
         ml_model,
         augmentation_strategy,
         augmentation_number,
-    ) = retrieve_optimal_model_for_training(args.task)
+    ) = retrieve_optimal_model(args.task)
     longest_smiles = retrieve_longest_smiles_from_optimal_model(args.task)
 
     new_data["augmented_smiles"] = new_data["canonical_smiles"].apply(
