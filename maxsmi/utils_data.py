@@ -148,10 +148,20 @@ def smiles_in_training(smiles, data):
 
 def data_checker(task_name):
     """
-    #TODO
+    Verify if a task associated to a dataset is valid in maxsmi.
+
+    Parameters
+    ----------
+    task_name : str
+        The considered physical chemical task.
+
+    Returns
+    -------
+    bool :
+        True if the name is valid. Raises an error otherwise.
     """
-    if task_name in ["free_solv", "ESOL", "ESOL_small", "lipophilicity", "affinity"]:
-        pass
+    if task_name in ["free_solv", "ESOL", "lipophilicity", "affinity"]:
+        return task_name
     else:
         raise NameError(
             "The task is unknown. Please choose between 'free_solv', 'ESOL', 'lipophilicity' and 'affinity'. \

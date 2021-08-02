@@ -2,7 +2,6 @@
 prediction_optimal.py
 Retrieves optimal prediction for each task.
 """
-import logging
 
 
 def retrieve_longest_smiles_from_optimal_model(task):
@@ -33,11 +32,7 @@ def retrieve_longest_smiles_from_optimal_model(task):
     elif task in ["chembl28", "affinity"]:
         longest_smiles = 246
     else:
-        if task != "ESOL":
-            logging.warning("Invalid data. Choosing ESOL by default.")
-            print(
-                "Task unknown. Please choose between free_solv, ESOL, lipophilicity or affinity"
-            )
+        longest_smiles = None
 
     return longest_smiles
 
@@ -57,7 +52,7 @@ def unlabeled_smiles_max_length(unlabeled_smiles, maximum_length_smiles):
     if len(unlabeled_smiles) > maximum_length_smiles:
         raise ValueError("The SMILES is too long for this model. Program aborting")
     else:
-        pass
+        return None
 
 
 def mixture_check(unlabeled_smiles):
