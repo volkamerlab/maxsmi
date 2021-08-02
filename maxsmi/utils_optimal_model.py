@@ -52,5 +52,9 @@ def retrieve_optimal_model(task):
             print(
                 "Task unknown. Please choose between free_solv, ESOL, lipophilicity or affinity"
             )
+            task = "ESOL"
+            ml_model = "CONV1D"
+            augmentation_strategy = augmentation_with_reduced_duplication
+            augmentation_number = 70
 
     return (ml_model, augmentation_strategy, augmentation_number)
