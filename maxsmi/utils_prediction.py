@@ -25,13 +25,13 @@ def retrieve_longest_smiles_from_optimal_model(task):
         longest_smiles = 76
 
     elif task == "ESOL":
-        longest_smiles = 111 + 4  # TODO
+        longest_smiles = 109
 
     elif task in ["lipo", "lipophilicity"]:
-        longest_smiles = 268 + 2  # TODO
+        longest_smiles = 268
 
     elif task in ["chembl28", "affinity"]:
-        longest_smiles = 280  # TODO
+        longest_smiles = 246
     else:
         if task != "ESOL":
             logging.warning("Invalid data. Choosing ESOL by default.")
