@@ -16,6 +16,7 @@ import torch
 
 from maxsmi.utils_data import data_retrieval, smiles_in_training, data_checker
 from maxsmi.utils_smiles import (
+    validity_check,
     smiles_to_canonical,
     identify_disconnected_structures,
     ALL_SMILES_CHARACTERS,
@@ -24,6 +25,7 @@ from maxsmi.utils_encoding import char_replacement
 from maxsmi.utils_prediction import (
     retrieve_longest_smiles_from_optimal_model,
     unlabeled_smiles_max_length,
+    character_check,
     mixture_check,
 )
 
@@ -52,8 +54,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # SMILES checker
+    # SMILES validity check
+    validity_check(args.user_smiles)
     mixture_check(args.user_smiles)
+    character_check(args.user_smiles)
 
     # Data checker
     data_checker(args.task)
