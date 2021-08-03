@@ -2,6 +2,7 @@
 prediction_optimal.py
 Retrieves optimal prediction for each task.
 """
+from maxsmi.utils_smiles import ALL_SMILES_CHARACTERS
 
 
 def retrieve_longest_smiles_from_optimal_model(task):
@@ -74,5 +75,27 @@ def mixture_check(unlabeled_smiles):
         raise ValueError(
             "SMILES containing mixtures cannot be processed. Program aborting"
         )
+    else:
+        return unlabeled_smiles
+
+
+def character_check(unlabeled_smiles):
+    """
+    Aborts the prediction if the SMILES contains an unknown character.
+
+    Parameters
+    ----------
+    unlabeled_smiles : str
+        SMILES string describing a compound.
+
+    Returns
+    -------
+    str :
+        the SMILES if all characters are known, raises an error otherwise.
+
+    """
+    for character in unlabeled_smiles:
+        if character not in ALL_SMILES_CHARACTERS:
+            raise ValueError("SMILES contains unknown character. Program aborting")
     else:
         return unlabeled_smiles
