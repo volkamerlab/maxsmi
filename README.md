@@ -58,11 +58,6 @@ If no ensemble learning is wanted for the evaluation, run:
 python maxsmi/full_workflow.py --task ESOL --eval-strategy False
 ```
 
-To compare SMILES encoding with DeepSMILES, run:
-```console
-python maxsmi/full_workflow.py --task ESOL --string-encoding deepsmiles
-```
-
 To run an example with all chosen arguments:
 ```console
 python maxsmi/full_workflow.py --task free_solv --string-encoding smiles --aug-strategy-train augmentation_with_duplication --aug-strategy-test augmentation_with_reduced_duplication --aug-nb-train 5 --aug-nb-test 2 --ml-model CONV1D --eval-strategy True --nb-epochs 250
