@@ -6,7 +6,14 @@ Unit and regression test for the maxsmi package.
 # import maxsmi
 import pytest
 import sys
-from maxsmi.utils_data import data_retrieval, process_ESOL, process_ChEMBL
+import pandas
+from maxsmi.utils_data import (
+    data_retrieval,
+    process_ESOL,
+    process_ChEMBL,
+    smiles_in_training,
+    data_checker,
+)
 
 
 def test_maxsmi_imported():
@@ -51,3 +58,42 @@ def test_process_ESOL(num_heavy_atoms, solution):
 def test_process_ChEMBL(uniprotID, solution):
     dataframe = process_ChEMBL(uniprotID)
     assert solution == dataframe.loc[0, "activities.standard_value"]
+
+
+@pytest.mark.parametrize(
+    "smiles, data, solution",
+    [
+        (
+            "CC1CC1",
+            pandas.DataFrame(["CCC1CC1", "CC1CC1"], columns=["canonical_smiles"]),
+            True,
+        ),
+        (
+            "CC1CC1",
+            pandas.DataFrame(["CCC1CC1", "CC1CC1CC"], columns=["canonical_smiles"]),
+            False,
+        ),
+    ],
+)
+def test_smiles_in_training(smiles, data, solution):
+    in_training = smiles_in_training(smiles, data)
+    assert solution == in_training
+
+
+@pytest.mark.parametrize(
+    "task, solution",
+    [
+        ("free_solv", "free_solv"),
+        ("ESOL", "ESOL"),
+        ("affinity", "affinity"),
+        ("lipophilicity", "lipophilicity"),
+    ],
+)
+def test_data_checker(task, solution):
+    name = data_checker(task)
+    assert solution == name
+
+
+def test_data_checker_exception():
+    with pytest.raises(NameError):
+        assert data_checker("lipholicity")

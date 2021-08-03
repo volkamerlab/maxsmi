@@ -6,32 +6,46 @@ maxsmi: a guide to SMILES augmentation
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Documentation Status](https://readthedocs.org/projects/maxsmi/badge/?version=latest)](https://maxsmi.readthedocs.io/en/latest/?badge=latest)
-![maxsmi](https://img.shields.io/badge/..-maxsmi-pink)
 
 ![GitHub closed pr](https://img.shields.io/github/issues-pr-closed-raw/volkamerlab/maxsmi) ![GitHub open pr](https://img.shields.io/github/issues-pr-raw/volkamerlab/maxsmi) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/volkamerlab/maxsmi) ![GitHub open issues](https://img.shields.io/github/issues/volkamerlab/maxsmi)
 
 
-Find the optimal SMILES augmentation for accurate prediction.
+SMILES augmentation for deep learning and physical chemistry prediction tool.
 
-#### Conda installation
-Create a conda environment:
+## Installation using conda
+
+### Prerequisite
+Anaconda and Git should be installed. See [Anaconda's website](https://www.anaconda.com/products/individual) and [Git's website](https://git-scm.com/downloads) for download.
+
+### How to
+
+1. Clone the github repository:
+```console
+https://github.com/volkamerlab/maxsmi.git
+```
+
+2. Change directory:
+```console
+cd maxsmi
+```
+3. Create the conda environment:
 
 ```console
 conda env create -n maxsmi -f devtools/conda-envs/test_env.yaml
 ```
 
-Activate the environment:
+4. Activate the environment:
 
 ```console
 conda activate maxsmi
 ```
 
-Activate developer mode:
+5. Activate developer mode:
 ```console
 pip install -e .
 ```
 
-#### Example
+## Examples
 
 To run an example with the ESOL data set, augmenting the train set 5 times and the test set 2 times, training for 5 epochs:
 
@@ -49,14 +63,20 @@ To compare SMILES encoding with DeepSMILES, run:
 python maxsmi/full_workflow.py --task ESOL --string-encoding deepsmiles
 ```
 
-Similarly for SELFIES, run:
-```console
-python maxsmi/full_workflow.py --task ESOL --string-encoding selfies
-```
-
 To run an example with all chosen arguments:
 ```console
 python maxsmi/full_workflow.py --task free_solv --string-encoding smiles --aug-strategy-train augmentation_with_duplication --aug-strategy-test augmentation_with_reduced_duplication --aug-nb-train 5 --aug-nb-test 2 --ml-model CONV1D --eval-strategy True --nb-epochs 250
+```
+
+## Prediction
+To predict the affinity of a compound against the EGFR kinase, e.g. given by the SMILES `CC1CC1`, run:
+```console
+python maxsmi/prediction_unlabeled_data.py --task affinity --smiles_prediction CC1CC1
+```
+
+Similarly for lipophilicity prediction, run:
+```console
+python maxsmi/prediction_unlabeled_data.py --task lipophilicity --smiles_prediction CC1CC1
 ```
 
 ### Copyright

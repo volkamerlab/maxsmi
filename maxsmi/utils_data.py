@@ -40,7 +40,7 @@ def data_retrieval(target_data="ESOL"):
         data = pd.read_csv(url)
         task = "exp"
 
-    elif target_data == "chembl28":
+    elif target_data in ["chembl28", "affinity"]:
         data = process_ChEMBL()
         task = "activities.standard_value"
 
@@ -122,3 +122,48 @@ def process_ChEMBL(uniprotID="P00533"):
         columns={"compound_structures.canonical_smiles": "smiles"}
     )
     return dataframe.reset_index(drop=True)
+
+
+def smiles_in_training(smiles, data):
+    """
+    Determines if a SMILES is a dataset.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+    dataframe : pd.Pandas
+        A pandas dataframe with a "smiles" column.
+
+    Returns
+    -------
+    bool :
+        If the SMILES is in the dataset.
+    """
+    if smiles in list(data["canonical_smiles"]):
+        return True
+    else:
+        return False
+
+
+def data_checker(task_name):
+    """
+    Verify if a task associated to a dataset is valid in maxsmi.
+
+    Parameters
+    ----------
+    task_name : str
+        The considered physical chemical task.
+
+    Returns
+    -------
+    bool :
+        True if the name is valid. Raises an error otherwise.
+    """
+    if task_name in ["free_solv", "ESOL", "lipophilicity", "affinity"]:
+        return task_name
+    else:
+        raise NameError(
+            "The task is unknown. Please choose between 'free_solv', 'ESOL', 'lipophilicity' and 'affinity'. \
+                Program aborting."
+        )
