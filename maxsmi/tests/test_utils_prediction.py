@@ -36,8 +36,15 @@ def test_retrieve_longest_smiles_from_optimal_model(task, solution):
     assert solution == length
 
 
-# def test_unlabeled_smiles_max_length():
-#     assert unlabeled_smiles_max_length("CCC", 10) == None
+@pytest.mark.parametrize(
+    "smiles, length, solution",
+    [
+        ("CCC", 10, None),
+    ],
+)
+def test_unlabeled_smiles_max_length(smiles, length, solution):
+    result = unlabeled_smiles_max_length(smiles, length)
+    assert solution == result
 
 
 def test_unlabeled_smiles_max_length_exception():
