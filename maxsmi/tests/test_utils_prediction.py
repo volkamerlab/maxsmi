@@ -10,6 +10,7 @@ from maxsmi.utils_prediction import (
     retrieve_longest_smiles_from_optimal_model,
     unlabeled_smiles_max_length,
     mixture_check,
+    character_check,
 )
 
 
@@ -59,3 +60,19 @@ def test_mixture_check():
 def test_mixture_check_exception():
     with pytest.raises(Exception):
         assert mixture_check("C.C")
+
+
+@pytest.mark.parametrize(
+    "smiles, solution",
+    [
+        ("CCC", "CCC"),
+    ],
+)
+def test_character_check(smiles, solution):
+    result = character_check(smiles)
+    assert solution == result
+
+
+def test_character_check_exception():
+    with pytest.raises(Exception):
+        assert character_check("CCçC")

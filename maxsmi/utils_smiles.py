@@ -14,6 +14,28 @@ import deepsmiles
 from maxsmi.utils_encoding import get_unique_elements_as_dict
 
 
+def validity_check(smiles):
+    """
+    Aborts the program if the SMILES is unvalid.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+
+    Returns
+    -------
+    str :
+        the valid SMILES, or raises an error otherwise.
+
+    """
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        raise ValueError("Unvalid SMILES. Program aborting")
+    else:
+        return smiles
+
+
 def smiles_to_canonical(smiles):
     """
     Takes a SMILES and return its canonical form.
