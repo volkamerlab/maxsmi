@@ -23,5 +23,5 @@ def test_maxsmi_imported():
     ],
 )
 def test_evaluation_results(pred_output, true_output, solution):
-    results = evaluation_results(true_output, pred_output)
+    results = evaluation_results(pred_output, true_output)
     assert solution == results
