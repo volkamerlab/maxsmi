@@ -13,7 +13,7 @@ from maxsmi.utils_smiles import get_num_heavy_atoms
 
 def data_retrieval(target_data="ESOL"):
     """
-    Retrieve data from MoleculeNet.
+    Retrieve data from MoleculeNet, or ChEMBL.
 
     Parameters
     ----------
@@ -39,6 +39,10 @@ def data_retrieval(target_data="ESOL"):
         )
         data = pd.read_csv(url)
         task = "exp"
+
+    elif target_data in ["chembl28", "affinity"]:
+        data = process_ChEMBL()
+        task = "activities.standard_value"
 
     elif target_data == "ESOL_small":
         data = process_ESOL()
@@ -75,8 +79,91 @@ def process_ESOL(num_heavy_atoms=25):
     url = (
         "https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/delaney-processed.csv"
     )
-    data = pd.read_csv(url)
-    data["num_heavy_atom"] = data["smiles"].apply(get_num_heavy_atoms)
-    data = data.loc[data["num_heavy_atom"] <= num_heavy_atoms]
+    dataframe = pd.read_csv(url)
+    dataframe["num_heavy_atom"] = dataframe["smiles"].apply(get_num_heavy_atoms)
+    dataframe = dataframe.loc[dataframe["num_heavy_atom"] <= num_heavy_atoms]
 
-    return data.reset_index(drop=True)
+    return dataframe.reset_index(drop=True)
+
+
+def process_ChEMBL(uniprotID="P00533"):
+    """
+    Retrieves pIC50 values in [nM] from ChEMBL v.28.
+
+    Parameters
+    ----------
+    uniprotID : str, default P00533
+        The kinase for which pIC50 measurements are considered. Default is EGFR kinase.
+
+    Returns
+    -------
+    dataframe: pd.Pandas
+        Pandas data frame pIC50 measurements tested against chosen uniprot ID.
+
+    Notes
+    -----
+    The first curation is done in openkinome, see https://github.com/openkinome/kinodata/releases/tag/v0.2.
+    """
+    url = "https://github.com/openkinome/kinodata/releases/download/v0.2/activities-chembl28_v0.2.zip"
+    dataframe = pd.read_csv(url)
+    dataframe = dataframe.dropna(
+        subset=[
+            "compound_structures.canonical_smiles",
+            "component_sequences.sequence",
+            "activities.standard_type",
+        ]
+    )
+    dataframe = dataframe[dataframe["activities.standard_type"] == "pIC50"]
+    dataframe = dataframe[dataframe["UniprotID"] == uniprotID]
+    dataframe = dataframe[
+        ["compound_structures.canonical_smiles", "activities.standard_value"]
+    ]
+    dataframe = dataframe.rename(
+        columns={"compound_structures.canonical_smiles": "smiles"}
+    )
+    return dataframe.reset_index(drop=True)
+
+
+def smiles_in_training(smiles, data):
+    """
+    Determines if a SMILES is a dataset.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+    dataframe : pd.Pandas
+        A pandas dataframe with a "smiles" column.
+
+    Returns
+    -------
+    bool :
+        If the SMILES is in the dataset.
+    """
+    if smiles in list(data["canonical_smiles"]):
+        return True
+    else:
+        return False
+
+
+def data_checker(task_name):
+    """
+    Verify if a task associated to a dataset is valid in maxsmi.
+
+    Parameters
+    ----------
+    task_name : str
+        The considered physical chemical task.
+
+    Returns
+    -------
+    bool :
+        True if the name is valid. Raises an error otherwise.
+    """
+    if task_name in ["free_solv", "ESOL", "lipophilicity", "affinity"]:
+        return task_name
+    else:
+        raise NameError(
+            "The task is unknown. Please choose between 'free_solv', 'ESOL', 'lipophilicity' and 'affinity'. \
+                Program aborting."
+        )
