@@ -332,7 +332,7 @@ if __name__ == "__main__":
         [output_true_train[smiles] for new_smiles in train_data["new_smiles"] for smiles in new_smiles]
     )
 
-    evaluation_train = evaluation_results(all_output_true_train, all_output_pred_train)
+    evaluation_train = evaluation_results(all_output_pred_train, all_output_true_train)
 
     logging.info(f"Train metrics (MSE, RMSE, R2): {evaluation_train}")
 
@@ -363,8 +363,8 @@ if __name__ == "__main__":
         # True value, canonical smiles, random smiles, mean prediction and standard deviation
         test_ensemble_learning = test_data.copy()
 
-        all_output_true_test = []
         all_output_pred_test = []
+        all_output_true_test = []
 
         for index, row in test_data.iterrows():
             # Obtain prediction for each of the random smiles of a given molecule
@@ -379,24 +379,23 @@ if __name__ == "__main__":
 
             # Add the new values to the data frame:
             test_ensemble_learning.loc[index, "average_prediction"] = prediction_per_mol
-
             test_ensemble_learning.loc[index, "std_prediction"] = std_prediction_per_mol
 
-            all_output_true_test.append(row["target"])
             all_output_pred_test.append(prediction_per_mol)
+            all_output_true_test.append(row["target"])
 
         test_ensemble_learning.to_pickle(f"{folder}/results_ensemble_learning.pkl")
-        all_output_true_test = numpy.array(all_output_true_test)
         all_output_pred_test = numpy.array(all_output_pred_test)
+        all_output_true_test = numpy.array(all_output_true_test)
     else:
-        all_output_true_test = numpy.concatenate(
-            [output_true_test[smiles] for new_smiles in test_data["new_smiles"] for smiles in new_smiles]
-        )
         all_output_pred_test = numpy.concatenate(
             [output_pred_test[smiles] for new_smiles in test_data["new_smiles"] for smiles in new_smiles]
         )
+        all_output_true_test = numpy.concatenate(
+            [output_true_test[smiles] for new_smiles in test_data["new_smiles"] for smiles in new_smiles]
+        )
 
-    evaluation_test = evaluation_results(all_output_true_test, all_output_pred_test)
+    evaluation_test = evaluation_results(all_output_pred_test, all_output_true_test)
 
     logging.info(f"Test output dimension {all_output_true_test.shape}")
 

@@ -8,7 +8,7 @@ Handles the primary functions
 from sklearn.metrics import r2_score, mean_squared_error
 
 
-def evaluation_results(output_true, output_predicted):
+def evaluation_results(output_predicted, output_true):
     """
     Computes metrics on ML predictions.
 

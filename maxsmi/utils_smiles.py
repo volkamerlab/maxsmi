@@ -110,7 +110,7 @@ def smiles_to_random(smiles, int_aug=50):
         elif int_aug == 0:
             return [smiles]
         else:
-            raise Exception("int_aug must be greater or equal to zero.")
+            raise ValueError("int_aug must be greater or equal to zero.")
 
 
 def smiles_to_max_random(smiles, max_duplication=10):
