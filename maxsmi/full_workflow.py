@@ -326,10 +326,10 @@ if __name__ == "__main__":
     )
 
     all_output_pred_train = numpy.concatenate(
-        [output_pred_train[smiles] for smiles in output_pred_train]
+        [output_pred_train[smiles] for new_smiles in train_data["new_smiles"] for smiles in new_smiles]
     )
     all_output_true_train = numpy.concatenate(
-        [output_true_train[smiles] for smiles in output_true_train]
+        [output_true_train[smiles] for new_smiles in train_data["new_smiles"] for smiles in new_smiles]
     )
 
     evaluation_train = evaluation_results(all_output_true_train, all_output_pred_train)
@@ -363,9 +363,9 @@ if __name__ == "__main__":
         # True value, canonical smiles, random smiles, mean prediction and standard deviation
         test_ensemble_learning = test_data.copy()
 
-        all_output_true_test = []
         all_output_pred_test = []
-
+        all_output_true_test = []
+        
         for index, row in test_data.iterrows():
             # Obtain prediction for each of the random smiles of a given molecule
             multiple_output = numpy.concatenate(
@@ -388,12 +388,12 @@ if __name__ == "__main__":
         test_ensemble_learning.to_pickle(f"{folder}/results_ensemble_learning.pkl")
         all_output_true_test = numpy.array(all_output_true_test)
         all_output_pred_test = numpy.array(all_output_pred_test)
-    else:
-        all_output_true_test = numpy.concatenate(
-            [output_true_test[smiles] for smiles in output_true_test]
-        )
+    else:           
         all_output_pred_test = numpy.concatenate(
-            [output_pred_test[smiles] for smiles in output_pred_test]
+            [output_pred_test[smiles] for new_smiles in test_data["new_smiles"] for smiles in new_smiles]
+        )
+        all_output_true_test = numpy.concatenate(
+            [output_true_test[smiles] for new_smiles in test_data["new_smiles"] for smiles in new_smiles]
         )
 
     evaluation_test = evaluation_results(all_output_true_test, all_output_pred_test)
