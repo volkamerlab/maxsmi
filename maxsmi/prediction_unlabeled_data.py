@@ -62,11 +62,11 @@ if __name__ == "__main__":
     # Data checker
     data_checker(args.task)
 
-    folder = f"maxsmi/prediction/{args.task}"
+    folder = f"maxsmi/user_prediction/{args.task}"
     os.makedirs(folder, exist_ok=True)
 
     # Logging information
-    log_file_name = "prediction.log"
+    log_file_name = "user_prediction_output.log"
     logging.basicConfig(filename=f"{folder}/{log_file_name}", level=logging.INFO)
     logging.info(f"Start at {datetime.now()}")
     logging.info(f"Data and task: {args.task}")
@@ -222,9 +222,9 @@ if __name__ == "__main__":
 
         # Draw and save 2D image of the molecule
         molecule = rdkit.Chem.MolFromSmiles(new_data.canonical_smiles[index])
-        Draw.MolToFile(molecule, f"maxsmi/prediction/{args.task}/2D_molecule.png")
+        Draw.MolToFile(molecule, f"{folder}/2D_molecule.png")
 
-    new_ensemble_learning.to_csv(f"{folder}/results_out_of_sample.csv")
+    new_ensemble_learning.to_csv(f"{folder}/user_prediction_table.csv")
 
     time_end_testing = datetime.now()
     time_testing = time_end_testing - time_start_testing
@@ -235,3 +235,4 @@ if __name__ == "__main__":
     logging.info(f"Time for model execution {time_execution}")
 
     logging.info("Script completed. \n \n")
+    print(f"Script completed. Output can be found at {folder}")
