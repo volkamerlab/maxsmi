@@ -14,10 +14,10 @@ def evaluation_results(output_predicted, output_true):
 
     Parameters
     ----------
-    output_true : array
-        Labelled output from the data.
     output_predicted : array
         Predicted output from the model.
+    output_true : array
+        Labelled output from the data.
 
     Returns
     -------
