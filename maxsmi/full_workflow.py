@@ -10,6 +10,7 @@ import warnings
 import os
 from datetime import datetime
 import itertools
+import numpy
 
 from maxsmi.utils import string_to_bool, augmentation_strategy
 from maxsmi.utils_data import data_retrieval
@@ -31,7 +32,7 @@ import torch
 import torch.nn as nn
 
 from maxsmi.pytorch_models import model_type
-from maxsmi.pytorch_data import AugmentSmilesData, data_to_pytorch_format
+from maxsmi.pytorch_data import AugmentSmilesData
 
 from maxsmi.constants import TEST_RATIO, RANDOM_SEED, BACTH_SIZE, LEARNING_RATE
 from maxsmi.pytorch_evaluation import model_evaluation
@@ -197,6 +198,8 @@ if __name__ == "__main__":
     # ================================
     # String encoding & Augmentation
     # ================================
+    time_start_augmenting = datetime.now()
+
     if args.string_encoding == "smiles":
         train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
             args.augmentation_strategy_train, args=(args.augmentation_number_train,)
@@ -220,6 +223,10 @@ if __name__ == "__main__":
         test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
             smiles_to_deepsmiles
         )
+
+    time_end_augmenting = datetime.now()
+    time_augmenting = time_end_augmenting - time_start_augmenting
+    logging.info(f"Time for augmentation {time_augmenting}")
 
     # ================================
     # Input processing
@@ -309,7 +316,7 @@ if __name__ == "__main__":
         train_pytorch, batch_size=1, shuffle=False
     )
 
-    (output_true_train, output_pred_train) = model_evaluation(
+    (output_pred_train, output_true_train) = model_evaluation(
         data_loader=train_loader,
         ml_model_name=ml_model_name,
         ml_model=ml_model,
@@ -318,7 +325,14 @@ if __name__ == "__main__":
         device_to_use=device,
     )
 
-    evaluation_train = evaluation_results(output_true_train, output_pred_train, is_cuda)
+    all_output_pred_train = numpy.concatenate(
+        [output_pred_train[smiles] for new_smiles in train_data["new_smiles"] for smiles in new_smiles]
+    )
+    all_output_true_train = numpy.concatenate(
+        [output_true_train[smiles] for new_smiles in train_data["new_smiles"] for smiles in new_smiles]
+    )
+
+    evaluation_train = evaluation_results(all_output_pred_train, all_output_true_train)
 
     logging.info(f"Train metrics (MSE, RMSE, R2): {evaluation_train}")
 
@@ -331,84 +345,59 @@ if __name__ == "__main__":
 
     time_start_testing = datetime.now()
 
+    test_pytorch = AugmentSmilesData(test_data)
+
+    test_loader = torch.utils.data.DataLoader(test_pytorch, batch_size=1, shuffle=False)
+
+    (output_pred_test, output_true_test) = model_evaluation(
+        data_loader=test_loader,
+        ml_model_name=ml_model_name,
+        ml_model=ml_model,
+        smiles_dictionary=smi_dict,
+        max_length_smiles=max_length_smi,
+        device_to_use=device,
+    )
+
     if args.ensemble_learning:
-        with torch.no_grad():
-            test_pytorch = AugmentSmilesData(test_data, index_augmentation=False)
-            output_true_test = []
-            output_pred_test = []
+        # Create a data frame with important information:
+        # True value, canonical smiles, random smiles, mean prediction and standard deviation
+        test_ensemble_learning = test_data.copy()
 
-            for item in test_pytorch.pandas_dataframe.index:
+        all_output_pred_test = []
+        all_output_true_test = []
 
-                # Retrive list of random smiles & true target for a given index/mol
-                (
-                    multiple_smiles_input_per_mol,
-                    output_true_test_per_mol,
-                ) = data_to_pytorch_format(
-                    test_pytorch.smiles.__getitem__(item),
-                    test_pytorch.target.__getitem__(item),
-                    smi_dict,
-                    max_length_smi,
-                    args.machine_learning_model,
-                    device,
-                    per_mol=True,
-                )
+        for index, row in test_data.iterrows():
+            # Obtain prediction for each of the random smiles of a given molecule
+            multiple_output = numpy.concatenate(
+                [output_pred_test[smiles] for smiles in row["new_smiles"]]
+            )
+            # Average the predictions for a given molecule
+            prediction_per_mol = numpy.mean(multiple_output)
 
-                # Reshape if there is only one random smiles for a given index/mol
-                if len(multiple_smiles_input_per_mol.shape) < 3:
-                    multiple_smiles_input_per_mol = (
-                        multiple_smiles_input_per_mol.reshape(
-                            (
-                                1,
-                                multiple_smiles_input_per_mol.shape[0],
-                                multiple_smiles_input_per_mol.shape[1],
-                            )
-                        )
-                    )
+            # Compute the standard deviation for a given molecule
+            std_prediction_per_mol = numpy.std(multiple_output)
 
-                # Obtain prediction for each of the random smiles of a given molecule
-                multiple_output = ml_model(multiple_smiles_input_per_mol)
+            # Add the new values to the data frame:
+            test_ensemble_learning.loc[index, "average_prediction"] = prediction_per_mol
+            test_ensemble_learning.loc[index, "std_prediction"] = std_prediction_per_mol
 
-                # Average the predictions for a given molecule
-                prediction_per_mol = torch.mean(multiple_output, dim=0)
+            all_output_pred_test.append(prediction_per_mol)
+            all_output_true_test.append(row["target"])
 
-                # Compute the standard deviation for a given molecule
-                std_prediction_per_mol = torch.std(multiple_output, dim=0)
-
-                # Create a data frame with important information:
-                # True value, canonical smiles, random smiles, mean prediction and standard deviation
-                test_pytorch_ensemble_learning = test_pytorch.pandas_dataframe
-                test_pytorch_ensemble_learning.loc[
-                    item, "average_prediction"
-                ] = prediction_per_mol.cpu().numpy()
-                test_pytorch_ensemble_learning.loc[
-                    item, "std_prediction"
-                ] = std_prediction_per_mol.cpu().numpy()
-                test_pytorch_ensemble_learning.to_pickle(
-                    f"{folder}/results_ensemble_learning.pkl"
-                )
-
-                output_true_test.append(output_true_test_per_mol)
-                output_pred_test.append(prediction_per_mol)
-
-            output_pred_test = torch.stack(output_pred_test)
-            output_true_test = torch.stack(output_true_test)
-
+        test_ensemble_learning.to_pickle(f"{folder}/results_ensemble_learning.pkl")
+        all_output_pred_test = numpy.array(all_output_pred_test)
+        all_output_true_test = numpy.array(all_output_true_test)
     else:
-        test_pytorch = AugmentSmilesData(test_data)
-        test_loader = torch.utils.data.DataLoader(
-            test_pytorch, batch_size=1, shuffle=False
+        all_output_pred_test = numpy.concatenate(
+            [output_pred_test[smiles] for new_smiles in test_data["new_smiles"] for smiles in new_smiles]
         )
-        (output_true_test, output_pred_test) = model_evaluation(
-            data_loader=test_loader,
-            ml_model_name=ml_model_name,
-            ml_model=ml_model,
-            smiles_dictionary=smi_dict,
-            max_length_smiles=max_length_smi,
-            device_to_use=device,
+        all_output_true_test = numpy.concatenate(
+            [output_true_test[smiles] for new_smiles in test_data["new_smiles"] for smiles in new_smiles]
         )
-    evaluation_test = evaluation_results(output_true_test, output_pred_test, is_cuda)
 
-    logging.info(f"Test output dimension {output_true_test.shape}")
+    evaluation_test = evaluation_results(all_output_pred_test, all_output_true_test)
+
+    logging.info(f"Test output dimension {all_output_true_test.shape}")
 
     logging.info(f"Test metrics (MSE, RMSE, R2): {evaluation_test}")
     time_end_testing = datetime.now()

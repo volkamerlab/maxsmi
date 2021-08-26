@@ -43,8 +43,11 @@ def char_replacement(list_smiles):
     return [
         smile.replace("Cl", "L")
         .replace("Br", "R")
+        .replace("Se", "E")
+        .replace("se", "e")
+        .replace("Zn", "Z")
+        .replace("Si", "T")
         .replace("@@", "$")
-        .replace("\\", "|")
         for smile in list_smiles
     ]
 

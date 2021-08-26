@@ -11,6 +11,29 @@ import itertools
 from rdkit import Chem
 import selfies
 import deepsmiles
+from maxsmi.utils_encoding import get_unique_elements_as_dict
+
+
+def validity_check(smiles):
+    """
+    Aborts the program if the SMILES is unvalid.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+
+    Returns
+    -------
+    str :
+        the valid SMILES, or raises an error otherwise.
+
+    """
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        raise ValueError("Unvalid SMILES. Program aborting")
+    else:
+        return smiles
 
 
 def smiles_to_canonical(smiles):
@@ -87,7 +110,7 @@ def smiles_to_random(smiles, int_aug=50):
         elif int_aug == 0:
             return [smiles]
         else:
-            raise Exception("int_aug must be greater or equal to zero.")
+            raise ValueError("int_aug must be greater or equal to zero.")
 
 
 def smiles_to_max_random(smiles, max_duplication=10):
@@ -193,3 +216,90 @@ def smiles_to_deepsmiles(smiles):
     """
     converter = deepsmiles.Converter(rings=True, branches=True)
     return [converter.encode(smiles)]
+
+
+def get_num_heavy_atoms(smiles):
+    """
+    Takes a SMILES and return the number of heavy atoms of the molecule.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+
+    Returns
+    -------
+    int
+        The number of heavy atoms of the molecule.
+    """
+
+    mol = Chem.MolFromSmiles(smiles)
+
+    if mol is None:
+        return None
+    else:
+        return mol.GetNumHeavyAtoms()
+
+
+ALL_SMILES_CHARACTERS = get_unique_elements_as_dict(
+    [
+        # See https://www.daylight.com/dayhtml/doc/theory/theory.smiles.html
+        # Bonds
+        "-",  # single bond
+        "=",  # double bond
+        "#",  # triple bond
+        "/",  # directional bond
+        "\\",  # directional bond
+        # Chirality
+        "@",  # chirality specification
+        "$",  # replacement for @@
+        # Formal charge
+        "+",  # formal charge
+        "-",  # formal charge
+        # Branches
+        "(",  # branch opening
+        ")",  # branch closing
+        # Rings
+        "0",  # ring opening and closure
+        "1",  #
+        "2",  #
+        "3",  #
+        "4",  #
+        "5",  #
+        "6",  #
+        "7",  #
+        "8",  #
+        "9",  # ring opening and closure
+        "%",  # ring nb > 9
+        # Atoms
+        "B",  # Boron
+        "C",  # Carbon
+        "E",  # replacement for Se
+        "F",  # Fluorine
+        "H",  # Hydrogen
+        "I",  # Iodine
+        "K",  # Potassium
+        "L",  # replacement for Cl
+        "N",  # Nitrogen
+        "O",  # Oxygen
+        "P",  # Phosphorus
+        "R",  # replacement for Br
+        "S",  # Sulfur
+        "T",  # replacement for Si
+        "Z",  # replacement for Zn
+        # aromatic atoms
+        "b",  # boron
+        "c",  # carbon
+        "e",  # remplacement for se
+        "i",  # iodine
+        "n",  # nitrogen
+        "o",  # oxygen
+        "s",  # sulfur
+        # Extra
+        ".",  # disconnected structure
+        "*",  # wild card
+        ":",  # atom map (reaction)
+        "[",  # for non organic or unormal valence
+        "]",  # same
+    ]
+)
