@@ -62,7 +62,7 @@ if __name__ == "__main__":
     # Data checker
     data_checker(args.task)
 
-    folder = f"maxsmi/user_prediction/{args.task}"
+    folder = f"maxsmi/user_prediction/{args.task}_{args.user_smiles}"
     os.makedirs(folder, exist_ok=True)
 
     # Logging information
