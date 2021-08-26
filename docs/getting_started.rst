@@ -8,4 +8,4 @@ This is the place to be!
 Installation
 -------------
 
-For installation, please refer to `the github page <https://github.com/volkamerlab/maxsmi#conda-installation>`_.
+For installation, please refer to `the github page <https://github.com/volkamerlab/maxsmi#installation-using-conda>`_.
