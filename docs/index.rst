@@ -26,6 +26,17 @@ Welcome to maxsmi's documentation!
    https://readthedocs.org/projects/maxsmi/badge/?version=latest
    :target: https://maxsmi.readthedocs.io/en/latest/?badge=latest
 
+.. raw:: html
+
+   <p align="center">
+   <img src="_static/ensemble_learning_prediction.png" alt="Ensemble learning" width="600"/>
+   <br>
+   <font size="3">
+   Given a compound represented by its canonical SMILES, the maxsmi model produces a prediction for each of the SMILES variations.
+   The aggreation of these values leads to a per compound prediction and the standard deviation to a confidence in the prediction.
+   </font>
+   </p>
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
