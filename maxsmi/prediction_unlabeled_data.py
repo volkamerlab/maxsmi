@@ -235,4 +235,4 @@ if __name__ == "__main__":
     logging.info(f"Time for model execution {time_execution}")
 
     logging.info("Script completed. \n \n")
-    print(f"Script completed. Output can be found at {folder}")
+    print(f"Script completed. Output can be found at {folder}/")
