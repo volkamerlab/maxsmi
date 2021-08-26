@@ -224,7 +224,11 @@ if __name__ == "__main__":
         molecule = rdkit.Chem.MolFromSmiles(new_data.canonical_smiles[index])
         Draw.MolToFile(molecule, f"{folder}/2D_molecule.png")
 
-    new_ensemble_learning.to_csv(f"{folder}/user_prediction_table.csv")
+    new_ensemble_learning = new_ensemble_learning.drop(columns=["target", "new_smiles"])
+    new_ensemble_learning = new_ensemble_learning.rename(
+        columns={"smiles": "user_smiles"}
+    )
+    new_ensemble_learning.to_csv(f"{folder}/user_prediction_table.csv", index=False)
 
     time_end_testing = datetime.now()
     time_testing = time_end_testing - time_start_testing
