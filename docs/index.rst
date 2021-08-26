@@ -11,6 +11,7 @@ Welcome to maxsmi's documentation!
    :caption: Contents:
 
    getting_started
+   example/user_prediction
    example/smiles_augmentation
    api
 
