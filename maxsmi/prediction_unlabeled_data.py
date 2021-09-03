@@ -198,15 +198,15 @@ if __name__ == "__main__":
     # canonical smiles, random smiles, mean prediction and standard deviation
     new_ensemble_learning = new_data.copy()
 
-    all_output_pred = []
-
     for index, row in new_data.iterrows():
         # Obtain prediction for each of the random smiles of a given molecule
         multiple_output = numpy.concatenate(
             [output_prediction[smiles] for smiles in row["new_smiles"]]
         )
-
+        new_ensemble_learning["per_smiles_prediction"] = ""
+        new_ensemble_learning["per_smiles_prediction"][0] = multiple_output
         logging.info(f"Prediction per random SMILES: {multiple_output}")
+
         # Average the predictions for a given molecule
         prediction_per_mol = numpy.mean(multiple_output)
 
@@ -215,8 +215,8 @@ if __name__ == "__main__":
 
         # Add the new values to the data frame:
         new_ensemble_learning.loc[index, "average_prediction"] = prediction_per_mol
-
         new_ensemble_learning.loc[index, "std_prediction"] = std_prediction_per_mol
+
         logging.info(f" Prediction: {prediction_per_mol}")
         logging.info(f" Confidence: {std_prediction_per_mol} \n\n")
 
@@ -228,7 +228,9 @@ if __name__ == "__main__":
     new_ensemble_learning = new_ensemble_learning.rename(
         columns={"smiles": "user_smiles"}
     )
-    new_ensemble_learning.to_csv(f"{folder}/user_prediction_table.csv", index=False)
+    new_ensemble_learning.to_csv(
+        f"{folder}/user_prediction_table.csv", index=False, sep=","
+    )
 
     time_end_testing = datetime.now()
     time_testing = time_end_testing - time_start_testing
