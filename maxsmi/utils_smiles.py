@@ -322,7 +322,7 @@ def smiles_to_folder_name(smiles):
     Notes
     -----
     : -> %3A
-    \\ -> %5C (here single backslash)
+    \\ -> %5C (here backslash)
     / -> %2F
     * -> %2A
 
@@ -340,19 +340,19 @@ def smiles_to_folder_name(smiles):
 
 def smiles_from_folder_name(url_encoded_smiles):
     """
-    Encodes the URL encoded SMILES containing special characters as r.
+    Returns the URL encoded SMILES containing special characters as regular SMILES.
 
     Parameters
     ----------
     url_encoded_smiles : str
-        XXX
+        A SMILES containing standard URL encoding symbols, such as %2F.
 
     Returns
     -------
-    XXX
-        xxx
+    str :
+        The SMILES with special characters as such.
     : <- %3A
-    \ <- %5C
+    \\ <- %5C (here backslash)
     / <- %2F
     * <- %2A
 
