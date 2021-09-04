@@ -17,6 +17,8 @@ from maxsmi.utils_smiles import (
     control_smiles_duplication,
     get_num_heavy_atoms,
     validity_check,
+    smiles_from_folder_name,
+    smiles_to_folder_name,
 )
 
 
@@ -127,3 +129,23 @@ def test_validity_check(smiles, solution):
 def test_validity_check_exception():
     with pytest.raises(Exception):
         assert validity_check("CC111C")
+
+
+@pytest.mark.parametrize(
+    "smiles, solution",
+    [("CCC%2F%5C", "CCC/\\"), ("%2A%2A", "**")],
+)
+def test_smiles_from_folder_name(smiles, solution):
+    new_smiles = smiles_from_folder_name(smiles)
+    assert solution == new_smiles
+
+
+@pytest.mark.parametrize(
+    "smiles, solution",
+    [
+        ("CCC/c\\c", "CCC%2Fc%5Cc"),
+    ],
+)
+def test_smiles_to_folder_name(smiles, solution):
+    smiles = smiles_to_folder_name(smiles)
+    assert solution == smiles
