@@ -20,6 +20,8 @@ from maxsmi.utils_smiles import (
     smiles_to_canonical,
     identify_disconnected_structures,
     ALL_SMILES_CHARACTERS,
+    smiles_to_folder_name,
+    smiles_from_folder_name,
 )
 from maxsmi.utils_encoding import char_replacement
 from maxsmi.utils_prediction import (
@@ -54,15 +56,20 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    # Check for URL encoded SMILES
+    user_smiles = smiles_from_folder_name(args.user_smiles)
+
     # SMILES validity check
-    validity_check(args.user_smiles)
-    mixture_check(args.user_smiles)
-    character_check(args.user_smiles)
+    validity_check(user_smiles)
+    mixture_check(user_smiles)
+    character_check(user_smiles)
 
     # Data checker
     data_checker(args.task)
 
-    folder = f"maxsmi/user_prediction/{args.task}_{args.user_smiles}"
+    # URL encoding for folder name
+    url_encoded_user_smiles = smiles_to_folder_name(user_smiles)
+    folder = f"maxsmi/user_prediction/{args.task}_{url_encoded_user_smiles}"
     os.makedirs(folder, exist_ok=True)
 
     # Logging information
@@ -107,7 +114,7 @@ if __name__ == "__main__":
 
     # Create data frame with unlabeled SMILES
     new_data = pandas.DataFrame(columns=["target", "smiles"])
-    new_data.loc[0] = [numpy.nan, args.user_smiles]
+    new_data.loc[0] = [numpy.nan, user_smiles]
 
     new_data["smiles_in_training"] = new_data["smiles"].apply(
         smiles_in_training, args=(data,)
