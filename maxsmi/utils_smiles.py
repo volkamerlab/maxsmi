@@ -303,3 +303,67 @@ ALL_SMILES_CHARACTERS = get_unique_elements_as_dict(
         "]",  # same
     ]
 )
+
+
+def smiles_to_folder_name(smiles):
+    """
+    Encodes the SMILES containing special characters as URL encoding.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+
+    Returns
+    -------
+    str :
+        The standard URL encoding of the SMILES if it contains special characters.
+
+    Notes
+    -----
+    : -> %3A
+    \\ -> %5C (here single backslash)
+    / -> %2F
+    * -> %2A
+
+    Taken from:
+    https://www.degraeve.com/reference/urlencoding.php
+    """
+    url_encoded_smiles = (
+        smiles.replace(":", "%3A")
+        .replace("\\", "%5C")
+        .replace("/", "%2F")
+        .replace("*", "%2A")
+    )
+    return url_encoded_smiles
+
+
+def smiles_from_folder_name(url_encoded_smiles):
+    """
+    Encodes the URL encoded SMILES containing special characters as r.
+
+    Parameters
+    ----------
+    url_encoded_smiles : str
+        XXX
+
+    Returns
+    -------
+    XXX
+        xxx
+    : <- %3A
+    \ <- %5C
+    / <- %2F
+    * <- %2A
+
+    Notes
+    -----
+    https://www.degraeve.com/reference/urlencoding.php
+    """
+    smiles = (
+        url_encoded_smiles.replace("%3A", ":")
+        .replace("%5C", "\\")
+        .replace("%2F", "/")
+        .replace("%2A", "*")
+    )
+    return smiles
