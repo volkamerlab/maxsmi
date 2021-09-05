@@ -18,8 +18,8 @@ import torch.nn as nn
 from maxsmi.utils_data import data_retrieval
 from maxsmi.utils_smiles import (
     smiles_to_canonical,
-    identify_disconnected_structures,
-    ALL_SMILES_CHARACTERS,
+    is_connected,
+    ALL_SMILES_DICT,
 )
 from maxsmi.utils_encoding import char_replacement, get_max_length
 from maxsmi.constants import BACTH_SIZE, LEARNING_RATE
@@ -87,11 +87,7 @@ if __name__ == "__main__":
 
     # Canonical SMILES
     data["canonical_smiles"] = data["smiles"].apply(smiles_to_canonical)
-    data["disconnected_smi"] = data["canonical_smiles"].apply(
-        identify_disconnected_structures
-    )
-    data = data.dropna(axis=0)
-    data = data.drop(["disconnected_smi", "smiles"], axis=1)
+    data = data[data["canonical_smiles"].apply(is_connected)]
 
     logging.info(f"Shape of data set: {data.shape} ")
     logging.info(f"Number of training points before augmentation: {len(data)} ")
@@ -130,13 +126,13 @@ if __name__ == "__main__":
     data["new_smiles"] = data["augmented_smiles"].apply(char_replacement)
 
     # Retrieve all smiles characters
-    smi_dict = ALL_SMILES_CHARACTERS
+    smi_dict = ALL_SMILES_DICT
     logging.info(f"Number of unique characters: {len(smi_dict)} ")
     logging.info(f"String dictionary: {smi_dict} ")
 
     # Obtain longest of all smiles
     max_length_smi = get_max_length(
-        list(itertools.chain.from_iterable(data["new_smiles"]))
+        set(itertools.chain.from_iterable(data["new_smiles"]))
     )
     logging.info(f"Longest smiles in data set: {max_length_smi} ")
 
