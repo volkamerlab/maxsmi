@@ -9,6 +9,7 @@ import pickle
 
 
 def load_results(
+    path,
     task,
     augmentation_strategy_train,
     train_augmentation,
@@ -23,6 +24,8 @@ def load_results(
 
     Parameters
     ----------
+    path : str
+        The path to output folder.
     task : str
         The data with associated task, e.g. "ESOL", "free_solv"
     augmentation_strategy_train : str
@@ -49,7 +52,7 @@ def load_results(
     if ensemble_learning:
         try:
             with open(
-                f"output/{task}_{string_encoding}_{augmentation_strategy_train}_"
+                f"{path}/output/{task}_{string_encoding}_{augmentation_strategy_train}_"
                 f"{train_augmentation}_{augmentation_strategy_test}_"
                 f"{test_augmentation}_{ml_model}/"
                 f"results_ensemble_learning.pkl",
@@ -58,7 +61,7 @@ def load_results(
                 data = pickle.load(f)
         except FileNotFoundError:
             with open(
-                f"output_/{task}_{string_encoding}_{augmentation_strategy_train}_"
+                f"{path}/output_/{task}_{string_encoding}_{augmentation_strategy_train}_"
                 f"{train_augmentation}_{augmentation_strategy_test}_"
                 f"{test_augmentation}_{ml_model}/"
                 f"results_ensemble_learning.pkl",
@@ -67,7 +70,7 @@ def load_results(
                 data = pickle.load(f)
     else:
         with open(
-            f"output/{task}_{string_encoding}_{augmentation_strategy_train}_"
+            f"{path}/output/{task}_{string_encoding}_{augmentation_strategy_train}_"
             f"{train_augmentation}_{augmentation_strategy_test}_"
             f"{test_augmentation}_{ml_model}/"
             f"results_metrics.pkl",
@@ -78,6 +81,7 @@ def load_results(
 
 
 def retrieve_metric(
+    path,
     metric,
     set_,
     task,
@@ -93,6 +97,8 @@ def retrieve_metric(
 
     Parameters
     ----------
+    path : str
+        The path to output folder.
     metric : str
         The metric of interest, such as the r2 score, time or mean squared error.
     set_ : str
@@ -118,6 +124,7 @@ def retrieve_metric(
         The metric of interest on the set of interest.
     """
     data = load_results(
+        path,
         task,
         augmentation_strategy_train,
         train_augmentation,
