@@ -18,8 +18,8 @@ from maxsmi.utils_data import data_retrieval, smiles_in_training, data_checker
 from maxsmi.utils_smiles import (
     validity_check,
     smiles_to_canonical,
-    identify_disconnected_structures,
-    ALL_SMILES_CHARACTERS,
+    is_connected,
+    ALL_SMILES_DICT,
 )
 from maxsmi.utils_encoding import char_replacement
 from maxsmi.utils_prediction import (
@@ -97,11 +97,7 @@ if __name__ == "__main__":
 
     # Canonical SMILES
     data["canonical_smiles"] = data["smiles"].apply(smiles_to_canonical)
-    data["disconnected_smi"] = data["canonical_smiles"].apply(
-        identify_disconnected_structures
-    )
-    data = data.dropna(axis=0)
-    data = data.drop(["disconnected_smi", "smiles"], axis=1)
+    data = data[data["canonical_smiles"].apply(is_connected)]
 
     logging.info(f"Shape of training data set after processing: {data.shape} ")
 
@@ -150,7 +146,7 @@ if __name__ == "__main__":
     new_data["new_smiles"] = new_data["augmented_smiles"].apply(char_replacement)
 
     # Retrieve SMILES' dictionary
-    smi_dict = ALL_SMILES_CHARACTERS
+    smi_dict = ALL_SMILES_DICT
 
     # Obtain longest of all smiles
     max_length_smi = longest_smiles

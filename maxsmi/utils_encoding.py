@@ -66,8 +66,8 @@ def get_unique_elements_as_dict(list_):
     dict
         Unique elements of the sorted list with assigned integer.
     """
-    all_elements = "".join(list_)
-    unique_elements = sorted(list(set(all_elements)))
+    all_elements = set.union(*[set(smiles) for smiles in list_])
+    unique_elements = sorted(list(all_elements))
     return {unique_elem: i for i, unique_elem in enumerate(unique_elements)}
 
 
