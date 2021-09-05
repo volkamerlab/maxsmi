@@ -304,6 +304,7 @@ def smiles_from_folder_name(url_encoded_smiles):
     )
     return smiles
 
+
 ALL_SMILES_CHARACTERS = [
     # See https://www.daylight.com/dayhtml/doc/theory/theory.smiles.html
     # Bonds
