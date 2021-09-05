@@ -241,6 +241,70 @@ def get_num_heavy_atoms(smiles):
         return mol.GetNumHeavyAtoms()
 
 
+def smiles_to_folder_name(smiles):
+    """
+    Encodes the SMILES containing special characters as URL encoding.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+
+    Returns
+    -------
+    str :
+        The standard URL encoding of the SMILES if it contains special characters.
+
+    Notes
+    -----
+    : -> %3A
+    \\ -> %5C (here backslash)
+    / -> %2F
+    * -> %2A
+
+    Taken from:
+    https://www.degraeve.com/reference/urlencoding.php
+    """
+    url_encoded_smiles = (
+        smiles.replace(":", "%3A")
+        .replace("\\", "%5C")
+        .replace("/", "%2F")
+        .replace("*", "%2A")
+    )
+    return url_encoded_smiles
+
+
+def smiles_from_folder_name(url_encoded_smiles):
+    """
+    Returns the URL encoded SMILES containing special characters as regular SMILES.
+
+    Parameters
+    ----------
+    url_encoded_smiles : str
+        A SMILES containing standard URL encoding symbols, such as %2F.
+
+    Returns
+    -------
+    str :
+        The SMILES with special characters as such.
+    : <- %3A
+    \\ <- %5C (here backslash)
+    / <- %2F
+    * <- %2A
+
+    Notes
+    -----
+    https://www.degraeve.com/reference/urlencoding.php
+    """
+    smiles = (
+        url_encoded_smiles.replace("%3A", ":")
+        .replace("%5C", "\\")
+        .replace("%2F", "/")
+        .replace("%2A", "*")
+    )
+    return smiles
+
+
 ALL_SMILES_CHARACTERS = [
     # See https://www.daylight.com/dayhtml/doc/theory/theory.smiles.html
     # Bonds
