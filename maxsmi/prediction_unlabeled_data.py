@@ -18,7 +18,7 @@ from maxsmi.utils_data import data_retrieval, smiles_in_training, data_checker
 from maxsmi.utils_smiles import (
     validity_check,
     smiles_to_canonical,
-    identify_disconnected_structures,
+    is_connected,
     ALL_SMILES_CHARACTERS,
 )
 from maxsmi.utils_encoding import char_replacement
@@ -97,11 +97,7 @@ if __name__ == "__main__":
 
     # Canonical SMILES
     data["canonical_smiles"] = data["smiles"].apply(smiles_to_canonical)
-    data["disconnected_smi"] = data["canonical_smiles"].apply(
-        identify_disconnected_structures
-    )
-    data = data.dropna(axis=0)
-    data = data.drop(["disconnected_smi", "smiles"], axis=1)
+    data = data[data["canonical_smiles"].apply(is_connected)]
 
     logging.info(f"Shape of training data set after processing: {data.shape} ")
 

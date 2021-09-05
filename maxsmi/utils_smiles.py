@@ -59,9 +59,9 @@ def smiles_to_canonical(smiles):
         return Chem.MolToSmiles(mol, canonical=True, doRandom=False)
 
 
-def identify_disconnected_structures(smiles):
+def is_connected(smiles):
     """
-    Identifiy disconnected structure through the dot symbol.
+    Identifiy connected SMILES through the dot symbol.
 
     Parameters
     ----------
@@ -70,14 +70,14 @@ def identify_disconnected_structures(smiles):
 
     Returns
     -------
-    str :
-        the SMILES if it's not disconnected. None otherwise.
+    bool :
+        True if the SMILES is connected. False otherwise.
 
     """
     if "." in smiles:
-        return None
+        return False
     else:
-        return smiles
+        return True
 
 
 def smiles_to_random(smiles, int_aug=50):
