@@ -18,6 +18,8 @@ from maxsmi.utils_data import data_retrieval, smiles_in_training, data_checker
 from maxsmi.utils_smiles import (
     validity_check,
     smiles_to_canonical,
+    smiles_to_folder_name,
+    smiles_from_folder_name,
     is_connected,
     ALL_SMILES_DICT,
 )
@@ -54,15 +56,20 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    # Check for URL encoded SMILES
+    user_smiles = smiles_from_folder_name(args.user_smiles)
+
     # SMILES validity check
-    validity_check(args.user_smiles)
-    mixture_check(args.user_smiles)
-    character_check(args.user_smiles)
+    validity_check(user_smiles)
+    mixture_check(user_smiles)
+    character_check(user_smiles)
 
     # Data checker
     data_checker(args.task)
 
-    folder = f"maxsmi/user_prediction/{args.task}_{args.user_smiles}"
+    # URL encoding for folder name
+    url_encoded_user_smiles = smiles_to_folder_name(user_smiles)
+    folder = f"maxsmi/user_prediction/{args.task}_{url_encoded_user_smiles}"
     os.makedirs(folder, exist_ok=True)
 
     # Logging information
@@ -103,7 +110,7 @@ if __name__ == "__main__":
 
     # Create data frame with unlabeled SMILES
     new_data = pandas.DataFrame(columns=["target", "smiles"])
-    new_data.loc[0] = [numpy.nan, args.user_smiles]
+    new_data.loc[0] = [numpy.nan, user_smiles]
 
     new_data["smiles_in_training"] = new_data["smiles"].apply(
         smiles_in_training, args=(data,)
@@ -194,15 +201,16 @@ if __name__ == "__main__":
     # canonical smiles, random smiles, mean prediction and standard deviation
     new_ensemble_learning = new_data.copy()
 
-    all_output_pred = []
-
     for index, row in new_data.iterrows():
         # Obtain prediction for each of the random smiles of a given molecule
         multiple_output = numpy.concatenate(
-            [output_prediction[smiles] for smiles in row["new_smiles"]]
+            [output_prediction[smiles][0] for smiles in row["new_smiles"]]
         )
+        new_ensemble_learning.loc[index, "per_smiles_prediction"] = numpy.array2string(
+            multiple_output, separator=", "
+        )
+        logging.info(f"Prediction per random SMILES: \n {multiple_output}")
 
-        logging.info(f"Prediction per random SMILES: {multiple_output}")
         # Average the predictions for a given molecule
         prediction_per_mol = numpy.mean(multiple_output)
 
@@ -211,8 +219,8 @@ if __name__ == "__main__":
 
         # Add the new values to the data frame:
         new_ensemble_learning.loc[index, "average_prediction"] = prediction_per_mol
-
         new_ensemble_learning.loc[index, "std_prediction"] = std_prediction_per_mol
+
         logging.info(f" Prediction: {prediction_per_mol}")
         logging.info(f" Confidence: {std_prediction_per_mol} \n\n")
 
@@ -224,7 +232,9 @@ if __name__ == "__main__":
     new_ensemble_learning = new_ensemble_learning.rename(
         columns={"smiles": "user_smiles"}
     )
-    new_ensemble_learning.to_csv(f"{folder}/user_prediction_table.csv", index=False)
+    new_ensemble_learning.to_csv(
+        f"{folder}/user_prediction_table.csv", index=False, sep=","
+    )
 
     time_end_testing = datetime.now()
     time_testing = time_end_testing - time_start_testing

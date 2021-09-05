@@ -50,28 +50,28 @@ pip install -e .
 To run an example with the ESOL data set, augmenting the train set 5 times and the test set 2 times, training for 5 epochs:
 
 ```console
-python maxsmi/full_workflow.py --task ESOL --aug-strategy-train augmentation_without_duplication --aug-nb-train 5 --aug-nb-test 2 --nb-epochs 5
+python maxsmi/full_workflow.py --task=ESOL --aug-strategy-train=augmentation_without_duplication --aug-nb-train=5 --aug-nb-test=2 --nb-epochs 5
 ```
 
 If no ensemble learning is wanted for the evaluation, run:
 ```console
-python maxsmi/full_workflow.py --task ESOL --eval-strategy False
+python maxsmi/full_workflow.py --task=ESOL --eval-strategy=False
 ```
 
 To run an example with all chosen arguments:
 ```console
-python maxsmi/full_workflow.py --task free_solv --string-encoding smiles --aug-strategy-train augmentation_with_duplication --aug-strategy-test augmentation_with_reduced_duplication --aug-nb-train 5 --aug-nb-test 2 --ml-model CONV1D --eval-strategy True --nb-epochs 250
+python maxsmi/full_workflow.py --task=free_solv --string-encoding=smiles --aug-strategy-train=augmentation_with_duplication --aug-strategy-test=augmentation_with_reduced_duplication --aug-nb-train=5 --aug-nb-test=2 --ml-model=CONV1D --eval-strategy=True --nb-epochs=250
 ```
 
 ## Prediction
 To predict the affinity of a compound against the EGFR kinase, e.g. given by the SMILES `CC1CC1`, run:
 ```console
-python maxsmi/prediction_unlabeled_data.py --task affinity --smiles_prediction CC1CC1
+python maxsmi/prediction_unlabeled_data.py --task="affinity" --smiles_prediction="CC1CC1"
 ```
 
-Similarly for lipophilicity prediction, run:
+To predict the lipophilicity prediction for the semaxanib drug, run:
 ```console
-python maxsmi/prediction_unlabeled_data.py --task lipophilicity --smiles_prediction CC1CC1
+python maxsmi/prediction_unlabeled_data.py --task="lipophilicity" --smiles_prediction="O=C2C(\c1ccccc1N2)=C/c3c(cc([nH]3)C)C"
 ```
 
 ### Copyright

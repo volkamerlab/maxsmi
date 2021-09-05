@@ -48,12 +48,12 @@ jobs:
     - name: Run training example
       shell: bash -l {0}
       run: |
-        python maxsmi/full_workflow.py --aug-strategy-train augmentation_without_duplication --aug-nb-train 2 --aug-nb-test 2 --nb-epochs 2
+        python maxsmi/full_workflow.py --aug-strategy-train=augmentation_without_duplication --aug-nb-train=2 --aug-nb-test=2 --nb-epochs=2
 
     - name: Run user prediction example
       shell: bash -l {0}
       run: |
-        python maxsmi/prediction_unlabeled_data.py --task lipophilicity --smiles_prediction CC1CC1
+        python maxsmi/prediction_unlabeled_data.py --task=lipophilicity --smiles_prediction="CC1CC1"
 
     - name: Generate code coverage report
       shell: bash -l {0}
