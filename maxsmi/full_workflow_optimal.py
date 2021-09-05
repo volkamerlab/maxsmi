@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
     # Obtain longest of all smiles
     max_length_smi = get_max_length(
-        list(itertools.chain.from_iterable(data["new_smiles"]))
+        set(itertools.chain.from_iterable(data["new_smiles"]))
     )
     logging.info(f"Longest smiles in data set: {max_length_smi} ")
 

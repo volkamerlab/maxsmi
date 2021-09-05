@@ -233,13 +233,13 @@ if __name__ == "__main__":
     test_data["new_smiles"] = test_data["augmented_smiles"].apply(char_replacement)
 
     # Merge all smiles
-    all_smiles = list(
+    all_smiles = set(
         itertools.chain.from_iterable(
             test_data["new_smiles"].append(train_data["new_smiles"])
         )
     )
     # Obtain dictionary for these smiles
-    smi_dict = get_unique_elements_as_dict(list(all_smiles))
+    smi_dict = get_unique_elements_as_dict(all_smiles)
     logging.info(f"Number of unique characters: {len(smi_dict)} ")
     logging.info(f"String dictionary: {smi_dict} ")
 
