@@ -302,5 +302,4 @@ ALL_SMILES_CHARACTERS = [
     "]",  # same
 ]
 
-
 ALL_SMILES_DICT = get_unique_elements_as_dict(ALL_SMILES_CHARACTERS)
