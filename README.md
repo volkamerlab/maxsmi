@@ -66,12 +66,12 @@ python maxsmi/full_workflow.py --task=free_solv --string-encoding=smiles --aug-s
 ## Prediction
 To predict the affinity of a compound against the EGFR kinase, e.g. given by the SMILES `CC1CC1`, run:
 ```console
-python maxsmi/prediction_unlabeled_data.py --task=affinity --smiles_prediction="CC1CC1"
+python maxsmi/prediction_unlabeled_data.py --task="affinity" --smiles_prediction="CC1CC1"
 ```
 
 To predict the lipophilicity prediction for the semaxanib drug, run:
 ```console
-python maxsmi/prediction_unlabeled_data.py --task=lipophilicity --smiles_prediction="O=C2C(\c1ccccc1N2)=C/c3c(cc([nH]3)C)C"
+python maxsmi/prediction_unlabeled_data.py --task="lipophilicity" --smiles_prediction="O=C2C(\c1ccccc1N2)=C/c3c(cc([nH]3)C)C"
 ```
 
 ### Copyright
