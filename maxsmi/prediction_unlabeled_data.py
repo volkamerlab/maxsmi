@@ -19,7 +19,7 @@ from maxsmi.utils_smiles import (
     validity_check,
     smiles_to_canonical,
     is_connected,
-    ALL_SMILES_CHARACTERS,
+    ALL_SMILES_DICT,
 )
 from maxsmi.utils_encoding import char_replacement
 from maxsmi.utils_prediction import (
@@ -146,7 +146,7 @@ if __name__ == "__main__":
     new_data["new_smiles"] = new_data["augmented_smiles"].apply(char_replacement)
 
     # Retrieve SMILES' dictionary
-    smi_dict = ALL_SMILES_CHARACTERS
+    smi_dict = ALL_SMILES_DICT
 
     # Obtain longest of all smiles
     max_length_smi = longest_smiles

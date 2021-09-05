@@ -19,7 +19,7 @@ from maxsmi.utils_data import data_retrieval
 from maxsmi.utils_smiles import (
     smiles_to_canonical,
     is_connected,
-    ALL_SMILES_CHARACTERS,
+    ALL_SMILES_DICT,
 )
 from maxsmi.utils_encoding import char_replacement, get_max_length
 from maxsmi.constants import BACTH_SIZE, LEARNING_RATE
@@ -126,7 +126,7 @@ if __name__ == "__main__":
     data["new_smiles"] = data["augmented_smiles"].apply(char_replacement)
 
     # Retrieve all smiles characters
-    smi_dict = ALL_SMILES_CHARACTERS
+    smi_dict = ALL_SMILES_DICT
     logging.info(f"Number of unique characters: {len(smi_dict)} ")
     logging.info(f"String dictionary: {smi_dict} ")
 
