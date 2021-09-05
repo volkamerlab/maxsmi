@@ -11,7 +11,7 @@ from maxsmi.utils_smiles import (
     smiles_to_canonical,
     smiles_to_random,
     smiles_to_max_random,
-    identify_disconnected_structures,
+    is_connected,
     smiles_to_selfies,
     smiles_to_deepsmiles,
     control_smiles_duplication,
@@ -53,11 +53,11 @@ def test_smiles_to_random_exception():
 
 @pytest.mark.parametrize(
     "smiles, solution",
-    [("C.", None), ("CCC", "CCC")],
+    [("C.", False), ("CCC", True)],
 )
-def test_identify_disconnected_structures(smiles, solution):
-    disconnected_smi = identify_disconnected_structures(smiles)
-    assert solution == disconnected_smi
+def test_is_connected(smiles, solution):
+    connected_smi = is_connected(smiles)
+    assert solution == connected_smi
 
 
 @pytest.mark.parametrize(

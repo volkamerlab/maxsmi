@@ -59,9 +59,9 @@ def smiles_to_canonical(smiles):
         return Chem.MolToSmiles(mol, canonical=True, doRandom=False)
 
 
-def identify_disconnected_structures(smiles):
+def is_connected(smiles):
     """
-    Identifiy disconnected structure through the dot symbol.
+    Identifiy connected SMILES through the dot symbol.
 
     Parameters
     ----------
@@ -70,14 +70,14 @@ def identify_disconnected_structures(smiles):
 
     Returns
     -------
-    str :
-        the SMILES if it's not disconnected. None otherwise.
+    bool :
+        True if the SMILES is connected. False otherwise.
 
     """
     if "." in smiles:
-        return None
+        return False
     else:
-        return smiles
+        return True
 
 
 def smiles_to_random(smiles, int_aug=50):
@@ -241,70 +241,6 @@ def get_num_heavy_atoms(smiles):
         return mol.GetNumHeavyAtoms()
 
 
-ALL_SMILES_CHARACTERS = get_unique_elements_as_dict(
-    [
-        # See https://www.daylight.com/dayhtml/doc/theory/theory.smiles.html
-        # Bonds
-        "-",  # single bond
-        "=",  # double bond
-        "#",  # triple bond
-        "/",  # directional bond
-        "\\",  # directional bond
-        # Chirality
-        "@",  # chirality specification
-        "$",  # replacement for @@
-        # Formal charge
-        "+",  # formal charge
-        "-",  # formal charge
-        # Branches
-        "(",  # branch opening
-        ")",  # branch closing
-        # Rings
-        "0",  # ring opening and closure
-        "1",  #
-        "2",  #
-        "3",  #
-        "4",  #
-        "5",  #
-        "6",  #
-        "7",  #
-        "8",  #
-        "9",  # ring opening and closure
-        "%",  # ring nb > 9
-        # Atoms
-        "B",  # Boron
-        "C",  # Carbon
-        "E",  # replacement for Se
-        "F",  # Fluorine
-        "H",  # Hydrogen
-        "I",  # Iodine
-        "K",  # Potassium
-        "L",  # replacement for Cl
-        "N",  # Nitrogen
-        "O",  # Oxygen
-        "P",  # Phosphorus
-        "R",  # replacement for Br
-        "S",  # Sulfur
-        "T",  # replacement for Si
-        "Z",  # replacement for Zn
-        # aromatic atoms
-        "b",  # boron
-        "c",  # carbon
-        "e",  # remplacement for se
-        "i",  # iodine
-        "n",  # nitrogen
-        "o",  # oxygen
-        "s",  # sulfur
-        # Extra
-        ".",  # disconnected structure
-        "*",  # wild card
-        ":",  # atom map (reaction)
-        "[",  # for non organic or unormal valence
-        "]",  # same
-    ]
-)
-
-
 def smiles_to_folder_name(smiles):
     """
     Encodes the SMILES containing special characters as URL encoding.
@@ -367,3 +303,66 @@ def smiles_from_folder_name(url_encoded_smiles):
         .replace("%2A", "*")
     )
     return smiles
+
+ALL_SMILES_CHARACTERS = [
+    # See https://www.daylight.com/dayhtml/doc/theory/theory.smiles.html
+    # Bonds
+    "-",  # single bond
+    "=",  # double bond
+    "#",  # triple bond
+    "/",  # directional bond
+    "\\",  # directional bond
+    # Chirality
+    "@",  # chirality specification
+    "$",  # replacement for @@
+    # Formal charge
+    "+",  # formal charge
+    "-",  # formal charge
+    # Branches
+    "(",  # branch opening
+    ")",  # branch closing
+    # Rings
+    "0",  # ring opening and closure
+    "1",  #
+    "2",  #
+    "3",  #
+    "4",  #
+    "5",  #
+    "6",  #
+    "7",  #
+    "8",  #
+    "9",  # ring opening and closure
+    "%",  # ring nb > 9
+    # Atoms
+    "B",  # Boron
+    "C",  # Carbon
+    "E",  # replacement for Se
+    "F",  # Fluorine
+    "H",  # Hydrogen
+    "I",  # Iodine
+    "K",  # Potassium
+    "L",  # replacement for Cl
+    "N",  # Nitrogen
+    "O",  # Oxygen
+    "P",  # Phosphorus
+    "R",  # replacement for Br
+    "S",  # Sulfur
+    "T",  # replacement for Si
+    "Z",  # replacement for Zn
+    # aromatic atoms
+    "b",  # boron
+    "c",  # carbon
+    "e",  # remplacement for se
+    "i",  # iodine
+    "n",  # nitrogen
+    "o",  # oxygen
+    "s",  # sulfur
+    # Extra
+    ".",  # disconnected structure
+    "*",  # wild card
+    ":",  # atom map (reaction)
+    "[",  # for non organic or unormal valence
+    "]",  # same
+]
+
+ALL_SMILES_DICT = get_unique_elements_as_dict(ALL_SMILES_CHARACTERS)
