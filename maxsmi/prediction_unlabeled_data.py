@@ -208,11 +208,10 @@ if __name__ == "__main__":
     for index, row in new_data.iterrows():
         # Obtain prediction for each of the random smiles of a given molecule
         multiple_output = numpy.concatenate(
-            [output_prediction[smiles] for smiles in row["new_smiles"]]
+            [output_prediction[smiles][0] for smiles in row["new_smiles"]]
         )
-        new_ensemble_learning["per_smiles_prediction"] = ""
-        new_ensemble_learning["per_smiles_prediction"][0] = multiple_output
-        logging.info(f"Prediction per random SMILES: {multiple_output}")
+        new_ensemble_learning.loc[index, "per_smiles_prediction"] = numpy.array2string(multiple_output, separator=", ")
+        logging.info(f"Prediction per random SMILES: \n {multiple_output}")
 
         # Average the predictions for a given molecule
         prediction_per_mol = numpy.mean(multiple_output)
@@ -235,6 +234,7 @@ if __name__ == "__main__":
     new_ensemble_learning = new_ensemble_learning.rename(
         columns={"smiles": "user_smiles"}
     )
+    print(new_ensemble_learning["augmented_smiles"])
     new_ensemble_learning.to_csv(
         f"{folder}/user_prediction_table.csv", index=False, sep=","
     )
