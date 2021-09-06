@@ -19,6 +19,7 @@ def test_maxsmi_imported():
 def test_load_results_exception():
     with pytest.raises(FileNotFoundError):
         assert load_results(
+            "path",
             "free_solv",
             "augmentation_without_duplication",
             70,
