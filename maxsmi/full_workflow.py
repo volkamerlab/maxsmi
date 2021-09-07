@@ -124,7 +124,6 @@ if __name__ == "__main__":
         args.augmentation_number_train = 0
     if args.augmentation_strategy_test.__name__ == "no_augmentation":
         args.augmentation_number_test = 0
-        args.ensemble_learning = False
 
     folder = (
         f"maxsmi/output/{args.task}_{args.string_encoding}_{args.augmentation_strategy_train.__name__}"
@@ -322,10 +321,18 @@ if __name__ == "__main__":
     )
 
     all_output_pred_train = numpy.concatenate(
-        [output_pred_train[smiles] for new_smiles in train_data["new_smiles"] for smiles in new_smiles]
+        [
+            output_pred_train[smiles]
+            for new_smiles in train_data["new_smiles"]
+            for smiles in new_smiles
+        ]
     )
     all_output_true_train = numpy.concatenate(
-        [output_true_train[smiles] for new_smiles in train_data["new_smiles"] for smiles in new_smiles]
+        [
+            output_true_train[smiles]
+            for new_smiles in train_data["new_smiles"]
+            for smiles in new_smiles
+        ]
     )
 
     evaluation_train = evaluation_results(all_output_pred_train, all_output_true_train)
@@ -385,10 +392,18 @@ if __name__ == "__main__":
         all_output_true_test = numpy.array(all_output_true_test)
     else:
         all_output_pred_test = numpy.concatenate(
-            [output_pred_test[smiles] for new_smiles in test_data["new_smiles"] for smiles in new_smiles]
+            [
+                output_pred_test[smiles]
+                for new_smiles in test_data["new_smiles"]
+                for smiles in new_smiles
+            ]
         )
         all_output_true_test = numpy.concatenate(
-            [output_true_test[smiles] for new_smiles in test_data["new_smiles"] for smiles in new_smiles]
+            [
+                output_true_test[smiles]
+                for new_smiles in test_data["new_smiles"]
+                for smiles in new_smiles
+            ]
         )
 
     evaluation_test = evaluation_results(all_output_pred_test, all_output_true_test)
