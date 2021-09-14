@@ -21,7 +21,7 @@ Anaconda and Git should be installed. See [Anaconda's website](https://www.anaco
 
 1. Clone the github repository:
 ```console
-https://github.com/volkamerlab/maxsmi.git
+git clone https://github.com/volkamerlab/maxsmi.git
 ```
 
 2. Change directory:
@@ -40,7 +40,7 @@ conda env create -n maxsmi -f devtools/conda-envs/test_env.yaml
 conda activate maxsmi
 ```
 
-5. Activate developer mode:
+5. Install maxsmi package:
 ```console
 pip install -e .
 ```
