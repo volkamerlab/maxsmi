@@ -60,7 +60,13 @@ conda activate maxsmi
 pip install -e .
 ```
 
-## Examples how to train a model
+## How to use maxsmi
+
+### Documentation
+
+The `maxsmi` package documentation is available [here](https://maxsmi.readthedocs.io/en/latest/).
+
+### Examples how to train a model
 
 To get an overview of all available options:
 
@@ -84,7 +90,7 @@ To train a model with all chosen arguments:
 python maxsmi/full_workflow.py --task=free_solv --string-encoding=smiles --aug-strategy-train=augmentation_with_duplication --aug-strategy-test=augmentation_with_reduced_duplication --aug-nb-train=5 --aug-nb-test=2 --ml-model=CONV1D --eval-strategy=True --nb-epochs=250
 ```
 
-## Examples how to make predictions
+### Examples how to make predictions
 
 Note these predictions use the precalculated `maxsmi` models (best performing models in the study).
 
@@ -97,10 +103,6 @@ To predict the lipophilicity prediction for the semaxanib drug, run:
 ```console
 python maxsmi/prediction_unlabeled_data.py --task="lipophilicity" --smiles_prediction="O=C2C(\c1ccccc1N2)=C/c3c(cc([nH]3)C)C"
 ```
-
-### Documentation
-
-The `maxsmi` package documentation is available [here](https://maxsmi.readthedocs.io/en/latest/).
 
 ### Copyright
 
