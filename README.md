@@ -45,9 +45,15 @@ conda activate maxsmi
 pip install -e .
 ```
 
-## Examples
+## Examples how to train a model
 
-To run an example with the ESOL data set, augmenting the train set 5 times and the test set 2 times, training for 5 epochs:
+To get an overview of all available options:
+
+```console
+python maxsmi/full_workflow.py --help
+```
+
+To train a model with the ESOL data set, augmenting the training set 5 times and the test set 2 times, training for 5 epochs:
 
 ```console
 python maxsmi/full_workflow.py --task=ESOL --aug-strategy-train=augmentation_without_duplication --aug-nb-train=5 --aug-nb-test=2 --nb-epochs 5
@@ -58,12 +64,15 @@ If no ensemble learning is wanted for the evaluation, run:
 python maxsmi/full_workflow.py --task=ESOL --eval-strategy=False
 ```
 
-To run an example with all chosen arguments:
+To train a model with all chosen arguments:
 ```console
 python maxsmi/full_workflow.py --task=free_solv --string-encoding=smiles --aug-strategy-train=augmentation_with_duplication --aug-strategy-test=augmentation_with_reduced_duplication --aug-nb-train=5 --aug-nb-test=2 --ml-model=CONV1D --eval-strategy=True --nb-epochs=250
 ```
 
-## Prediction
+## Examples how to make predictions
+
+Note these predictions use the precalculated `maxsmi` models (best performing models in the study).
+
 To predict the affinity of a compound against the EGFR kinase, e.g. given by the SMILES `CC1CC1`, run:
 ```console
 python maxsmi/prediction_unlabeled_data.py --task="affinity" --smiles_prediction="CC1CC1"
@@ -76,7 +85,7 @@ python maxsmi/prediction_unlabeled_data.py --task="lipophilicity" --smiles_predi
 
 ### Copyright
 
-Copyright (c) 2020, Talia B. Kimber
+Copyright (c) 2020, Talia B. Kimber @ Volkamer Lab
 
 
 #### Acknowledgements
