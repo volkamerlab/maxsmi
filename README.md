@@ -98,6 +98,10 @@ To predict the lipophilicity prediction for the semaxanib drug, run:
 python maxsmi/prediction_unlabeled_data.py --task="lipophilicity" --smiles_prediction="O=C2C(\c1ccccc1N2)=C/c3c(cc([nH]3)C)C"
 ```
 
+### Documentation
+
+The `maxsmi` package documentation is available [here](https://maxsmi.readthedocs.io/en/latest/).
+
 ### Copyright
 
 Copyright (c) 2020, Talia B. Kimber @ Volkamer Lab
