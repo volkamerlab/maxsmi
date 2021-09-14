@@ -10,7 +10,7 @@ maxsmi: a guide to SMILES augmentation
 ![GitHub closed pr](https://img.shields.io/github/issues-pr-closed-raw/volkamerlab/maxsmi) ![GitHub open pr](https://img.shields.io/github/issues-pr-raw/volkamerlab/maxsmi) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/volkamerlab/maxsmi) ![GitHub open issues](https://img.shields.io/github/issues/volkamerlab/maxsmi)
 
 
-## SMILES augmentation for deep learning based molecular property and activity prediction tool.
+## SMILES augmentation for deep learning based molecular property and activity prediction.
 
 Accurate molecular property or activity prediction is one of the main goals in computer-aided drug design. Especially more recently machine learning/deep learning (DL) have become an important part of this process. Since these algorithms are data greedy, but physico-chemical and bioactivity data sets sizes are still scacre, augmentation techniques are increasingly applied in this context. 
 
