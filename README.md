@@ -17,13 +17,23 @@ Accurate molecular property or activity prediction is one of the main goals in c
 This repository provides the code basis to exploit data augmentation techniques using the fact that one compound can be represented by various SMILES (simplified molecular-input line-entry system) strings.
 
 **Augmentation strategies**
-* todo
+* No augmentation
+* Augmentation with duplication
+* Augmentation without duplication
+* Augmentation with reduced duplication
+* Augmentation with estimated maximum
 
 **Data sets used**
-* todo
+* Physico-chemical data from MoleculeNet, available as part of [DeepChem](https://deepchem.readthedocs.io/en/latest/index.html)
+    * ESOL
+    * free solv
+    * lipohilicity
+* Bioactivity data from ChEMBL exemplifid on the EGFR kinase, retrieved from [kinodata](https://github.com/openkinome/kinodata)
 
 **DL models**
-* todo
+* 1D convolutional neural network (CONV1D)
+* 2D convolutional neural network (CONV2D) 
+* Recurrent neural network (RNN)
 
 The results of our study show that data augmentation improves the accuracy independently of the deep learning model and the size of the data. The best strategy led to the maxsmi models, which are available here for predictions on novel compounds on the provided data sets.
 
