@@ -28,6 +28,7 @@ Welcome to maxsmi's documentation!
 
 .. raw:: html
 
+   <title>maxsmi: SMILES augmentation for deep learning based molecular property and activity prediction</title>
    <p align="center">
    <img src="_static/ensemble_learning_prediction.png" alt="Ensemble learning" width="600"/>
    <br>
