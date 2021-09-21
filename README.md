@@ -1,4 +1,4 @@
-maxsmi: a guide to SMILES augmentation
+Maxsmi: data augmentation for molecular property prediction using deep learning
 ==============================
 [//]: # (Badges)
 
@@ -12,9 +12,9 @@ maxsmi: a guide to SMILES augmentation
 
 ## SMILES augmentation for deep learning based molecular property and activity prediction.
 
-Accurate molecular property or activity prediction is one of the main goals in computer-aided drug design. Especially more recently machine learning/deep learning (DL) have become an important part of this process. Since these algorithms are data greedy, but physico-chemical and bioactivity data sets sizes are still scacre, augmentation techniques are increasingly applied in this context. 
+Accurate molecular property or activity prediction is one of the main goals in computer-aided drug design in which deep learning has become an important part. Since neural networks are data greedy and both physico-chemical and bioactivity data sets remain scarce, augmentation techniques have become a powerful assistance for accurate predictions.
 
-This repository provides the code basis to exploit data augmentation techniques using the fact that one compound can be represented by various SMILES (simplified molecular-input line-entry system) strings.
+This repository provides the code basis to exploit data augmentation using the fact that one compound can be represented by various SMILES (simplified molecular-input line-entry system) strings.
 
 **Augmentation strategies**
 * No augmentation
@@ -23,19 +23,19 @@ This repository provides the code basis to exploit data augmentation techniques 
 * Augmentation with reduced duplication
 * Augmentation with estimated maximum
 
-**Data sets used**
+**Data sets**
 * Physico-chemical data from MoleculeNet, available as part of [DeepChem](https://deepchem.readthedocs.io/en/latest/index.html)
     * ESOL
     * free solv
-    * lipohilicity
-* Bioactivity data from ChEMBL exemplifid on the EGFR kinase, retrieved from [kinodata](https://github.com/openkinome/kinodata)
+    * lipophilicity
+* Bioactivity data on the EGFR kinase, retrieved from [Kinodata](https://github.com/openkinome/kinodata)
 
-**DL models**
+**Deep learning models**
 * 1D convolutional neural network (CONV1D)
-* 2D convolutional neural network (CONV2D) 
+* 2D convolutional neural network (CONV2D)
 * Recurrent neural network (RNN)
 
-The results of our study show that data augmentation improves the accuracy independently of the deep learning model and the size of the data. The best strategy led to the maxsmi models, which are available here for predictions on novel compounds on the provided data sets.
+The results of our study show that data augmentation improves the accuracy independently of the deep learning model and the size of the data. The best strategy leads to the Maxsmi models, which are available here for predictions on novel compounds on the provided data sets.
 
 ## Installation using conda
 
@@ -65,7 +65,7 @@ conda env create -n maxsmi -f devtools/conda-envs/test_env.yaml
 conda activate maxsmi
 ```
 
-5. Install maxsmi package:
+5. Install the maxsmi package:
 ```console
 pip install -e .
 ```
@@ -76,7 +76,8 @@ pip install -e .
 
 The `maxsmi` package documentation is available [here](https://maxsmi.readthedocs.io/en/latest/).
 
-### Examples how to train a model
+## Examples
+### How to train and evaluate a model using augmentation
 
 To get an overview of all available options:
 
@@ -87,22 +88,22 @@ python maxsmi/full_workflow.py --help
 To train a model with the ESOL data set, augmenting the training set 5 times and the test set 2 times, training for 5 epochs:
 
 ```console
-python maxsmi/full_workflow.py --task=ESOL --aug-strategy-train=augmentation_without_duplication --aug-nb-train=5 --aug-nb-test=2 --nb-epochs 5
+python maxsmi/full_workflow.py --task="ESOL" --aug-strategy-train="augmentation_without_duplication" --aug-nb-train=5 --aug-nb-test=2 --nb-epochs 5
 ```
 
-If no ensemble learning is wanted for the evaluation, run:
+If no ensemble learning is wanted for the evaluation, add the flag as below:
 ```console
-python maxsmi/full_workflow.py --task=ESOL --eval-strategy=False
+python maxsmi/full_workflow.py --task="ESOL" --aug-strategy-train="augmentation_without_duplication" --aug-nb-train=5 --aug-nb-test=2 --nb-epochs 5 --eval-strategy=False
 ```
 
 To train a model with all chosen arguments:
 ```console
-python maxsmi/full_workflow.py --task=free_solv --string-encoding=smiles --aug-strategy-train=augmentation_with_duplication --aug-strategy-test=augmentation_with_reduced_duplication --aug-nb-train=5 --aug-nb-test=2 --ml-model=CONV1D --eval-strategy=True --nb-epochs=250
+python maxsmi/full_workflow.py --task="free_solv" --string-encoding="smiles" --aug-strategy-train="augmentation_with_duplication" --aug-strategy-test="augmentation_with_reduced_duplication" --aug-nb-train=5 --aug-nb-test=2 --ml-model="CONV1D" --eval-strategy=True --nb-epochs=5
 ```
 
-### Examples how to make predictions
+### How to make predictions
 
-Note these predictions use the precalculated `maxsmi` models (best performing models in the study).
+These predictions use the precalculated `Maxsmi` models (best performing models in the study).
 
 To predict the affinity of a compound against the EGFR kinase, e.g. given by the SMILES `CC1CC1`, run:
 ```console
@@ -116,7 +117,7 @@ python maxsmi/prediction_unlabeled_data.py --task="lipophilicity" --smiles_predi
 
 ### Copyright
 
-Copyright (c) 2020, Talia B. Kimber @ Volkamer Lab
+Copyright (c) 2020, Talia B. Kimber [@VolkamerLab](https://volkamerlab.org/).
 
 
 #### Acknowledgements
