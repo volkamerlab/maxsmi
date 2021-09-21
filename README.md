@@ -138,13 +138,12 @@ The `maxsmi` package documentation is available [here](https://maxsmi.readthedoc
 ├── docs
 ├── maxsmi
 │   ├── augmentation_strategies.py      <- SMILES augmentation strategies
-│   ├── full_workflow.py                <- Training and evaluation of deep learning model
+│   ├── full_workflow.py                <- Training and evaluation of deep learning models
 │   ├── output_                         <- Saved outputs for results analysis
 │   ├── prediction_models               <- Weights for Maxsmi models
 │   ├── prediction_unlabeled_data.py    <- Maxsmi models available for user prediction
 │   ├── results_analysis                <- Notebooks for results analysis
 │   ├── tests
-
 ```
 
 ### Copyright
