@@ -9,7 +9,19 @@ Maxsmi: data augmentation for molecular property prediction using deep learning
 
 ![GitHub closed pr](https://img.shields.io/github/issues-pr-closed-raw/volkamerlab/maxsmi) ![GitHub open pr](https://img.shields.io/github/issues-pr-raw/volkamerlab/maxsmi) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/volkamerlab/maxsmi) ![GitHub open issues](https://img.shields.io/github/issues/volkamerlab/maxsmi)
 
+# Table of contents
+- Project description
+- Installation using conda
+  - Prerequisites
+  - How to install
+- How to use maxsmi
+  - Examples
+    - How to train and evaluate a model using augmentation
+    - How to make predictions
+- Documentation
+- Repository structure and important files
 
+# Project description
 ## SMILES augmentation for deep learning based molecular property and activity prediction.
 
 Accurate molecular property or activity prediction is one of the main goals in computer-aided drug design in which deep learning has become an important part. Since neural networks are data greedy and both physico-chemical and bioactivity data sets remain scarce, augmentation techniques have become a powerful assistance for accurate predictions.
@@ -37,12 +49,12 @@ This repository provides the code basis to exploit data augmentation using the f
 
 The results of our study show that data augmentation improves the accuracy independently of the deep learning model and the size of the data. The best strategy leads to the Maxsmi models, which are available here for predictions on novel compounds on the provided data sets.
 
-## Installation using conda
+# Installation using conda
 
-### Prerequisite
+## Prerequisites
 Anaconda and Git should be installed. See [Anaconda's website](https://www.anaconda.com/products/individual) and [Git's website](https://git-scm.com/downloads) for download.
 
-### How to
+## How to install
 
 1. Clone the github repository:
 ```console
@@ -70,12 +82,7 @@ conda activate maxsmi
 pip install -e .
 ```
 
-## How to use maxsmi
-
-### Documentation
-
-The `maxsmi` package documentation is available [here](https://maxsmi.readthedocs.io/en/latest/).
-
+# How to use maxsmi
 ## Examples
 ### How to train and evaluate a model using augmentation
 
@@ -116,6 +123,28 @@ python maxsmi/prediction_unlabeled_data.py --task="affinity" --smiles_prediction
 To predict the lipophilicity prediction for the semaxanib drug, run:
 ```console
 python maxsmi/prediction_unlabeled_data.py --task="lipophilicity" --smiles_prediction="O=C2C(\c1ccccc1N2)=C/c3c(cc([nH]3)C)C"
+```
+# Documentation
+
+The `maxsmi` package documentation is available [here](https://maxsmi.readthedocs.io/en/latest/).
+
+
+# Repository structure and important files
+
+```
+├── LICENSE
+├── README.md
+├── devtools
+├── docs
+├── maxsmi
+│   ├── augmentation_strategies.py      <- SMILES augmentation strategies
+│   ├── full_workflow.py                <- Training and evaluation of deep learning model
+│   ├── output_                         <- Saved outputs for results analysis
+│   ├── prediction_models               <- Weights for Maxsmi models
+│   ├── prediction_unlabeled_data.py    <- Maxsmi models available for user prediction
+│   ├── results_analysis                <- Notebooks for results analysis
+│   ├── tests
+
 ```
 
 ### Copyright
