@@ -45,7 +45,6 @@ Welcome to maxsmi's documentation!
    getting_started
    example/user_prediction
    example/smiles_augmentation
-   api
 
 
 
