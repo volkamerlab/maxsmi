@@ -99,6 +99,9 @@ python maxsmi/full_workflow.py --task="ESOL" --aug-strategy-train="augmentation_
 ```
 
 If no ensemble learning is wanted for the evaluation, add the flag as below:
+
+_Note_: with ensemble learning computes a per compound prediction, whereas without ensemble learning compute a per SMILES prediction.
+
 ```console
 python maxsmi/full_workflow.py --task="ESOL" --aug-strategy-train="augmentation_without_duplication" --aug-nb-train=5 --aug-nb-test=2 --nb-epochs 5 --eval-strategy=False
 ```
