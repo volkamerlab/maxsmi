@@ -5,7 +5,6 @@
 
 Welcome to maxsmi's documentation!
 =========================================================
-**SMILES augmentation for deep learning based molecular property and activity prediction**
 
 .. image::
    https://github.com/volkamerlab/maxsmi/workflows/CI/badge.svg
@@ -45,6 +44,7 @@ Welcome to maxsmi's documentation!
    getting_started
    example/user_prediction
    example/smiles_augmentation
+   api
 
 
 
