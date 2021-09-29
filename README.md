@@ -108,7 +108,7 @@ python maxsmi/full_workflow.py --task="ESOL" --aug-strategy-train="augmentation_
 
 To train a model with all chosen arguments:
 
-⚠️ This command uses the default number of epochs (which is set to 250). Please allow time for the model to train.
+_Note_: This command uses the default number of epochs (which is set to 250). Please allow time for the model to train.
 
 ```console
 python maxsmi/full_workflow.py --task="free_solv" --string-encoding="smiles" --aug-strategy-train="augmentation_with_duplication" --aug-strategy-test="augmentation_with_reduced_duplication" --aug-nb-train=5 --aug-nb-test=2 --ml-model="CONV1D" --eval-strategy=True --nb-epochs=250
@@ -135,23 +135,23 @@ The `maxsmi` package documentation is available [here](https://maxsmi.readthedoc
 # Repository structure and important files
 
 ```
-├── LICENSE
-├── README.md
-├── devtools
-├── docs
-├── maxsmi
-│   ├── augmentation_strategies.py      <- SMILES augmentation strategies
-│   ├── full_workflow.py                <- Training and evaluation of deep learning models
-│   ├── output_                         <- Saved outputs for results analysis
-│   ├── prediction_models               <- Weights for Maxsmi models
-│   ├── prediction_unlabeled_data.py    <- Maxsmi models available for user prediction
-│   ├── results_analysis                <- Notebooks for results analysis
-│   ├── tests
+|-- LICENSE
+|-- README.md
+|-- devtools
+|-- docs
+|-- maxsmi
+|   |-- augmentation_strategies.py      <- SMILES augmentation strategies
+|   |-- full_workflow.py                <- Training and evaluation of deep learning models
+|   |-- output_                         <- Saved outputs for results analysis
+|   |-- prediction_models               <- Weights for Maxsmi models
+|   |-- prediction_unlabeled_data.py    <- Maxsmi models available for user prediction
+|   |-- results_analysis                <- Notebooks for results analysis
+|   |-- tests
 ```
 
 ### Copyright
 
-Copyright (c) 2020, Talia B. Kimber [@VolkamerLab](https://volkamerlab.org/).
+Copyright (c) 2020, Talia B. Kimber at [VolkamerLab](https://volkamerlab.org/).
 
 
 #### Acknowledgements
