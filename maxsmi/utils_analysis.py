@@ -69,14 +69,24 @@ def load_results(
             ) as f:
                 data = pickle.load(f)
     else:
-        with open(
-            f"{path}/output/{task}_{string_encoding}_{augmentation_strategy_train}_"
-            f"{train_augmentation}_{augmentation_strategy_test}_"
-            f"{test_augmentation}_{ml_model}/"
-            f"results_metrics.pkl",
-            "rb",
-        ) as f:
-            data = pickle.load(f)
+        try:
+            with open(
+                f"{path}/output/{task}_{string_encoding}_{augmentation_strategy_train}_"
+                f"{train_augmentation}_{augmentation_strategy_test}_"
+                f"{test_augmentation}_{ml_model}/"
+                f"results_metrics.pkl",
+                "rb",
+            ) as f:
+                data = pickle.load(f)
+        except FileNotFoundError:
+            with open(
+                f"{path}/output_/{task}_{string_encoding}_{augmentation_strategy_train}_"
+                f"{train_augmentation}_{augmentation_strategy_test}_"
+                f"{test_augmentation}_{ml_model}/"
+                f"results_metrics.pkl",
+                "rb",
+            ) as f:
+                data = pickle.load(f)
     return data
 
 

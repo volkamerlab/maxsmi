@@ -1,9 +1,11 @@
 Getting Started
 ===============
 
+**maxsmi: SMILES augmentation for deep learning based molecular property and activity prediction**
+
 Do you want more accurate prediction for molecular properties when training a deep neural network?
 Do you need a prediction for a novel compound?
-This is the place to be!
+You've come to the right place!
 
 Installation
 -------------
