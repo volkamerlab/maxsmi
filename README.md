@@ -151,7 +151,7 @@ The `maxsmi` package documentation is available [here](https://maxsmi.readthedoc
 
 ### Copyright
 
-Copyright (c) 2020, Talia B. Kimber [@VolkamerLab](https://volkamerlab.org/).
+Copyright (c) 2020, Talia B. Kimber at [VolkamerLab](https://volkamerlab.org/).
 
 
 #### Acknowledgements
