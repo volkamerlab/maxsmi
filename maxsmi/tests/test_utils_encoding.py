@@ -39,7 +39,7 @@ def test_get_max_length(list_, solution):
     [
         (["Cl"], ["L"]),
         (["CBrCC", "C@@C", "CCC"], ["CRCC", "C$C", "CCC"]),
-        (["[Se]\\C", "se", "seZn"], ["[E]\\C", "e", "eZ"]),
+        (["[Se]\\C", "SiZn"], ["[E]\\C", "TZ"]),
         (["Si"], ["T"]),
     ],
 )
