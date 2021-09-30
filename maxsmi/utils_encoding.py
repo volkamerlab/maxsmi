@@ -44,7 +44,6 @@ def char_replacement(list_smiles):
         smile.replace("Cl", "L")
         .replace("Br", "R")
         .replace("Se", "E")
-        .replace("se", "e")
         .replace("Zn", "Z")
         .replace("Si", "T")
         .replace("@@", "$")

@@ -353,7 +353,7 @@ ALL_SMILES_CHARACTERS = [
     # aromatic atoms
     "b",  # boron
     "c",  # carbon
-    "e",  # remplacement for se
+    "e",  # use case
     "i",  # iodine
     "n",  # nitrogen
     "o",  # oxygen
