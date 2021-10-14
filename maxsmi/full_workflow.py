@@ -5,7 +5,6 @@ From smiles to predictions
 import argparse
 import logging
 import logging.handlers
-from sys import path
 import pandas
 import warnings
 import os
