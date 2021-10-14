@@ -27,7 +27,7 @@ def load_results(
     path : str
         The path to output folder.
     task : str
-        The data with associated task, e.g. "ESOL", "free_solv"
+        The data with associated task, e.g. "ESOL", "FreeSolv"
     augmentation_strategy_train : str
         The augmentation strategy used on the train set.
     train_augmentation : int
@@ -114,7 +114,7 @@ def retrieve_metric(
     set_ : str
         The train set or test set.
     task : str
-        The data with associated task, e.g. "ESOL", "free_solv"
+        The data with associated task, e.g. "ESOL", "FreeSolv"
     augmentation_strategy_train : str
         The augmentation strategy used on the train set.
     train_augmentation : int

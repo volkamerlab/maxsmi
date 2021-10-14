@@ -21,7 +21,7 @@ def retrieve_longest_smiles_from_optimal_model(task):
         The longest SMILES that was generated when training the best model strategy for `task` data.
 
     """
-    if task == "free_solv":
+    if task == "FreeSolv":
         longest_smiles = 76
 
     elif task == "ESOL":

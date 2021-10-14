@@ -28,7 +28,7 @@ def test_maxsmi_imported():
         ("ESOL", "OCC3OC(OCC2OC(OC(C#N)c1ccccc1)C(O)C(O)C2O)C(O)C(O)C3O "),
         ("lipophilicity", "Cn1c(CN2CCN(CC2)c3ccc(Cl)cc3)nc4ccccc14"),
         ("dncn", "OCC3OC(OCC2OC(OC(C#N)c1ccccc1)C(O)C(O)C2O)C(O)C(O)C3O "),
-        ("free_solv", "CN(C)C(=O)c1ccc(cc1)OC"),
+        ("FreeSolv", "CN(C)C(=O)c1ccc(cc1)OC"),
         ("ESOL_small", "Cc1occc1C(=O)Nc2ccccc2"),
         ("chembl28", "Brc1cccc(Nc2ncnc3cc4ccccc4cc23)c1"),
     ],
@@ -83,7 +83,7 @@ def test_smiles_in_training(smiles, data, solution):
 @pytest.mark.parametrize(
     "task, solution",
     [
-        ("free_solv", "free_solv"),
+        ("FreeSolv", "FreeSolv"),
         ("ESOL", "ESOL"),
         ("affinity", "affinity"),
         ("lipophilicity", "lipophilicity"),
