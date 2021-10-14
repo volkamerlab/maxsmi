@@ -5,6 +5,7 @@ From smiles to predictions
 import argparse
 import logging
 import logging.handlers
+from sys import path
 import pandas
 import warnings
 import os
@@ -268,10 +269,16 @@ if __name__ == "__main__":
     # Pytorch train set
     train_pytorch = AugmentSmilesData(train_data)
     logging.info(f"Number of data points in training set: {len(train_pytorch)} ")
+    # Pytorch valid set
+    valid_pytorch = AugmentSmilesData(valid_data)
+    logging.info(f"Number of data points in validation set: {len(valid_pytorch)} ")
 
     # Pytorch data loader for mini batches
     train_loader = torch.utils.data.DataLoader(
         train_pytorch, batch_size=BATCH_SIZE, shuffle=True
+    )
+    valid_loader = torch.utils.data.DataLoader(
+        valid_pytorch, batch_size=BATCH_SIZE, shuffle=True
     )
 
     # ==================================
@@ -295,27 +302,25 @@ if __name__ == "__main__":
     logging.info("========")
     time_start_training = datetime.now()
 
-    loss_per_epoch = model_training(
-        data_loader=train_loader,
+    ml_model, train_loss_list, valid_loss_list = model_training(
+        data_loader_train=train_loader,
+        data_loader_valid=valid_loader,
         ml_model_name=ml_model_name,
         ml_model=ml_model,
         loss_function=loss_function,
         nb_epochs=args.number_epochs,
         is_cuda=is_cuda,
-        len_train_data=len(train_pytorch),
         smiles_dictionary=smi_dict,
         max_length_smiles=max_length_smi,
         device_to_use=device,
         learning_rate=LEARNING_RATE,
+        path_to_parameters=folder,
     )
 
     logging.info("Training: over")
     time_end_training = datetime.now()
     time_training = time_end_training - time_start_training
     logging.info(f"Time for model training {time_training}")
-
-    # Save model
-    torch.save(ml_model.state_dict(), f"{folder}/model_dict.pth")
 
     # ================================
     # # Evaluate on train set
@@ -440,7 +445,8 @@ if __name__ == "__main__":
             "execution": [time_execution],
             "time_training": [time_training],
             "time_testing": [time_testing],
-            "loss": [loss_per_epoch],
+            "train_loss_list": [train_loss_list],
+            "valid_loss_list": [valid_loss_list],
             "train": [evaluation_train],
             "test": [evaluation_test],
         }
