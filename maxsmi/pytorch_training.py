@@ -24,7 +24,7 @@ def model_training(
     learning_rate,
 ):
     """
-    # Train the machine learning model using the otpimization loop in pytorch.
+    Train the machine learning model using the optimization loop in pytorch.
 
     Parameters
     ----------
@@ -83,6 +83,80 @@ def model_training(
             output_pred = ml_model(input_true)
             # Objective
             loss = loss_function(output_pred, output_true)
+            # Backward
+            loss.backward()
+            # Optimization
+            optimizer.step()
+            # Save loss
+            running_loss += float(loss.item())
+            # free memory
+            del data
+
+        loss_per_epoch.append(running_loss / len_train_data)
+        if epoch % 10 == 0:
+            logging.info(f"Epoch : {epoch + 1} ")
+
+        if is_cuda:
+            torch.cuda.empty_cache()
+
+    return loss_per_epoch
+
+
+def model_training_fingerprint(
+    data_loader,
+    ml_model,
+    loss_function,
+    nb_epochs,
+    is_cuda,
+    len_train_data,
+    device_to_use,
+    learning_rate,
+):
+    """
+    Train the machine learning model using the optimization loop in pytorch.
+
+    Parameters
+    ----------
+    data_loader : torch.utils.data
+        The training data as seen by Pytorch for mini-batches.
+    ml_model : nn.Module
+        Instance of the pytorch machine learning model.
+    loss_function : torch.nn.modules.loss
+        The loss function to be optimized.
+    nb_epochs : int
+        Number of epochs to train the model.
+    is_cuda : bool
+        Is cuda available.
+    len_train_data :
+        Number of data points in the training set.
+    device_to_use : torch.device
+        The device to use for model instance, "cpu" or "cuda".
+    learning_rate : float
+        The learning rate in the optimization algorithm.
+
+    Returns
+    -------
+    list
+        The loss value at each epoch.
+    """
+
+    optimizer = optim.SGD(ml_model.parameters(), lr=learning_rate)
+
+    ml_model.train()
+    loss_per_epoch = []
+    for epoch in range(nb_epochs):
+        running_loss = 0.0
+        for _, data in enumerate(data_loader):
+
+            # fingerprint and target
+            fingerprint, output_true = data
+
+            # Zero the parameter gradients
+            optimizer.zero_grad()
+            # Forward
+            output_pred = ml_model(fingerprint)
+            # Objective
+            loss = loss_function(output_pred.float(), output_true.float())
             # Backward
             loss.backward()
             # Optimization

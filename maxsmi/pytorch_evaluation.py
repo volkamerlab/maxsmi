@@ -128,3 +128,46 @@ def out_of_sample_prediction(
                 all_output[smile] = output_pred
 
     return all_output
+
+
+def model_evaluation_fingerprint(
+    data_loader,
+    ml_model,
+    device_to_use,
+):
+    """
+    Evaluation per batch of a pytorch machine learning model.
+
+    Parameters
+    ----------
+    data_loader : torch.utils.data
+        The training data as seen by Pytorch for mini-batches.
+    ml_model : nn.Module
+        Instance of the pytorch machine learning model.
+    device_to_use : torch.device
+        The device to use for model instance, "cpu" or "cuda".
+
+    Returns
+    -------
+    tuple of dict:
+        Dictionary of the predicted, true output values, respectively, in the data loader, with SMILES as keys.
+    """
+
+    ml_model.eval()
+    with torch.no_grad():
+        all_output_pred = []
+        all_output_true = []
+        for _, data in enumerate(data_loader):
+            # fingerprint and target
+            fingerprint, output_true = data
+
+            # Prediction
+            output_pred = ml_model(fingerprint)
+
+            # Convert to numpy arrays
+            output_pred = output_pred.cpu().detach().numpy()
+            output_true = output_true.cpu().detach().numpy()
+            all_output_pred.append(output_pred)
+            all_output_true.append(output_true)
+
+    return (all_output_pred, all_output_true)

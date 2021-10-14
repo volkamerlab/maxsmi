@@ -100,3 +100,34 @@ def data_to_pytorch_format(
         output_true = output_true.view(-1, 1)
 
     return input_true, output_true
+
+
+class FingerprintData(Dataset):
+    """
+    Data set for Pytorch compatibility.
+
+    Attributes
+    ----------
+    pandas_dataframe : pandas.DataFrame
+        A data frame containing at least two columns: fingerprint and target.
+
+    Methods
+    -------
+    __len__()
+        Returns the length of the data frame.
+
+    __getitem__(idx)
+        Access the idx element of the data frame.
+    """
+
+    def __init__(self, pandas_dataframe):
+        super().__init__()
+        self.pandas_dataframe = pandas_dataframe
+        self.fingerprint = self.pandas_dataframe["fingerprint"]
+        self.target = self.pandas_dataframe["target"]
+
+    def __len__(self):
+        return len(self.pandas_dataframe)
+
+    def __getitem__(self, idx):
+        return self.fingerprint.iloc[idx], self.target.iloc[idx]
