@@ -24,7 +24,7 @@ def test_maxsmi_imported():
 @pytest.mark.parametrize(
     "task, solution",
     [
-        ("free_solv", ("CONV1D", augmentation_without_duplication, 70)),
+        ("FreeSolv", ("CONV1D", augmentation_without_duplication, 70)),
         ("ESOL", ("CONV1D", augmentation_with_reduced_duplication, 70)),
         ("lipo", ("CONV1D", augmentation_with_duplication, 80)),
         ("lipophilicity", ("CONV1D", augmentation_with_duplication, 80)),

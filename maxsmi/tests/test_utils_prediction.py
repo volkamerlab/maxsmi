@@ -23,13 +23,13 @@ def test_maxsmi_imported():
 @pytest.mark.parametrize(
     "task, solution",
     [
-        ("free_solv", 76),
+        ("FreeSolv", 76),
         ("ESOL", 109),
         ("lipo", 268),
         ("lipophilicity", 268),
         ("chembl28", 246),
         ("affinity", 246),
-        ("free solv", None),
+        ("free_solv", None),
     ],
 )
 def test_retrieve_longest_smiles_from_optimal_model(task, solution):

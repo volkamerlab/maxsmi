@@ -20,7 +20,7 @@ def test_load_results_exception():
     with pytest.raises(FileNotFoundError):
         assert load_results(
             "path",
-            "free_solv",
+            "FreeSolv",
             "augmentation_without_duplication",
             70,
             "aumgentation_without_duplication",

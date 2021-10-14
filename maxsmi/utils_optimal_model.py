@@ -27,7 +27,7 @@ def retrieve_optimal_model(task):
         The ML model, the augmentation strategy, the augmentation number
 
     """
-    if task == "free_solv":
+    if task == "FreeSolv":
         ml_model = "CONV1D"
         augmentation_strategy = augmentation_without_duplication
         augmentation_number = 70
@@ -50,7 +50,7 @@ def retrieve_optimal_model(task):
         if task != "ESOL":
             logging.warning("Invalid data. Choosing ESOL by default.")
             print(
-                "Task unknown. Please choose between free_solv, ESOL, lipophilicity or affinity"
+                "Task unknown. Please choose between FreeSolv, ESOL, lipophilicity or affinity"
             )
             task = "ESOL"
             ml_model = "CONV1D"
