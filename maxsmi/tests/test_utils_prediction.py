@@ -29,7 +29,7 @@ def test_maxsmi_imported():
         ("lipophilicity", 268),
         ("chembl28", 246),
         ("affinity", 246),
-        ("FreeSolv", None),
+        ("free_solv", None),
     ],
 )
 def test_retrieve_longest_smiles_from_optimal_model(task, solution):
