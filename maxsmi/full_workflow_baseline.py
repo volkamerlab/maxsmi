@@ -183,9 +183,7 @@ if __name__ == "__main__":
     )
 
     (output_pred_train, output_true_train) = model_evaluation_fingerprint(
-        data_loader=train_loader,
-        ml_model=ml_model,
-        device_to_use=device,
+        data_loader=train_loader, ml_model=ml_model
     )
 
     output_pred_train = numpy.array(output_pred_train)
@@ -211,9 +209,7 @@ if __name__ == "__main__":
     test_loader = torch.utils.data.DataLoader(test_pytorch, batch_size=1, shuffle=False)
 
     (output_pred_test, output_true_test) = model_evaluation_fingerprint(
-        data_loader=test_loader,
-        ml_model=ml_model,
-        device_to_use=device,
+        data_loader=test_loader, ml_model=ml_model
     )
     output_pred_test = numpy.array(output_pred_test)
     output_true_test = numpy.array(output_true_test)
