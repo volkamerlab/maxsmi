@@ -276,7 +276,6 @@ class FeedForwardNetwork(nn.Module):
         self.fully_connected_1 = nn.Linear(self.input_shape, self.hidden_shape)
         self.fully_connected_2 = nn.Linear(self.hidden_shape, 64)
         self.fully_connected_out = nn.Linear(64, self.output_shape)
-        # self.double()
 
     def forward(self, x):
         """
