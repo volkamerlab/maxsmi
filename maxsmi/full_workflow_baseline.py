@@ -6,6 +6,7 @@ import argparse
 import logging
 import logging.handlers
 import pandas
+import numpy
 import warnings
 import os
 from datetime import datetime
@@ -120,9 +121,6 @@ if __name__ == "__main__":
     test_data["fingerprint"] = test_data["canonical_smiles"].apply(
         smiles_to_morgan_fingerprint,
     )
-    # ================================
-    # Input processing
-    # ================================
 
     # ==================================
     # Pytorch data
@@ -190,7 +188,11 @@ if __name__ == "__main__":
         device_to_use=device,
     )
 
-    print(type(output_pred_train), type(output_true_train))
+    output_pred_train = numpy.array(output_pred_train)
+    output_true_train = numpy.array(output_true_train)
+    output_pred_train = output_pred_train.reshape(output_pred_train.shape[0])
+    output_true_train = output_true_train.reshape(output_true_train.shape[0])
+
     evaluation_train = evaluation_results(output_pred_train, output_true_train)
 
     logging.info(f"Train metrics (MSE, RMSE, R2): {evaluation_train}")
@@ -213,13 +215,14 @@ if __name__ == "__main__":
         ml_model=ml_model,
         device_to_use=device,
     )
+    output_pred_test = numpy.array(output_pred_test)
+    output_true_test = numpy.array(output_true_test)
+    output_pred_test = output_pred_test.reshape(output_pred_test.shape[0])
+    output_true_test = output_true_test.reshape(output_true_test.shape[0])
 
-    all_output_pred_test = []
-    all_output_true_test = []
+    evaluation_test = evaluation_results(output_pred_test, output_true_test)
 
-    evaluation_test = evaluation_results(all_output_pred_test, all_output_true_test)
-
-    logging.info(f"Test output dimension {all_output_true_test.shape}")
+    logging.info(f"Test output dimension {output_true_test.shape}")
 
     logging.info(f"Test metrics (MSE, RMSE, R2): {evaluation_test}")
     time_end_testing = datetime.now()
