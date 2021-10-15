@@ -130,11 +130,7 @@ def out_of_sample_prediction(
     return all_output
 
 
-def model_evaluation_fingerprint(
-    data_loader,
-    ml_model,
-    device_to_use,
-):
+def model_evaluation_fingerprint(data_loader, ml_model):
     """
     Evaluation per batch of a pytorch machine learning model.
 
@@ -144,13 +140,11 @@ def model_evaluation_fingerprint(
         The training data as seen by Pytorch for mini-batches.
     ml_model : nn.Module
         Instance of the pytorch machine learning model.
-    device_to_use : torch.device
-        The device to use for model instance, "cpu" or "cuda".
 
     Returns
     -------
-    tuple of dict:
-        Dictionary of the predicted, true output values, respectively, in the data loader, with SMILES as keys.
+    tuple of array:
+        Arrays of the predicted, true output values, respectively, in the data loader.
     """
 
     ml_model.eval()
