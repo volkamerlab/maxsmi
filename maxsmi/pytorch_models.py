@@ -203,12 +203,12 @@ class RecurrentNetwork(nn.Module):
 
 def model_type(model_name, device_to_use, smiles_dictionary, max_length_smiles):
     """
-    Instanciates a pytorch machine learning model.
+    Instanciates a Pytorch machine learning model.
 
     Parameters
     ----------
     model_name : str
-        Name of the machine learning model. It can be either "CON1D", "CONV2D", or "RNN".
+        Name of the machine learning model. It can be either "CONV1D", "CONV2D", or "RNN".
     device_to_use : torch.device
         The device to use for model instance, "cpu" or "cuda".
     smiles_dictionary : dict
