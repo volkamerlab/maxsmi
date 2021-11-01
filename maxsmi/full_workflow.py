@@ -34,7 +34,7 @@ import torch.nn as nn
 from maxsmi.pytorch_models import model_type
 from maxsmi.pytorch_data import AugmentSmilesData
 
-from maxsmi.constants import TEST_RATIO, RANDOM_SEED, BACTH_SIZE, LEARNING_RATE
+from maxsmi.constants import TEST_RATIO, RANDOM_SEED, BATCH_SIZE, LEARNING_RATE
 from maxsmi.pytorch_evaluation import model_evaluation
 from maxsmi.pytorch_training import model_training
 from maxsmi.utils_evaluation import evaluation_results
@@ -256,7 +256,7 @@ if __name__ == "__main__":
 
     # Pytorch data loader for mini batches
     train_loader = torch.utils.data.DataLoader(
-        train_pytorch, batch_size=BACTH_SIZE, shuffle=True
+        train_pytorch, batch_size=BATCH_SIZE, shuffle=True
     )
 
     # ==================================
