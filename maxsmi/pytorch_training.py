@@ -23,10 +23,10 @@ def model_training(
     device_to_use,
     learning_rate,
     path_to_parameters,
-    patience=3,
+    patience=10,
 ):
     """
-    # Train the machine learning model using the optimization loop in pytorch.
+    Train the machine learning model using the optimization loop in Pytorch.
 
     Parameters
     ----------
@@ -35,7 +35,7 @@ def model_training(
     data_loader_valid : torch.utils.data
         The validation data as seen by Pytorch for mini-batches.
     ml_model_name : str
-        Name of the machine learning model. It can be either "CON1D", "CONV2D", or "RNN".
+        Name of the machine learning model. It can be either "CONV1D", "CONV2D", or "RNN".
     ml_model : nn.Module
         Instance of the pytorch machine learning model.
     loss_function : torch.nn.modules.loss
@@ -58,9 +58,10 @@ def model_training(
         Number of epochs to wait since the last time validation loss improved.
     Returns
     -------
-    # TODO
-    tuple
-        The loss value at each epoch.
+    tuple : (nn.Module, list, list)
+        The trained machine learning model.
+        The training loss value at each epoch.
+        The validation loss value at each epoch.
     """
 
     optimizer = optim.SGD(ml_model.parameters(), lr=learning_rate)
@@ -78,8 +79,13 @@ def model_training(
 
     while epoch <= nb_epochs:
         ################
-        # Train the model
+        # Per epoch
         ################
+        logging.info(f"Epoch: {epoch}")
+
+        #################
+        # Train the model
+        #################
         ml_model.train()
         batch_loss_train = 0.0
         for _, data in enumerate(data_loader_train):
@@ -111,9 +117,9 @@ def model_training(
             # free memory
             del data
 
-        ################
+        ####################
         # Validate the model
-        ################
+        ###################
         ml_model.eval()
         batch_loss_valid = 0.0
         for _, data in enumerate(data_loader_valid):
@@ -134,19 +140,14 @@ def model_training(
             loss = loss_function(output_pred, output_true)
             batch_loss_valid += float(loss.item())
 
+        # Train and valid loss per epoch
         epoch_loss_train = batch_loss_train / len_train_data
         epoch_loss_valid = batch_loss_valid / len_valid_data
 
-        # if epoch % 10 == 0:
-        #    logging.info(f"Epoch : {epoch + 1} ")
-        # TODO: add logging for early stopping
-        # print(f"Epoch : {epoch} ")
-        # print(f"Train loss: {epoch_loss_train:.3f}")
-        # print(f"Valid loss: {epoch_loss_valid:.3f}")
-        logging.info(f"Epoch: {epoch} ")
         logging.info(f"Train loss: {epoch_loss_train:.3f}")
         logging.info(f"Valid loss: {epoch_loss_valid:.3f}")
 
+        # Track train and valid losses per epoch
         loss_train_list.append(epoch_loss_train)
         loss_valid_list.append(epoch_loss_valid)
 
@@ -154,15 +155,12 @@ def model_training(
         if is_cuda:
             torch.cuda.empty_cache()
 
-        # Update epoch
-        epoch += 1
-
-        #######
+        ################
         # Early stopping
-        #######
+        ################
 
         # Initialize early stopping:
-        if epoch == 1:
+        if epoch == 0:
             best_loss_valid = epoch_loss_valid
             waiting = 0
         # Check for early stopping criteria
@@ -172,19 +170,25 @@ def model_training(
             best_loss_valid = epoch_loss_valid
             waiting = 0
             # Save best model
-            torch.save(ml_model.state_dict(), f"{path_to_parameters}/model_dict.pth")
+            torch.save(
+                {
+                    "epoch": epoch,
+                    "model_state_dict": ml_model.state_dict(),
+                    "loss": loss,
+                },
+                f"{path_to_parameters}/model_dict.pth",
+            )
+            # Use line below to save only the weights
+            # torch.save(ml_model.state_dict(), f"{path_to_parameters}/model_dict.pth")
         if waiting > patience:
-            # print(f"Early stopping at epoch {epoch}.")
-            logging.info(f"Early stopping at epoch: {epoch} ")
-            # ml_model = torch.load(f"{path_to_parameters}/model_dict.pth")
-            torch.save(ml_model.state_dict(), f"{path_to_parameters}/model_dict.pth")
+            logging.info(f"Early stopping stops the training at epoch: {epoch}")
             break
 
-    ml_model.load_state_dict(torch.load(f"{path_to_parameters}/model_dict.pth"))
-    # print(f"Effective number of epochs for training {epoch}.")
-    # print("Train error per epoch:", loss_train_list)
-    # print("Valid error per epoch:", loss_valid_list)
-    logging.info(f"Effective number of epochs for training {epoch}.")
-    # logging.info("Train error per epoch:", loss_train_list)
-    # logging.info("Valid error per epoch:", loss_valid_list)
+        # Update epoch
+        epoch += 1
+
+    # Load best model
+    checkpoint = torch.load(f"{path_to_parameters}/model_dict.pth")
+    ml_model.load_state_dict(checkpoint["model_state_dict"])
+
     return ml_model, loss_train_list, loss_valid_list
