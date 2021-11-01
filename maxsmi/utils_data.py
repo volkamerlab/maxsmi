@@ -28,7 +28,7 @@ def data_retrieval(target_data="ESOL"):
             - `target`: the measured target values.
     """
 
-    if target_data == "free_solv":
+    if target_data == "FreeSolv":
         url = "https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/SAMPL.csv"
         data = pd.read_csv(url)
         task = "expt"
@@ -160,10 +160,10 @@ def data_checker(task_name):
     bool :
         True if the name is valid. Raises an error otherwise.
     """
-    if task_name in ["free_solv", "ESOL", "lipophilicity", "affinity"]:
+    if task_name in ["FreeSolv", "ESOL", "lipophilicity", "affinity"]:
         return task_name
     else:
         raise NameError(
-            "The task is unknown. Please choose between 'free_solv', 'ESOL', 'lipophilicity' and 'affinity'. \
+            "The task is unknown. Please choose between 'FreeSolv', 'ESOL', 'lipophilicity' and 'affinity'. \
                 Program aborting."
         )

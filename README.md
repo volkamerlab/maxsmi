@@ -38,7 +38,7 @@ This repository provides the code basis to exploit data augmentation using the f
 **Data sets**
 * Physico-chemical data from MoleculeNet, available as part of [DeepChem](https://deepchem.readthedocs.io/en/latest/index.html)
     * ESOL
-    * free solv
+    * FreeSolv
     * lipophilicity
 * Bioactivity data on the EGFR kinase, retrieved from [Kinodata](https://github.com/openkinome/kinodata)
 
@@ -111,7 +111,7 @@ To train a model with all chosen arguments:
 _Note_: This command uses the default number of epochs (which is set to 250). Please allow time for the model to train.
 
 ```console
-python maxsmi/full_workflow.py --task="free_solv" --string-encoding="smiles" --aug-strategy-train="augmentation_with_duplication" --aug-strategy-test="augmentation_with_reduced_duplication" --aug-nb-train=5 --aug-nb-test=2 --ml-model="CONV1D" --eval-strategy=True --nb-epochs=250
+python maxsmi/full_workflow.py --task="FreeSolv" --string-encoding="smiles" --aug-strategy-train="augmentation_with_duplication" --aug-strategy-test="augmentation_with_reduced_duplication" --aug-nb-train=5 --aug-nb-test=2 --ml-model="CONV1D" --eval-strategy=True --nb-epochs=250
 ```
 
 To train a model with early stopping (this command could take time to be executed):
