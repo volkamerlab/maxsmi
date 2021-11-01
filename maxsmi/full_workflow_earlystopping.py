@@ -36,7 +36,7 @@ from maxsmi.pytorch_data import AugmentSmilesData
 
 from maxsmi.constants import TEST_RATIO, RANDOM_SEED, BATCH_SIZE, LEARNING_RATE
 from maxsmi.pytorch_evaluation import model_evaluation
-from maxsmi.pytorch_training import model_training
+from maxsmi.pytorch_training import model_training_earlystopping
 from maxsmi.utils_evaluation import evaluation_results
 
 from maxsmi.parser_default import (
@@ -301,7 +301,7 @@ if __name__ == "__main__":
     logging.info("========")
     time_start_training = datetime.now()
 
-    ml_model, train_loss_list, valid_loss_list = model_training(
+    ml_model, train_loss_list, valid_loss_list = model_training_earlystopping(
         data_loader_train=train_loader,
         data_loader_valid=valid_loader,
         ml_model_name=ml_model_name,
