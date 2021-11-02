@@ -25,7 +25,7 @@ import torch.nn as nn
 
 from maxsmi.pytorch_data import FingerprintData
 
-from maxsmi.constants import TEST_RATIO, RANDOM_SEED, BACTH_SIZE, LEARNING_RATE
+from maxsmi.constants import TEST_RATIO, RANDOM_SEED, BATCH_SIZE, LEARNING_RATE
 from maxsmi.pytorch_evaluation import model_evaluation_fingerprint
 from maxsmi.pytorch_training import model_training_fingerprint
 from maxsmi.utils_evaluation import evaluation_results
@@ -107,8 +107,8 @@ if __name__ == "__main__":
         test_size=TEST_RATIO,
         random_state=RANDOM_SEED,
     )
-    logging.info(f"Number of training points before augmentation: {len(train_data)} ")
-    logging.info(f"Number of testing points before augmentation: {len(test_data)} ")
+    logging.info(f"Number of training points: {len(train_data)} ")
+    logging.info(f"Number of testing points: {len(test_data)} ")
 
     # ================================
     # String encoding
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
     # Pytorch data loader for mini batches
     train_loader = torch.utils.data.DataLoader(
-        train_pytorch, batch_size=BACTH_SIZE, shuffle=True
+        train_pytorch, batch_size=BATCH_SIZE, shuffle=True
     )
 
     # ==================================
