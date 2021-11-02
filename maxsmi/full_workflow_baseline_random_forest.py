@@ -106,7 +106,6 @@ if __name__ == "__main__":
     # Train the model on training data
     X_train = numpy.array(list(train_data["fingerprint"]))
     y_train = numpy.array(train_data["target"])
-    print(X_train.shape, y_train.shape)
     random_forest.fit(X_train, y_train)
 
     logging.info("Training: over")
