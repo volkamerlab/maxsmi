@@ -128,7 +128,7 @@ if __name__ == "__main__":
     folder = (
         f"maxsmi/output/{args.task}_{args.string_encoding}_{args.augmentation_strategy_train.__name__}"
         f"_{args.augmentation_number_train}_{args.augmentation_strategy_test.__name__}"
-        f"_{args.augmentation_number_test}_{args.machine_learning_model}"
+        f"_{args.augmentation_number_test}_{args.machine_learning_model}_earlystopping"
     )
     os.makedirs(folder, exist_ok=True)
 
@@ -147,6 +147,7 @@ if __name__ == "__main__":
     logging.info(f"Train augmentation: {args.augmentation_number_train}")
     logging.info(f"Test augmentation: {args.augmentation_number_test}")
     logging.info(f"Machine learning model: {args.machine_learning_model}")
+    logging.info("Training with early stopping.")
 
     # ================================
     # Computing device
