@@ -95,7 +95,7 @@ if __name__ == "__main__":
     # ==================================
 
     # Instantiate model with 100 decision trees
-    random_forest = RandomForestRegressor(n_estimators=100, random_state=42)
+    random_forest = RandomForestRegressor(random_state=42)
     logging.info("Summary of ml model: Random Forest.")
 
     # ==================================
