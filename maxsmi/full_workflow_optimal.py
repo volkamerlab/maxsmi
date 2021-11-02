@@ -22,7 +22,7 @@ from maxsmi.utils_smiles import (
     ALL_SMILES_DICT,
 )
 from maxsmi.utils_encoding import char_replacement, get_max_length
-from maxsmi.constants import BACTH_SIZE, LEARNING_RATE
+from maxsmi.constants import BATCH_SIZE, LEARNING_RATE
 from maxsmi.pytorch_models import model_type
 from maxsmi.pytorch_data import AugmentSmilesData
 from maxsmi.pytorch_training import model_training
@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
     # Pytorch data loader for mini batches
     train_loader = torch.utils.data.DataLoader(
-        data_pytorch, batch_size=BACTH_SIZE, shuffle=True
+        data_pytorch, batch_size=BATCH_SIZE, shuffle=True
     )
 
     # ==================================
