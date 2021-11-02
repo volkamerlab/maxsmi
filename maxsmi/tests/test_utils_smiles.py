@@ -6,6 +6,7 @@ Unit and regression test for the maxsmi package.
 # import maxsmi
 import pytest
 import sys
+import numpy
 
 from maxsmi.utils_smiles import (
     smiles_to_canonical,
@@ -19,6 +20,7 @@ from maxsmi.utils_smiles import (
     validity_check,
     smiles_from_folder_name,
     smiles_to_folder_name,
+    smiles_to_morgan_fingerprint,
 )
 
 
@@ -149,3 +151,14 @@ def test_smiles_from_folder_name(smiles, solution):
 def test_smiles_to_folder_name(smiles, solution):
     smiles = smiles_to_folder_name(smiles)
     assert solution == smiles
+
+
+@pytest.mark.parametrize(
+    "smiles, solution",
+    [
+        ("C", numpy.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0])),
+    ],
+)
+def test_smiles_to_morgan_fingerprint(smiles, solution):
+    smiles = smiles_to_morgan_fingerprint(smiles, nbits=10)
+    assert (solution == smiles).all()
