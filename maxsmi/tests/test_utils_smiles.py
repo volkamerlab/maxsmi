@@ -93,7 +93,7 @@ def test_control_smiles_duplication(smiles, control_function, solution):
 
 
 @pytest.mark.parametrize(
-    "smiles, solution", [("c1ccccc1", ["[C][=C][C][=C][C][=C][Ring1][Branch1_2]"])]
+    "smiles, solution", [("c1ccccc1", ["[C][=C][C][=C][C][=C][Ring1][=Branch1]"])]
 )
 def test_smiles_to_selfies(smiles, solution):
     selfies = smiles_to_selfies(smiles)
