@@ -36,7 +36,7 @@ from maxsmi.pytorch_data import AugmentSmilesData
 
 from maxsmi.constants import TEST_RATIO, RANDOM_SEED, BATCH_SIZE, LEARNING_RATE
 from maxsmi.pytorch_evaluation import model_evaluation
-from maxsmi.pytorch_training import model_training
+from maxsmi.pytorch_training import model_training_earlystopping
 from maxsmi.utils_evaluation import evaluation_results
 
 from maxsmi.parser_default import (
@@ -128,7 +128,7 @@ if __name__ == "__main__":
     folder = (
         f"maxsmi/output/{args.task}_{args.string_encoding}_{args.augmentation_strategy_train.__name__}"
         f"_{args.augmentation_number_train}_{args.augmentation_strategy_test.__name__}"
-        f"_{args.augmentation_number_test}_{args.machine_learning_model}"
+        f"_{args.augmentation_number_test}_{args.machine_learning_model}_earlystopping"
     )
     os.makedirs(folder, exist_ok=True)
 
@@ -147,6 +147,7 @@ if __name__ == "__main__":
     logging.info(f"Train augmentation: {args.augmentation_number_train}")
     logging.info(f"Test augmentation: {args.augmentation_number_test}")
     logging.info(f"Machine learning model: {args.machine_learning_model}")
+    logging.info("Training with early stopping.")
 
     # ================================
     # Computing device
@@ -181,13 +182,22 @@ if __name__ == "__main__":
     # Splitting
     # ================================
 
-    # Split data into train/test
-    train_data, test_data = train_test_split(
+    # Split data into train/valid/test
+    # First split into train and valid_test
+    train_data, valid_test_data = train_test_split(
         data,
         test_size=TEST_RATIO,
         random_state=RANDOM_SEED,
     )
+    # Then split valid_test into valid and test
+    # They get split into 50% each
+    valid_data, test_data = train_test_split(
+        valid_test_data,
+        test_size=0.5,
+        random_state=RANDOM_SEED,
+    )
     logging.info(f"Number of training points before augmentation: {len(train_data)} ")
+    logging.info(f"Number of validation points before augmentation: {len(valid_data)} ")
     logging.info(f"Number of testing points before augmentation: {len(test_data)} ")
 
     # ================================
@@ -199,6 +209,10 @@ if __name__ == "__main__":
         train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
             args.augmentation_strategy_train, args=(args.augmentation_number_train,)
         )
+        # Note: Augmentation on the valid set is automatically the same as on the train
+        valid_data["augmented_smiles"] = valid_data["canonical_smiles"].apply(
+            args.augmentation_strategy_train, args=(args.augmentation_number_train,)
+        )
         test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
             args.augmentation_strategy_test, args=(args.augmentation_number_test,)
         )
@@ -207,6 +221,7 @@ if __name__ == "__main__":
         train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
             smiles_to_selfies
         )
+        # Valid: skip
         test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
             smiles_to_selfies
         )
@@ -215,6 +230,7 @@ if __name__ == "__main__":
         train_data["augmented_smiles"] = train_data["canonical_smiles"].apply(
             smiles_to_deepsmiles
         )
+        # Valid: skip
         test_data["augmented_smiles"] = test_data["canonical_smiles"].apply(
             smiles_to_deepsmiles
         )
@@ -229,13 +245,13 @@ if __name__ == "__main__":
 
     # Replace double symbols
     train_data["new_smiles"] = train_data["augmented_smiles"].apply(char_replacement)
+    valid_data["new_smiles"] = valid_data["augmented_smiles"].apply(char_replacement)
     test_data["new_smiles"] = test_data["augmented_smiles"].apply(char_replacement)
 
     # Merge all smiles
+    test_valid = test_data["new_smiles"].append(valid_data["new_smiles"])
     all_smiles = set(
-        itertools.chain.from_iterable(
-            test_data["new_smiles"].append(train_data["new_smiles"])
-        )
+        itertools.chain.from_iterable(test_valid.append(train_data["new_smiles"]))
     )
     # Obtain dictionary for these smiles
     smi_dict = get_unique_elements_as_dict(all_smiles)
@@ -253,10 +269,16 @@ if __name__ == "__main__":
     # Pytorch train set
     train_pytorch = AugmentSmilesData(train_data)
     logging.info(f"Number of data points in training set: {len(train_pytorch)} ")
+    # Pytorch valid set
+    valid_pytorch = AugmentSmilesData(valid_data)
+    logging.info(f"Number of data points in validation set: {len(valid_pytorch)} ")
 
     # Pytorch data loader for mini batches
     train_loader = torch.utils.data.DataLoader(
         train_pytorch, batch_size=BATCH_SIZE, shuffle=True
+    )
+    valid_loader = torch.utils.data.DataLoader(
+        valid_pytorch, batch_size=BATCH_SIZE, shuffle=True
     )
 
     # ==================================
@@ -276,31 +298,29 @@ if __name__ == "__main__":
     # ==================================
 
     logging.info("========")
-    logging.info(f"Training for {args.number_epochs} epochs")
+    logging.info(f"Training for maximum {args.number_epochs} epochs or early stopping")
     logging.info("========")
     time_start_training = datetime.now()
 
-    loss_per_epoch = model_training(
-        data_loader=train_loader,
+    ml_model, train_loss_list, valid_loss_list = model_training_earlystopping(
+        data_loader_train=train_loader,
+        data_loader_valid=valid_loader,
         ml_model_name=ml_model_name,
         ml_model=ml_model,
         loss_function=loss_function,
         nb_epochs=args.number_epochs,
         is_cuda=is_cuda,
-        len_train_data=len(train_pytorch),
         smiles_dictionary=smi_dict,
         max_length_smiles=max_length_smi,
         device_to_use=device,
         learning_rate=LEARNING_RATE,
+        path_to_parameters=folder,
     )
 
     logging.info("Training: over")
     time_end_training = datetime.now()
     time_training = time_end_training - time_start_training
     logging.info(f"Time for model training {time_training}")
-
-    # Save model
-    torch.save(ml_model.state_dict(), f"{folder}/model_dict.pth")
 
     # ================================
     # # Evaluate on train set
@@ -310,7 +330,6 @@ if __name__ == "__main__":
     train_loader = torch.utils.data.DataLoader(
         train_pytorch, batch_size=1, shuffle=False
     )
-
     (output_pred_train, output_true_train) = model_evaluation(
         data_loader=train_loader,
         ml_model_name=ml_model_name,
@@ -319,7 +338,6 @@ if __name__ == "__main__":
         max_length_smiles=max_length_smi,
         device_to_use=device,
     )
-
     all_output_pred_train = numpy.concatenate(
         [
             output_pred_train[smiles]
@@ -425,7 +443,8 @@ if __name__ == "__main__":
             "execution": [time_execution],
             "time_training": [time_training],
             "time_testing": [time_testing],
-            "loss": [loss_per_epoch],
+            "train_loss_list": [train_loss_list],
+            "valid_loss_list": [valid_loss_list],
             "train": [evaluation_train],
             "test": [evaluation_test],
         }
