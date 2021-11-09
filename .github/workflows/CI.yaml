@@ -51,6 +51,11 @@ jobs:
       run: |
         python maxsmi/full_workflow.py --aug-strategy-train=augmentation_without_duplication --aug-nb-train=2 --aug-nb-test=2 --nb-epochs=2
 
+    - name: Run training example with early stopping
+      shell: bash -l {0}
+      run: |
+        python maxsmi/full_workflow_earlystopping.py --aug-nb-train=3 --aug-nb-test=2 --nb-epochs=2
+
     - name: Run user prediction example
       shell: bash -l {0}
       run: |

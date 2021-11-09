@@ -114,6 +114,12 @@ _Note_: This command uses the default number of epochs (which is set to 250). Pl
 python maxsmi/full_workflow.py --task="FreeSolv" --string-encoding="smiles" --aug-strategy-train="augmentation_with_duplication" --aug-strategy-test="augmentation_with_reduced_duplication" --aug-nb-train=5 --aug-nb-test=2 --ml-model="CONV1D" --eval-strategy=True --nb-epochs=250
 ```
 
+To train a model with early stopping (this command could take time to be executed):
+
+```console
+python maxsmi/full_workflow_earlystopping.py --aug-nb-train=3 --aug-nb-test=2
+```
+
 ### How to make predictions
 
 These predictions use the precalculated `Maxsmi` models (best performing models in the study).
@@ -142,6 +148,7 @@ The `maxsmi` package documentation is available [here](https://maxsmi.readthedoc
 |-- maxsmi
 |   |-- augmentation_strategies.py      <- SMILES augmentation strategies
 |   |-- full_workflow.py                <- Training and evaluation of deep learning models
+    |-- full_workflow_earlystopping.py  <- Training using early stopping
 |   |-- output_                         <- Saved outputs for results analysis
 |   |-- prediction_models               <- Weights for Maxsmi models
 |   |-- prediction_unlabeled_data.py    <- Maxsmi models available for user prediction
