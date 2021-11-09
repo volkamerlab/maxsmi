@@ -53,7 +53,7 @@ def test___getitem___(pandas_data_frame, ind, solution):
             torch.tensor([1.03]),
             get_unique_elements_as_dict(["CC", "CN"]),
             2,
-            "CON1D",
+            "CONV1D",
             "cpu",
             False,
             torch.tensor([[[1, 1], [0, 0]], [[1, 0], [0, 1]]]).float(),

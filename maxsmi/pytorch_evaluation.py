@@ -24,7 +24,7 @@ def model_evaluation(
     data_loader : torch.utils.data
         The training data as seen by Pytorch for mini-batches.
     ml_model_name : str
-        Name of the machine learning model. It can be either "CON1D", "CONV2D", or "RNN".
+        Name of the machine learning model. It can be either "CONV1D", "CONV2D", or "RNN".
     ml_model : nn.Module
         Instance of the pytorch machine learning model.
     smiles_dictionary : dict
@@ -87,7 +87,7 @@ def out_of_sample_prediction(
     data_loader : torch.utils.data
         The unlabeled data as seen by Pytorch.
     ml_model_name : str
-        Name of the machine learning model. It can be either "CON1D", "CONV2D", or "RNN".
+        Name of the machine learning model. It can be either "CONV1D", "CONV2D", or "RNN".
     ml_model : nn.Module
         Instance of the pytorch machine learning model.
     smiles_dictionary : dict

@@ -71,7 +71,7 @@ def data_to_pytorch_format(
     maximum_length : int
         The maximum length of SMILES.
     machine_learning_model_name :
-        Name of the machine learning model. It can be either "CON1D", "CONV2D", or "RNN".
+        Name of the machine learning model. It can be either "CONV1D", "CONV2D", or "RNN".
     device_to_use : torch.device
         The device to use for model instance, "cpu" or "cuda".
     per_mol : bool, default False
