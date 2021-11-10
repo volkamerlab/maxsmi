@@ -8,7 +8,9 @@ Handles the primary functions
 import math
 from collections import Counter
 import itertools
+import numpy as np
 from rdkit import Chem
+from rdkit.Chem import AllChem
 import selfies
 import deepsmiles
 from maxsmi.utils_encoding import get_unique_elements_as_dict
@@ -16,7 +18,7 @@ from maxsmi.utils_encoding import get_unique_elements_as_dict
 
 def validity_check(smiles):
     """
-    Aborts the program if the SMILES is unvalid.
+    Aborts the program if the SMILES is invalid.
 
     Parameters
     ----------
@@ -31,7 +33,7 @@ def validity_check(smiles):
     """
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:
-        raise ValueError("Unvalid SMILES. Program aborting")
+        raise ValueError("Invalid SMILES. Program aborting")
     else:
         return smiles
 
@@ -61,7 +63,7 @@ def smiles_to_canonical(smiles):
 
 def is_connected(smiles):
     """
-    Identifiy connected SMILES through the dot symbol.
+    Identify connected SMILES through the dot symbol.
 
     Parameters
     ----------
@@ -216,6 +218,30 @@ def smiles_to_deepsmiles(smiles):
     """
     converter = deepsmiles.Converter(rings=True, branches=True)
     return [converter.encode(smiles)]
+
+
+def smiles_to_morgan_fingerprint(smiles, radius=2, nbits=1024):
+    """
+    Takes a SMILES and return Morgan fingerprint.
+
+    Parameters
+    ----------
+    smiles : str
+        SMILES string describing a compound.
+    radius : int, default=2
+        The radius of the molecular environment.
+    nbits : int, default=1024
+        The length of the fingerprint.
+
+    Returns
+    -------
+    np.array
+        The Morgan fingerprint (binary vector) of the SMILES.
+    """
+    molecule = Chem.MolFromSmiles(smiles)
+    return np.array(
+        AllChem.GetMorganFingerprintAsBitVect(molecule, radius=radius, nBits=nbits)
+    )
 
 
 def get_num_heavy_atoms(smiles):

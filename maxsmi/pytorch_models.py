@@ -64,7 +64,7 @@ class Convolutional1DNetwork(nn.Module):
 
     def forward(self, x):
         """
-        Defines the foward pass for a given input 'x'
+        Defines the forward pass for a given input 'x'
         """
         x = self._activation(self.convolution(x))
         x = torch.flatten(x, 1)
@@ -132,7 +132,7 @@ class Convolutional2DNetwork(nn.Module):
 
     def forward(self, x):
         """
-        Defines the foward pass for a given input 'x'
+        Defines the forward pass for a given input 'x'
         """
         x = self._activation(self.convolution(x))
         x = torch.flatten(x, 1)
