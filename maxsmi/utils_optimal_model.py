@@ -29,7 +29,7 @@ def retrieve_optimal_model(task):
     """
     if task == "FreeSolv":
         ml_model = "CONV1D"
-        augmentation_strategy = augmentation_without_duplication
+        augmentation_strategy = augmentation_with_duplication
         augmentation_number = 70
 
     elif task == "ESOL":
@@ -39,7 +39,7 @@ def retrieve_optimal_model(task):
 
     elif task in ["lipo", "lipophilicity"]:
         ml_model = "CONV1D"
-        augmentation_strategy = augmentation_with_duplication
+        augmentation_strategy = augmentation_without_duplication
         augmentation_number = 80
 
     elif task in ["chembl28", "affinity"]:
