@@ -24,7 +24,7 @@ def model_training(
     learning_rate,
 ):
     """
-    # Train the machine learning model using the otpimization loop in pytorch.
+    # Train the machine learning model using the optimization loop in pytorch.
 
     Parameters
     ----------

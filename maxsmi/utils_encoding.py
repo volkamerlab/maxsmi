@@ -53,7 +53,7 @@ def char_replacement(list_smiles):
 
 def get_unique_elements_as_dict(list_):
     """
-    Given a list, obtain a dictonary with unique elements as keys and integer as values.
+    Given a list, obtain a dictionary with unique elements as keys and integer as values.
 
     Parameters
     ----------
