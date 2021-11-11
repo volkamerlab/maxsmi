@@ -10,4 +10,4 @@ You've come to the right place!
 Installation
 -------------
 
-For installation, please refer to `the github page <https://github.com/volkamerlab/maxsmi#installation-using-conda>`_.
+For installation, please refer to `the Github page <https://github.com/volkamerlab/maxsmi#installation-using-conda>`_.
