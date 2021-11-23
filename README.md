@@ -148,7 +148,7 @@ The `maxsmi` package documentation is available [here](https://maxsmi.readthedoc
 |-- maxsmi
 |   |-- augmentation_strategies.py      <- SMILES augmentation strategies
 |   |-- full_workflow.py                <- Training and evaluation of deep learning models
-    |-- full_workflow_earlystopping.py  <- Training using early stopping
+|   |-- full_workflow_earlystopping.py  <- Training using early stopping
 |   |-- output_                         <- Saved outputs for results analysis
 |   |-- prediction_models               <- Weights for Maxsmi models
 |   |-- prediction_unlabeled_data.py    <- Maxsmi models available for user prediction
