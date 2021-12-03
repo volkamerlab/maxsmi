@@ -114,6 +114,7 @@ ENV/
 # Results
 output/
 user_prediction/
+output_early_stopping/
 
 # Testing files
 test_notebooks.ipynb
