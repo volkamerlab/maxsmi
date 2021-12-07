@@ -6,7 +6,7 @@ Maxsmi: data augmentation for molecular property prediction using deep learning
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Documentation Status](https://readthedocs.org/projects/maxsmi/badge/?version=latest)](https://maxsmi.readthedocs.io/en/latest/?badge=latest)
-[![Anaconda-Server Badge](https://anaconda.org/conda-forge/maxsmi/badges/installer/conda.svg)](https://conda.anaconda.org/conda-forge)
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/maxsmi/badges/installer/conda.svg)](https://anaconda.org/conda-forge/maxsmi)
 
 ![GitHub closed pr](https://img.shields.io/github/issues-pr-closed-raw/volkamerlab/maxsmi) ![GitHub open pr](https://img.shields.io/github/issues-pr-raw/volkamerlab/maxsmi) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/volkamerlab/maxsmi) ![GitHub open issues](https://img.shields.io/github/issues/volkamerlab/maxsmi)
 
@@ -72,7 +72,7 @@ If you use `maxsmi`, don't forget to reference the work. The paper can be found 
 # Installation using conda
 
 ## Prerequisites
-Anaconda should be installed. See [Anaconda's website](https://www.anaconda.com/products/individual) for download.
+Anaconda should be installed. See [Anaconda's website](https://www.anaconda.com) for download.
 
 ## How to install
 
@@ -182,7 +182,7 @@ Project based on the
 [Computational Molecular Science Python Cookiecutter](https://github.com/molssi/cookiecutter-cms) version 1.4.
 
 Documentation and packaging:
-A special thank you to @dominiquesydow for sharing her valuable knowledge with infinite kindness.
+A special thank you to [dominiquesydow](https://github.com/dominiquesydow) for sharing her valuable knowledge with infinite kindness.
 
 ### Copyright
 
