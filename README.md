@@ -182,7 +182,7 @@ Project based on the
 [Computational Molecular Science Python Cookiecutter](https://github.com/molssi/cookiecutter-cms) version 1.4.
 
 Documentation and packaging:
-A special thank you to [dominiquesydow](https://github.com/dominiquesydow) for sharing her valuable knowledge with infinite kindness.
+A special thank you to [dominiquesydow](https://github.com/dominiquesydow) for sharing her valuable knowledge with patience and kindness.
 
 ### Copyright
 
