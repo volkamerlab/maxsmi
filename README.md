@@ -2,7 +2,9 @@ Maxsmi: data augmentation for molecular property prediction using deep learning
 ==============================
 [//]: # (Badges)
 
-[![Actions Status](https://github.com/volkamerlab/maxsmi/workflows/CI/badge.svg)](https://github.com/volkamerlab/maxsmi/actions) [![codecov](https://codecov.io/gh/volkamerlab/maxsmi/branch/main/graph/badge.svg)](https://codecov.io/gh/volkamerlab/maxsmi/branch/main) [![Actions Status](https://github.com/volkamerlab/maxsmi/workflows/flake8/badge.svg)](https://github.com/volkamerlab/maxsmi/actions)
+[![Actions Status](https://github.com/volkamerlab/maxsmi/workflows/CI/badge.svg)](https://github.com/volkamerlab/maxsmi/actions)
+[![codecov](https://codecov.io/gh/volkamerlab/maxsmi/branch/main/graph/badge.svg)](https://codecov.io/gh/volkamerlab/maxsmi/branch/main)
+[![Actions Status](https://github.com/volkamerlab/maxsmi/workflows/flake8/badge.svg)](https://github.com/volkamerlab/maxsmi/actions)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Documentation Status](https://readthedocs.org/projects/maxsmi/badge/?version=latest)](https://maxsmi.readthedocs.io/en/latest/?badge=latest)
@@ -11,6 +13,7 @@ Maxsmi: data augmentation for molecular property prediction using deep learning
 ![GitHub closed pr](https://img.shields.io/github/issues-pr-closed-raw/volkamerlab/maxsmi) ![GitHub open pr](https://img.shields.io/github/issues-pr-raw/volkamerlab/maxsmi) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/volkamerlab/maxsmi) ![GitHub open issues](https://img.shields.io/github/issues/volkamerlab/maxsmi)
 
 # Table of contents
+
 - Project description
 - Citation
 - Installation using conda
@@ -53,6 +56,7 @@ This repository provides the code basis to exploit data augmentation using the f
 The results of our study show that data augmentation improves the accuracy independently of the deep learning model and the size of the data. The best strategy leads to the Maxsmi models, which are available here for predictions on novel compounds on the provided data sets.
 
 # Citation
+
 If you use `maxsmi`, don't forget to reference the work. The paper can be found at [this link](https://doi.org/10.1016/j.ailsci.2021.100014).
 
 ```
@@ -69,9 +73,11 @@ If you use `maxsmi`, don't forget to reference the work. The paper can be found 
 }
 ```
 
+
 # Installation using conda
 
 ## Prerequisites
+
 Anaconda should be installed. See [Anaconda's website](https://www.anaconda.com) for download.
 
 ## How to install
@@ -184,6 +190,8 @@ Project based on the
 Documentation and packaging:
 A special thank you to [dominiquesydow](https://github.com/dominiquesydow) for sharing her valuable knowledge with patience and kindness.
 
+
 ### Copyright
 
 Copyright (c) 2020, Talia B. Kimber at [VolkamerLab](https://volkamerlab.org/).
+
