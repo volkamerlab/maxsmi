@@ -39,7 +39,13 @@ setup(
     # Comment out this line to prevent the files from being packaged with your software
     include_package_data=True,
 
-    entry_points={"console_scripts": ["maxsmi = maxsmi.full_workflow"]},
+    entry_points={
+        "console_scripts": [
+            "maxsmi = maxsmi.full_workflow:main", 
+            "maxsmi-earlystopping = maxsmi.full_workflow_earlystopping:main", 
+            "maxsmi-pred = maxsmi.prediction_unlabeled_data:main"
+        ]
+    },
     # Allows `setup.py test` to work correctly with pytest
     setup_requires=[] + pytest_runner,
     # Additional entries you may want simply uncomment the lines you want and fill in the data
