@@ -2,6 +2,7 @@
 From smiles to predictions
 
 """
+from pathlib import Path
 import argparse
 import logging
 import logging.handlers
@@ -36,7 +37,10 @@ from maxsmi.pytorch_data import AugmentSmilesData
 from maxsmi.pytorch_evaluation import out_of_sample_prediction
 from maxsmi.utils_optimal_model import retrieve_optimal_model
 
-if __name__ == "__main__":
+PATH_MAXSMI = Path(__file__).parent
+
+def main():
+
     warnings.filterwarnings("ignore")
     parser = argparse.ArgumentParser()
 
@@ -170,7 +174,7 @@ if __name__ == "__main__":
 
     (ml_model_name, ml_model) = model_type(ml_model, device, smi_dict, max_length_smi)
     logging.info(f"Summary of ml model used for the prediction: {ml_model} ")
-    file_path = f"maxsmi/prediction_models/{args.task}"
+    file_path = PATH_MAXSMI / f"prediction_models/{args.task}"
     ml_model.load_state_dict(
         torch.load(f"{file_path}/model_dict.pth", map_location=device)
     )
@@ -246,3 +250,6 @@ if __name__ == "__main__":
 
     logging.info("Script completed. \n \n")
     print(f"Script completed. Output can be found at {folder}/")
+
+if __name__ == "__main__":
+    main()
