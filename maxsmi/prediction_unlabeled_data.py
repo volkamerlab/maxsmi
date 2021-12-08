@@ -39,6 +39,7 @@ from maxsmi.utils_optimal_model import retrieve_optimal_model
 
 PATH_MAXSMI = Path(__file__).parent
 
+
 def main():
 
     warnings.filterwarnings("ignore")
@@ -250,6 +251,7 @@ def main():
 
     logging.info("Script completed. \n \n")
     print(f"Script completed. Output can be found at {folder}/")
+
 
 if __name__ == "__main__":
     main()
