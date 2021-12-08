@@ -2,7 +2,9 @@ Maxsmi: data augmentation for molecular property prediction using deep learning
 ==============================
 [//]: # (Badges)
 
-[![Actions Status](https://github.com/volkamerlab/maxsmi/workflows/CI/badge.svg)](https://github.com/volkamerlab/maxsmi/actions) [![codecov](https://codecov.io/gh/volkamerlab/maxsmi/branch/main/graph/badge.svg)](https://codecov.io/gh/volkamerlab/maxsmi/branch/main) [![Actions Status](https://github.com/volkamerlab/maxsmi/workflows/flake8/badge.svg)](https://github.com/volkamerlab/maxsmi/actions)
+[![Actions Status](https://github.com/volkamerlab/maxsmi/workflows/CI/badge.svg)](https://github.com/volkamerlab/maxsmi/actions)
+[![codecov](https://codecov.io/gh/volkamerlab/maxsmi/branch/main/graph/badge.svg)](https://codecov.io/gh/volkamerlab/maxsmi/branch/main)
+[![Actions Status](https://github.com/volkamerlab/maxsmi/workflows/flake8/badge.svg)](https://github.com/volkamerlab/maxsmi/actions)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Documentation Status](https://readthedocs.org/projects/maxsmi/badge/?version=latest)](https://maxsmi.readthedocs.io/en/latest/?badge=latest)
@@ -11,6 +13,7 @@ Maxsmi: data augmentation for molecular property prediction using deep learning
 
 # Table of contents
 - Project description
+- Citation
 - Installation using conda
   - Prerequisites
   - How to install
@@ -20,6 +23,7 @@ Maxsmi: data augmentation for molecular property prediction using deep learning
     - How to make predictions
 - Documentation
 - Repository structure and important files
+- Acknowledgments
 
 # Project description
 ## SMILES augmentation for deep learning based molecular property and activity prediction.
@@ -49,10 +53,28 @@ This repository provides the code basis to exploit data augmentation using the f
 
 The results of our study show that data augmentation improves the accuracy independently of the deep learning model and the size of the data. The best strategy leads to the Maxsmi models, which are available here for predictions on novel compounds on the provided data sets.
 
+
+# Citation
+If you use `maxsmi`, don't forget to reference the work. The paper can be found at [this link](https://doi.org/10.1016/j.ailsci.2021.100014).
+
+```
+@article{kimber_2021_AILSCI,
+  title = {Maxsmi: Maximizing molecular property prediction performance with confidence estimation using SMILES augmentation and deep learning},
+  author = {Talia B. Kimber and Maxime Gagnebin and Andrea Volkamer}
+  journal = {Artificial Intelligence in the Life Sciences},
+  volume = {1},
+  pages = {100014},
+  year = {2021},
+  issn = {2667-3185},
+  doi = {https://doi.org/10.1016/j.ailsci.2021.100014},
+  url = {https://www.sciencedirect.com/science/article/pii/S2667318521000143}
+}
+```
+
 # Installation using conda
 
 ## Prerequisites
-Anaconda and Git should be installed. See [Anaconda's website](https://www.anaconda.com/products/individual) and [Git's website](https://git-scm.com/downloads) for download.
+Anaconda and Git should be installed. See [Anaconda's website](https://www.anaconda.com) and [Git's website](https://git-scm.com/downloads) for download.
 
 ## How to install
 
@@ -156,12 +178,15 @@ The `maxsmi` package documentation is available [here](https://maxsmi.readthedoc
 |   |-- tests
 ```
 
+### Acknowledgements
+
+Project based on the
+[Computational Molecular Science Python Cookiecutter](https://github.com/molssi/cookiecutter-cms) version 1.4.
+
+Documentation and packaging:
+A special thank you to [dominiquesydow](https://github.com/dominiquesydow) for sharing her valuable knowledge with patience and kindness.
+
 ### Copyright
 
 Copyright (c) 2020, Talia B. Kimber at [VolkamerLab](https://volkamerlab.org/).
 
-
-#### Acknowledgements
-
-Project based on the
-[Computational Molecular Science Python Cookiecutter](https://github.com/molssi/cookiecutter-cms) version 1.4.
