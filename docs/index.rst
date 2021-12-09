@@ -34,7 +34,7 @@ Welcome to maxsmi's documentation!
    <br>
    <font size="3">
    Given a compound represented by its canonical SMILES, the Maxsmi model produces a prediction for each of the SMILES variations.
-   The aggregation of these values leads to a per compound prediction and the standard deviation to an uncertainty in the prediction.
+   The aggregation of these values leads to a per compound prediction and the standard deviation to an uncertainty in the prediction. The figure is taken from <a href="https://doi.org/10.1016/j.ailsci.2021.100014">Kimber <i>et al. </i>(2021)</a>.
    </font>
    </p>
 
