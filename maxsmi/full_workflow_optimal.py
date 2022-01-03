@@ -15,18 +15,18 @@ import itertools
 import torch
 import torch.nn as nn
 
-from maxsmi.utils_data import data_retrieval
-from maxsmi.utils_smiles import (
+from maxsmi.utils.utils_data import data_retrieval
+from maxsmi.utils.utils_smiles import (
     smiles_to_canonical,
     is_connected,
     ALL_SMILES_DICT,
 )
-from maxsmi.utils_encoding import char_replacement, get_max_length
+from maxsmi.utils.utils_encoding import char_replacement, get_max_length
 from maxsmi.constants import BATCH_SIZE, LEARNING_RATE
-from maxsmi.pytorch_models import model_type
-from maxsmi.pytorch_data import AugmentSmilesData
-from maxsmi.pytorch_training import model_training
-from maxsmi.utils_optimal_model import retrieve_optimal_model
+from maxsmi.pytorch_utils.pytorch_models import model_type
+from maxsmi.pytorch_utils.pytorch_data import AugmentSmilesData
+from maxsmi.pytorch_utils.pytorch_training import model_training
+from maxsmi.utils.utils_optimal_model import retrieve_optimal_model
 from maxsmi.parser_default import NB_EPOCHS
 
 

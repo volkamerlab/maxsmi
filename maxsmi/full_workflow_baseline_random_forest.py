@@ -12,9 +12,9 @@ import os
 from datetime import datetime
 from sklearn.ensemble import RandomForestRegressor
 
-from maxsmi.utils_data import data_retrieval
+from maxsmi.utils.utils_data import data_retrieval
 
-from maxsmi.utils_smiles import (
+from maxsmi.utils.utils_smiles import (
     smiles_to_canonical,
     is_connected,
     smiles_to_morgan_fingerprint,
@@ -23,7 +23,7 @@ from sklearn.model_selection import train_test_split
 
 
 from maxsmi.constants import TEST_RATIO, RANDOM_SEED
-from maxsmi.utils_evaluation import evaluation_results
+from maxsmi.utils.utils_evaluation import evaluation_results
 
 from maxsmi.parser_default import TASK
 

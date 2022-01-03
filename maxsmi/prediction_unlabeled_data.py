@@ -14,8 +14,8 @@ import rdkit
 from rdkit.Chem import Draw
 import torch
 
-from maxsmi.utils_data import data_retrieval, smiles_in_training, data_checker
-from maxsmi.utils_smiles import (
+from maxsmi.utils.utils_data import data_retrieval, smiles_in_training, data_checker
+from maxsmi.utils.utils_smiles import (
     validity_check,
     smiles_to_canonical,
     smiles_to_folder_name,
@@ -23,18 +23,18 @@ from maxsmi.utils_smiles import (
     is_connected,
     ALL_SMILES_DICT,
 )
-from maxsmi.utils_encoding import char_replacement
-from maxsmi.utils_prediction import (
+from maxsmi.utils.utils_encoding import char_replacement
+from maxsmi.utils.utils_prediction import (
     retrieve_longest_smiles_from_optimal_model,
     unlabeled_smiles_max_length,
     character_check,
     mixture_check,
 )
 
-from maxsmi.pytorch_models import model_type
-from maxsmi.pytorch_data import AugmentSmilesData
-from maxsmi.pytorch_evaluation import out_of_sample_prediction
-from maxsmi.utils_optimal_model import retrieve_optimal_model
+from maxsmi.pytorch_utils.pytorch_models import model_type
+from maxsmi.pytorch_utils.pytorch_data import AugmentSmilesData
+from maxsmi.pytorch_utils.pytorch_evaluation import out_of_sample_prediction
+from maxsmi.utils.utils_optimal_model import retrieve_optimal_model
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
