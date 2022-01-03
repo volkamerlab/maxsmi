@@ -6,7 +6,7 @@ Unit and regression test for the maxsmi package.
 # import maxsmi
 import pytest
 import sys
-from maxsmi.utils import string_to_bool, augmentation_strategy
+from maxsmi.utils.utils_parser import string_to_bool, augmentation_strategy
 from maxsmi.augmentation_strategies import (
     no_augmentation,
     augmentation_with_duplication,

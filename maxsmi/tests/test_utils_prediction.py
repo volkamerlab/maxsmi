@@ -6,7 +6,7 @@ Unit and regression test for the maxsmi package.
 # import maxsmi
 import pytest
 import sys
-from maxsmi.utils_prediction import (
+from maxsmi.utils.utils_prediction import (
     retrieve_longest_smiles_from_optimal_model,
     unlabeled_smiles_max_length,
     mixture_check,

@@ -7,7 +7,7 @@ Unit and regression test for the maxsmi package.
 import pytest
 import sys
 
-from maxsmi.utils_optimal_model import retrieve_optimal_model
+from maxsmi.utils.utils_optimal_model import retrieve_optimal_model
 from maxsmi.augmentation_strategies import (
     augmentation_with_duplication,
     augmentation_without_duplication,
