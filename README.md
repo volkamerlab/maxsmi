@@ -168,14 +168,16 @@ The `maxsmi` package documentation is available [here](https://maxsmi.readthedoc
 |-- devtools
 |-- docs
 |-- maxsmi
+|   |-- output_                         <- Saved outputs for results analysis
+|   |-- prediction_models               <- Weights for Maxsmi models
+|   |-- pytorch_utils                   <- Utilities for PyTorch
+|   |-- results_analysis                <- Notebooks for results analysis
+|   |-- tests                           <- Unit tests
+|   |-- utils                           <- Utilities for data, encodings, smiles
 |   |-- augmentation_strategies.py      <- SMILES augmentation strategies
 |   |-- full_workflow.py                <- Training and evaluation of deep learning models
 |   |-- full_workflow_earlystopping.py  <- Training using early stopping
-|   |-- output_                         <- Saved outputs for results analysis
-|   |-- prediction_models               <- Weights for Maxsmi models
 |   |-- prediction_unlabeled_data.py    <- Maxsmi models available for user prediction
-|   |-- results_analysis                <- Notebooks for results analysis
-|   |-- tests
 ```
 
 ### Acknowledgements
