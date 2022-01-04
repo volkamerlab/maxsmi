@@ -8,7 +8,7 @@ Handles the primary functions
 
 import logging
 import pandas as pd
-from maxsmi.utils_smiles import get_num_heavy_atoms
+from maxsmi.utils.utils_smiles import get_num_heavy_atoms
 
 
 def data_retrieval(target_data="ESOL"):

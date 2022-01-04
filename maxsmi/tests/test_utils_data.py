@@ -7,7 +7,7 @@ Unit and regression test for the maxsmi package.
 import pytest
 import sys
 import pandas
-from maxsmi.utils_data import (
+from maxsmi.utils.utils_data import (
     data_retrieval,
     process_ESOL,
     process_ChEMBL,

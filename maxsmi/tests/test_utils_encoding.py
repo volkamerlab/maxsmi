@@ -6,7 +6,7 @@ Unit and regression test for the maxsmi package.
 import pytest
 import sys
 import numpy as np
-from maxsmi.utils_encoding import (
+from maxsmi.utils.utils_encoding import (
     get_max_length,
     char_replacement,
     get_unique_elements_as_dict,

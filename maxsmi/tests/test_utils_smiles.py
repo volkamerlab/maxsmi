@@ -8,7 +8,7 @@ import pytest
 import sys
 import numpy
 
-from maxsmi.utils_smiles import (
+from maxsmi.utils.utils_smiles import (
     smiles_to_canonical,
     smiles_to_random,
     smiles_to_max_random,

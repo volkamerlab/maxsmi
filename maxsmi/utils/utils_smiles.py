@@ -13,7 +13,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 import selfies
 import deepsmiles
-from maxsmi.utils_encoding import get_unique_elements_as_dict
+from maxsmi.utils.utils_encoding import get_unique_elements_as_dict
 
 
 def validity_check(smiles):

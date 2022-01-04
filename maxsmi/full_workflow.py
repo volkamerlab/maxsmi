@@ -12,16 +12,16 @@ from datetime import datetime
 import itertools
 import numpy
 
-from maxsmi.utils import string_to_bool, augmentation_strategy
-from maxsmi.utils_data import data_retrieval
+from maxsmi.utils.utils_parser import string_to_bool, augmentation_strategy
+from maxsmi.utils.utils_data import data_retrieval
 
-from maxsmi.utils_smiles import (
+from maxsmi.utils.utils_smiles import (
     smiles_to_canonical,
     is_connected,
     smiles_to_selfies,
     smiles_to_deepsmiles,
 )
-from maxsmi.utils_encoding import (
+from maxsmi.utils.utils_encoding import (
     char_replacement,
     get_unique_elements_as_dict,
     get_max_length,
@@ -31,13 +31,13 @@ from sklearn.model_selection import train_test_split
 import torch
 import torch.nn as nn
 
-from maxsmi.pytorch_models import model_type
-from maxsmi.pytorch_data import AugmentSmilesData
+from maxsmi.pytorch_utils.pytorch_models import model_type
+from maxsmi.pytorch_utils.pytorch_data import AugmentSmilesData
 
 from maxsmi.constants import TEST_RATIO, RANDOM_SEED, BATCH_SIZE, LEARNING_RATE
-from maxsmi.pytorch_evaluation import model_evaluation
-from maxsmi.pytorch_training import model_training
-from maxsmi.utils_evaluation import evaluation_results
+from maxsmi.pytorch_utils.pytorch_evaluation import model_evaluation
+from maxsmi.pytorch_utils.pytorch_training import model_training
+from maxsmi.utils.utils_evaluation import evaluation_results
 
 from maxsmi.parser_default import (
     TASK,

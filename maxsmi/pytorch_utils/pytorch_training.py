@@ -7,7 +7,7 @@ import logging
 import torch
 import torch.optim as optim
 
-from maxsmi.pytorch_data import data_to_pytorch_format
+from maxsmi.pytorch_utils.pytorch_data import data_to_pytorch_format
 
 
 def model_training(

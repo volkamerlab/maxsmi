@@ -2,7 +2,7 @@
 prediction_optimal.py
 Retrieves optimal prediction for each task.
 """
-from maxsmi.utils_smiles import ALL_SMILES_DICT
+from maxsmi.utils.utils_smiles import ALL_SMILES_DICT
 
 
 def retrieve_longest_smiles_from_optimal_model(task):

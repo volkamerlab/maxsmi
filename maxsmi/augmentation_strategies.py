@@ -1,5 +1,5 @@
 import math
-from maxsmi.utils_smiles import (
+from maxsmi.utils.utils_smiles import (
     smiles_to_random,
     control_smiles_duplication,
     smiles_to_max_random,

@@ -7,7 +7,7 @@ Unit and regression test for the maxsmi package.
 import pytest
 import sys
 import numpy
-from maxsmi.utils_evaluation import evaluation_results
+from maxsmi.utils.utils_evaluation import evaluation_results
 
 
 def test_maxsmi_imported():
