@@ -11,7 +11,7 @@ dependencies:
   - scikit-learn
   - requests
   - tqdm
-  - pytorch>=1.11.0
+  - pytorch
   - matplotlib
   - selfies
   - deepsmiles
