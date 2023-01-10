@@ -50,7 +50,9 @@ from maxsmi.parser_default import (
     NB_EPOCHS,
 )
 
-if __name__ == "__main__":
+
+def main():
+
     warnings.filterwarnings("ignore")
     parser = argparse.ArgumentParser()
 
@@ -451,3 +453,7 @@ if __name__ == "__main__":
     )
     results_metrics = results_metrics.to_pickle(f"{folder}/results_metrics.pkl")
     logging.info("Script completed. \n \n")
+
+
+if __name__ == "__main__":
+    main()
