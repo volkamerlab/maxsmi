@@ -117,7 +117,13 @@ if __name__ == "__main__":
         help="ensemble learning used as evaluation strategy",
         default=ENSEMBLE_LEARNING,
     )
-
+    parser.add_argument(
+        "--folder",
+        dest="folder_iteration",
+        type=int,
+        help="iteration for output folder name",
+        default=0,
+    )
     args = parser.parse_args()
 
     if args.augmentation_strategy_train.__name__ == "no_augmentation":
@@ -126,7 +132,8 @@ if __name__ == "__main__":
         args.augmentation_number_test = 0
 
     folder = (
-        f"maxsmi/output/{args.task}_{args.string_encoding}_{args.augmentation_strategy_train.__name__}"
+        f"maxsmi/output_{args.folder_iteration}/{args.task}_{args.string_encoding}"
+        f"_{args.augmentation_strategy_train.__name__}"
         f"_{args.augmentation_number_train}_{args.augmentation_strategy_test.__name__}"
         f"_{args.augmentation_number_test}_{args.machine_learning_model}"
     )
