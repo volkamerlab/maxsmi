@@ -26,6 +26,10 @@ Welcome to maxsmi's documentation!
 .. image::
    https://readthedocs.org/projects/maxsmi/badge/?version=latest
    :target: https://maxsmi.readthedocs.io/en/latest/?badge=latest
+   
+.. image::
+    https://anaconda.org/conda-forge/maxsmi/badges/installer/conda.svg
+    :target: https://anaconda.org/conda-forge/maxsmi
 
 .. raw:: html
 
